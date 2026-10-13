@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tao2typ</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#posts">Skip to posts</a>
+  <header><a class="wordmark" href="./">tao2typ</a><nav aria-label="Links"><a href="https://terrytao.wordpress.com/">Blog</a><a href="@@REPO_URL@@">GitHub</a></nav></header>
+  <main>
+    <aside class="taxonomy">
+      <a class="all-posts" href="#" data-route="all">All posts <span>@@TOTAL@@</span></a>
+      <details open><summary>Categories <span>@@CATEGORY_COUNT@@</span></summary><nav aria-label="Categories">@@CATEGORY_LINKS@@</nav></details>
+      <details><summary>Tags <span>@@TAG_COUNT@@</span></summary><nav aria-label="Tags">@@TAG_LINKS@@</nav></details>
+    </aside>
+    <section class="catalogue" aria-label="Posts">
+      <div class="catalogue-heading"><h1 id="collection-title">All posts</h1><span id="result-count" role="status" aria-live="polite">@@TOTAL@@ posts</span></div>
+      <form class="controls" role="search">
+        <label class="search-label" for="search">Search<input id="search" type="search" placeholder="Search" autocomplete="off"></label>
+        <label class="ready-filter"><input type="checkbox" id="ready"> PDFs only</label>
+        <label class="sort-label" for="sort">Order<select id="sort"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="title">A–Z</option></select></label>
+      </form>
+      <ol id="posts" class="post-list" tabindex="-1">@@POSTS@@</ol>
+      <p id="empty" hidden>No matches.</p>
+      <noscript><p>Search and filters need JavaScript.</p></noscript>
+    </section>
+  </main>
+</body>
+</html>

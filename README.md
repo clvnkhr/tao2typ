@@ -1,5 +1,7 @@
 # tao2typ
 
+[Browse posts](https://clvnkhr.github.io/tao2typ/)
+
 Convert [Terence Tao’s blog](https://terrytao.wordpress.com/) through a versioned
 intermediate representation into readable Typst and PDF. This is a successor to
 [tao2tex](https://github.com/clvnkhr/tao2tex), with parsing, rendering, fetching,
@@ -45,7 +47,7 @@ downloads image assets and follows all comment pagination links. Rerender saved
 IR without fetching or reparsing HTML:
 
 ```sh
-uv run tao2typ render archive/ir/2022-10-03-123.json --output archive/typst/2022-10-03-123.typ --pdf archive/pdfs/2022-10-03-123.pdf
+uv run tao2typ render archive/ir/what-are-the-odds.json --output archive/typst/what-are-the-odds.typ --pdf archive/pdfs/what-are-the-odds.pdf
 ```
 
 Use the actual filenames listed in `archive/README.md`. To attempt an entire
@@ -110,11 +112,61 @@ archive/
   jobs/*.json       # one timestamped report per batch
   ir/*.json         # versioned intermediate documents
   typst/*.typ       # escaped, independently compilable Typst source
-  pdfs/*.pdf        # stable filenames: publication date + WordPress ID
+  pdfs/*.pdf        # stable lower kebab case filenames from post permalinks
   assets/*          # image assets addressed by URL + content hashes
   failures/*        # diagnostic IR/Typst for failed compilations
   README.md         # chronological PDF index
 ```
+
+PDFs, `.typ` sources and IR JSON share readable lower kebab case names derived
+from the original post permalink, such as `what-should-we-tell-our-students.pdf`.
+Post IDs are appended only to resolve collisions. `uv run tao2typ migrate-names`
+renames existing outputs without downloading or recompiling them.
+
+## Website
+
+The catalogue is hosted at [clvnkhr.github.io/tao2typ/](https://clvnkhr.github.io/tao2typ/).
+Original WordPress tags and categories are stored separately, including category
+parent IDs. Filters preserve these names and category hierarchies. The page
+contains post metadata and links to PDFs and `.typ` sources. The repository is
+private during development; the intended release provides public downloads.
+Default builds contain metadata and GitHub file links. Public release builds use
+`--download-base-url` to export existing PDFs, `.typ` sources, IR JSON and only
+their referenced image assets beside the page. Relative Typst image paths are
+preserved. State, queues, job reports, failure diagnostics and caches are excluded.
+
+Build or refresh the site without generating PDFs:
+
+```sh
+uv run tao2typ sync-metadata
+uv run tao2typ site --output docs
+bash scripts/publish-catalogue.sh /path/to/clvnkhr.github.io
+```
+
+Only four allowlisted files are published under the personal site's
+`public/tao2typ/` directory: HTML, CSS, JavaScript and `.nojekyll`. The existing
+website's build copies that directory to GitHub Pages.
+
+Prepare a public release without fetching or converting posts:
+
+```sh
+uv run tao2typ site --output /private/tmp/tao2typ-release --download-base-url https://clvnkhr.github.io/tao2typ/
+```
+
+Preparing this directory locally does not publish it or change repository visibility.
+When ready to release, the explicit public publish flag rebuilds `docs/` and also
+copies the exported download folders:
+
+```sh
+bash scripts/publish-catalogue.sh /path/to/clvnkhr.github.io --public-downloads
+```
+
+Daily conversion also refreshes `docs/`. Automatic cross-repository publication
+uses an optional `PAGES_PUBLISH_TOKEN` Actions secret: a fine-grained token with
+Contents read/write permission for **clvnkhr.github.io only**. Without that secret,
+use the local publish command above. The daily ten-attempt PDF budget still applies.
+For the public release, set the `PAGES_PUBLIC_DOWNLOADS` repository variable to
+`true` so daily publication also updates public PDFs, sources and required assets.
 
 An unchanged IR and rendered Typst reuse existing files, reducing binary history
 growth. Images are re-fetched on each due refresh to detect replacements at the
@@ -126,7 +178,7 @@ The workflow needs `contents: write` and must be on the default branch. Reposito
 or organization policies may need to permit Actions and bot pushes. It uses the
 normal `GITHUB_TOKEN`, with no custom secret. GitHub schedules can be delayed;
 manual dispatch catches up. Public repositories’ schedules can be disabled after
-60 days without activity; this repository is intended to be private.
+60 days without activity; this repository is private during development.
 See [GitHub’s scheduled workflow documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 
 ## Development

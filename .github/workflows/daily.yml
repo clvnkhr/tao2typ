@@ -18,6 +18,9 @@ jobs:
   convert:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      PAGES_PUBLISH_TOKEN: ${{ secrets.PAGES_PUBLISH_TOKEN }}
+      PAGES_PUBLIC_DOWNLOADS: ${{ vars.PAGES_PUBLIC_DOWNLOADS || 'false' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -52,9 +55,28 @@ jobs:
           if [[ ! -d archive ]]; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- archive
+          git add -- archive docs
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Update PDFs $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           # Preserve concurrent source changes. A real content conflict fails visibly.
           git pull --rebase origin "${{ github.event.repository.default_branch }}"
           git push origin "HEAD:${{ github.event.repository.default_branch }}"
+      - name: Check out catalogue hosting repository
+        id: pages
+        if: ${{ always() && steps.batch.outcome != 'skipped' && env.PAGES_PUBLISH_TOKEN != '' }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: clvnkhr/clvnkhr.github.io
+          ref: master
+          path: .cache/pages
+          token: ${{ secrets.PAGES_PUBLISH_TOKEN }}
+      - name: Publish updated catalogue
+        if: ${{ always() && steps.pages.outcome == 'success' }}
+        run: |
+          git -C .cache/pages config user.name "github-actions[bot]"
+          git -C .cache/pages config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          publish_args=(.cache/pages)
+          if [[ "$PAGES_PUBLIC_DOWNLOADS" == "true" ]]; then
+            publish_args+=(--public-downloads)
+          fi
+          bash scripts/publish-catalogue.sh "${publish_args[@]}"

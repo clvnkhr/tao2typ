@@ -5,6 +5,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from tao2typ.source import TaxonomyTerm
+
 
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -33,6 +35,8 @@ class PostState:
     last_error: str | None = None
     pending_comments: list[str] = field(default_factory=list)
     seen_comments: list[str] = field(default_factory=list)
+    tags: list[TaxonomyTerm] = field(default_factory=list)
+    categories: list[TaxonomyTerm] = field(default_factory=list)
 
 
 @dataclass
@@ -49,6 +53,9 @@ class ArchiveState:
         raw = json.loads(path.read_text(encoding="utf-8"))
         if raw.get("schema_version") != 1:
             raise ValueError("Unsupported archive state schema; migrate it before running")
+        for post in raw["posts"].values():
+            post["tags"] = [TaxonomyTerm(**term) for term in post.get("tags", [])]
+            post["categories"] = [TaxonomyTerm(**term) for term in post.get("categories", [])]
         return cls(
             last_discovered_at=raw.get("last_discovered_at"),
             posts={key: PostState(**post) for key, post in raw["posts"].items()},

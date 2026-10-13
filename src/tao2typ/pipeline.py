@@ -12,6 +12,8 @@ from urllib.parse import urlsplit
 
 from tao2typ import __version__
 from tao2typ.ir import Post
+from tao2typ.metadata import merge_metadata
+from tao2typ.naming import artifact_stems
 from tao2typ.parser import parse_post
 from tao2typ.schedule import next_scheduled_check, plan_refresh
 from tao2typ.source import BlogClient
@@ -167,6 +169,8 @@ def write_index(state: ArchiveState, output: Path) -> None:
             title = post.title.replace("[", "\\[").replace("]", "\\]").replace("\n", " ")
             rows.append(
                 f"- {post.published_at[:10]} · [{title}]({post.pdf}) · [source]({post.url})"
+                + (f" · [Typst]({post.typst})" if post.typst else "")
+                + (f" · [IR]({post.ir})" if post.ir else "")
             )
     (output / "README.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
 
@@ -215,22 +219,8 @@ def run_batch(
         # Small metadata-only pages scan the complete inventory every run. This also
         # detects modifications to older posts without relying on an RSS window.
         discovered = list(client.discover_posts())
-        for metadata in discovered:
-            key = str(metadata.id)
-            if key not in state.posts:
-                state.posts[key] = PostState(
-                    metadata.id,
-                    metadata.url,
-                    metadata.title,
-                    metadata.published_at.isoformat(),
-                    metadata.modified_at.isoformat(),
-                )
-            else:
-                post_state = state.posts[key]
-                post_state.url = metadata.url
-                post_state.title = metadata.title
-                post_state.published_at = metadata.published_at.isoformat()
-                post_state.modified_at = metadata.modified_at.isoformat()
+        merge_metadata(state, discovered)
+        stems = artifact_stems(state.posts.values())
         state.last_discovered_at = timestamp(now)
         report["discovered"] = len(discovered)
         try:
@@ -320,7 +310,7 @@ def run_batch(
                     published_at=post_state.published_at,
                     modified_at=post_state.modified_at,
                 )
-                stem = f"{post_state.published_at[:10]}-{post_state.id}"
+                stem = stems[post_state.id]
                 artifacts = save_post(
                     post, stem, output, client, previous_digest=post_state.content_sha256
                 )

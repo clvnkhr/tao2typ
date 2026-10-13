@@ -23,7 +23,7 @@ from bs4 import BeautifulSoup
 SITE_HOST = "terrytao.wordpress.com"
 SITE_URL = f"https://{SITE_HOST}/"
 POSTS_API = f"https://public-api.wordpress.com/rest/v1.1/sites/{SITE_HOST}/posts/"
-METADATA_FIELDS = "ID,URL,title,date,modified"
+METADATA_FIELDS = "ID,URL,title,date,modified,tags,categories"
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
 _POST_PATH = re.compile(
     r"^/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/"
@@ -38,12 +38,25 @@ class SourceError(RuntimeError):
 
 
 @dataclass(frozen=True)
+class TaxonomyTerm:
+    """An original WordPress tag or category, with a stable source link."""
+
+    id: int
+    name: str
+    slug: str
+    url: str
+    parent_id: int | None = None
+
+
+@dataclass(frozen=True)
 class PostMetadata:
     id: int
     url: str
     title: str
     published_at: datetime
     modified_at: datetime
+    tags: tuple[TaxonomyTerm, ...] = ()
+    categories: tuple[TaxonomyTerm, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -127,6 +140,57 @@ def _aware_datetime(value: object, field: str) -> datetime:
     return timestamp
 
 
+def _taxonomy(data: object, kind: str) -> tuple[TaxonomyTerm, ...]:
+    """Read WordPress v1.1's name-keyed taxonomy maps, including empty lists.
+
+    This API does not normally supply public taxonomy URLs. Category IDs are
+    stable even when the API slug differs from the site's hierarchical URL,
+    so use WordPress's category-ID link rather than guessing a permalink.
+    """
+    if data is None or data == []:
+        return ()
+    if not isinstance(data, dict):
+        raise SourceError(f"WordPress returned invalid {kind} metadata")
+    terms: dict[int, TaxonomyTerm] = {}
+    for key, item in data.items():
+        if not isinstance(item, dict):
+            raise SourceError(f"WordPress returned an invalid {kind} term")
+        identifier = item.get("ID")
+        name, slug = item.get("name", key), item.get("slug")
+        if (
+            not isinstance(identifier, int)
+            or isinstance(identifier, bool)
+            or identifier <= 0
+            or not isinstance(name, str)
+            or not name
+            or not isinstance(slug, str)
+            or not slug
+        ):
+            raise SourceError(f"WordPress returned an invalid {kind} term")
+        parent = item.get("parent") if kind == "categories" else None
+        if parent is not None and (
+            not isinstance(parent, int) or isinstance(parent, bool) or parent < 0
+        ):
+            raise SourceError("WordPress returned an invalid category parent")
+        url = item.get("URL")
+        if url is None:
+            url = (
+                f"{SITE_URL}tag/{quote(slug, safe='%')}/"
+                if kind == "tags"
+                else f"{SITE_URL}?cat={identifier}"
+            )
+        if not isinstance(url, str) or not url:
+            raise SourceError(f"WordPress returned an invalid {kind} URL")
+        terms[identifier] = TaxonomyTerm(
+            id=identifier,
+            name=BeautifulSoup(name, "html.parser").get_text(" ", strip=True),
+            slug=slug,
+            url=url,
+            parent_id=parent,
+        )
+    return tuple(terms.values())
+
+
 def _metadata(data: object) -> PostMetadata:
     if not isinstance(data, dict):
         raise SourceError("WordPress returned a non-object post")
@@ -145,6 +209,8 @@ def _metadata(data: object) -> PostMetadata:
         title=BeautifulSoup(title, "html.parser").get_text(" ", strip=True),
         published_at=_aware_datetime(data.get("date"), "date"),
         modified_at=_aware_datetime(data.get("modified"), "modified"),
+        tags=_taxonomy(data.get("tags"), "tags"),
+        categories=_taxonomy(data.get("categories"), "categories"),
     )
 
 

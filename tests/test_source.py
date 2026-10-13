@@ -7,7 +7,13 @@ import httpx
 import pytest
 
 from tao2typ import source
-from tao2typ.source import BlogClient, SourceError, canonical_post_url, extract_recent_comments
+from tao2typ.source import (
+    BlogClient,
+    SourceError,
+    TaxonomyTerm,
+    canonical_post_url,
+    extract_recent_comments,
+)
 
 POST = "https://terrytao.wordpress.com/2024/01/31/example/"
 OTHER = "https://terrytao.wordpress.com/2024/02/01/other/"
@@ -101,6 +107,93 @@ def test_discovery_uses_cursor_and_timezone_aware_api_dates() -> None:
     assert posts[0].published_at.utcoffset() == timedelta(hours=-8)
     assert posts[0].published_at.astimezone(UTC).isoformat() == "2024-02-01T07:30:00+00:00"
     assert requests[1].url.params["page_handle"].endswith("&id=1")
+    assert requests[0].url.params["fields"] == "ID,URL,title,date,modified,tags,categories"
+
+
+def test_original_tags_and_hierarchical_categories_are_distinct() -> None:
+    data = metadata()
+    data["tags"] = {
+        "math.GM": {"ID": 10, "name": "math.GM", "slug": "math-gm"},
+        "Sophie Huiberts": {
+            "ID": 792514498,
+            "name": "Sophie Huiberts",
+            "slug": "sophie-huiberts",
+            "URL": "https://terrytao.wordpress.com/tag/sophie-huiberts/",
+        },
+    }
+    data["categories"] = {
+        "math.GM": {
+            "ID": 1440160,
+            "name": "math.GM",
+            "slug": "math-gm",
+            "parent": 3582,
+        }
+    }
+    post = source._metadata(data)
+    assert post.tags == (
+        TaxonomyTerm(10, "math.GM", "math-gm", "https://terrytao.wordpress.com/tag/math-gm/"),
+        TaxonomyTerm(
+            792514498,
+            "Sophie Huiberts",
+            "sophie-huiberts",
+            "https://terrytao.wordpress.com/tag/sophie-huiberts/",
+        ),
+    )
+    assert post.categories == (
+        TaxonomyTerm(
+            1440160, "math.GM", "math-gm", "https://terrytao.wordpress.com/?cat=1440160", 3582
+        ),
+    )
+
+
+@pytest.mark.parametrize("empty", [None, {}, []])
+def test_empty_and_older_metadata_taxonomy_is_backwards_compatible(empty: object) -> None:
+    data = metadata()
+    data["tags"], data["categories"] = empty, empty
+    post = source._metadata(data)
+    assert post.tags == post.categories == ()
+    assert source._metadata(metadata()).tags == ()
+
+
+def test_taxonomy_retains_supplied_source_url_and_decodes_name() -> None:
+    data = metadata()
+    data["categories"] = {
+        "Math &amp; Science": {
+            "ID": 3,
+            "slug": "math-science",
+            "URL": "https://terrytao.wordpress.com/category/mathematics/math-science/",
+            "parent": 0,
+        }
+    }
+    assert source._metadata(data).categories == (
+        TaxonomyTerm(
+            3,
+            "Math & Science",
+            "math-science",
+            "https://terrytao.wordpress.com/category/mathematics/math-science/",
+            0,
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "terms",
+    [
+        "bad",
+        [{"ID": 1}],
+        {"a": "bad"},
+        {"a": {"ID": True, "name": "a", "slug": "a"}},
+        {"a": {"ID": 0, "name": "a", "slug": "a"}},
+        {"a": {"ID": 1, "name": "a", "slug": ""}},
+        {"a": {"ID": 1, "name": "a", "slug": "a", "parent": -1}},
+        {"a": {"ID": 1, "name": "a", "slug": "a", "URL": False}},
+    ],
+)
+def test_malformed_taxonomy_is_an_error(terms: object) -> None:
+    data = metadata()
+    data["categories"] = terms
+    with pytest.raises(SourceError, match="invalid"):
+        source._metadata(data)
 
 
 def test_discovery_filter_is_modified_time_not_publication() -> None:

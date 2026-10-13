@@ -7,10 +7,15 @@ import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from tao2typ.catalogue import generate_site
 from tao2typ.ir import Post
+from tao2typ.metadata import sync_metadata
+from tao2typ.migrate import migrate_existing_archive
+from tao2typ.naming import artifact_stem
 from tao2typ.parser import parse_post
-from tao2typ.pipeline import compile_typst, image_urls, run_batch, save_post
+from tao2typ.pipeline import compile_typst, image_urls, run_batch, save_post, write_index
 from tao2typ.source import BlogClient, canonical_post_url
+from tao2typ.state import ArchiveState
 from tao2typ.typst import render_post
 
 
@@ -31,12 +36,49 @@ def main() -> int:
     convert.add_argument("--url", help="Canonical source URL for a saved HTML file")
     convert.add_argument("--published-at", help="Source publication time (ISO8601), for local HTML")
     convert.add_argument("--output", type=Path, default=Path("archive"))
-    convert.add_argument("--stem", default="post")
+    convert.add_argument(
+        "--stem", help="Optional filename stem; defaults to the original post slug"
+    )
     render = commands.add_parser("render", help="Render a saved IR JSON without parsing HTML")
     render.add_argument("ir", type=Path)
     render.add_argument("--output", type=Path, required=True, help="Output .typ file")
     render.add_argument("--pdf", type=Path, help="Also compile to this PDF file")
+    migrate = commands.add_parser(
+        "migrate-names", help="Rename existing outputs without conversion"
+    )
+    migrate.add_argument("--output", type=Path, default=Path("archive"))
+    metadata = commands.add_parser("sync-metadata", help="Update post tags/categories without PDFs")
+    metadata.add_argument("--output", type=Path, default=Path("archive"))
+    metadata.add_argument("--interval", type=float, default=1.0)
+    site = commands.add_parser("site", help="Build the catalogue or export public downloads")
+    site.add_argument("--archive", type=Path, default=Path("archive"))
+    site.add_argument("--output", type=Path, default=Path("docs"))
+    site.add_argument("--repo-url", default="https://github.com/clvnkhr/tao2typ")
+    site.add_argument("--branch", default="main")
+    site.add_argument(
+        "--download-base-url", help="Export public documents/assets and use this hosting URL"
+    )
     args = parser.parse_args()
+    if args.command == "migrate-names":
+        result = migrate_existing_archive(args.output)
+        write_index(ArchiveState.load(args.output / "state.json"), args.output)
+        print(json.dumps(result, indent=2))
+        return 0
+    if args.command == "sync-metadata":
+        with BlogClient(interval=args.interval) as client:
+            result = sync_metadata(args.output, client)
+        print(json.dumps(result, indent=2))
+        return 0
+    if args.command == "site":
+        result = generate_site(
+            args.archive,
+            args.output,
+            repo_url=args.repo_url,
+            branch=args.branch,
+            download_base_url=args.download_base_url,
+        )
+        print(json.dumps(result, indent=2))
+        return 0
     if args.command == "render":
         post = Post.from_dict(json.loads(args.ir.read_text(encoding="utf-8")))
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -72,7 +114,7 @@ def main() -> int:
             compile_typst(args.output, args.pdf, root)
         return 0
     if args.command == "convert":
-        if Path(args.stem).name != args.stem or args.stem in {".", "..", ""}:
+        if args.stem and (Path(args.stem).name != args.stem or args.stem in {".", "..", ""}):
             parser.error("--stem must be a simple filename without directories")
         local = Path(args.source)
         if local.is_file():
@@ -81,7 +123,9 @@ def main() -> int:
             post = parse_post(
                 local.read_text(encoding="utf-8"), args.url, published_at=args.published_at
             )
-            paths = save_post(post, args.stem, args.output, None)
+            paths = save_post(
+                post, args.stem or artifact_stem(post.title, post.url, 0), args.output, None
+            )
         else:
             url = canonical_post_url(args.source)
             with BlogClient() as client:
@@ -94,7 +138,12 @@ def main() -> int:
                     published_at=metadata.published_at.isoformat(),
                     modified_at=metadata.modified_at.isoformat(),
                 )
-                paths = save_post(post, args.stem, args.output, client)
+                paths = save_post(
+                    post,
+                    args.stem or artifact_stem(post.title, post.url, metadata.id),
+                    args.output,
+                    client,
+                )
         print(json.dumps(paths, indent=2))
         return 0
     with BlogClient(interval=args.interval) as client:
@@ -106,6 +155,8 @@ def main() -> int:
             max_seconds=args.max_seconds,
             daily_limit=args.daily_limit,
         )
+    if (args.output / "state.json").exists():
+        generate_site(args.output, args.output.parent / "docs")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 1 if report["failed"] or report["errors"] else 0
 
