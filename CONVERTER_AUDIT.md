@@ -52,8 +52,11 @@ sample pages were inspected for reply indentation, avatars, equations and theore
 captions; page thumbnails and text bounds were checked for clipping. Raw LaTeX
 in the rebuilt samples matches their previous saved IR.
 
-Only these three samples were built locally. Other existing PDFs retain their
-older rendering until a queued refresh; the daily limit stays at ten attempts.
+These three samples were converted for the parser/rendering review. A later
+offline update added conversion-date provenance to all 227 existing PDFs and
+Typst files, preserving their article bodies and recorded conversion dates.
+Other existing PDFs retain their older body rendering until a queued refresh;
+the daily limit stays at ten attempts.
 
 Genuinely unavailable source images and malformed source TeX remain explicit
 failures with diagnostics. An abrupt process kill between three file replacements
