@@ -38,6 +38,7 @@ def converter_fingerprint() -> str:
         "ir.py",
         "parser.py",
         "typst.py",
+        "tex.py",
         "pipeline.py",
         "source.py",
         "raw.py",

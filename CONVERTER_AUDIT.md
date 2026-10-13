@@ -4,6 +4,8 @@ Reviewed the parser, IR, Typst renderer, fetching, asset handling, scheduling,
 state, CLI and public export. Compared live HTML and regenerated PDFs for
 `what-should-we-tell-our-students` and `245b-notes-3-lp-spaces`, including all
 reachable comment pages. The bulk conversion remains stopped.
+Also checked the Navier-Stokes quantitative-bounds post for norm, script and
+prime rendering.
 
 ## Fixed
 
@@ -25,6 +27,12 @@ reachable comment pages. The bulk conversion remains stopped.
 - Percent-encoded internal fragments resolve to their source anchors.
 - Supported legacy TeX aliases and numeric `\raisebox{...ex}` offsets compile;
   `ex` uses the actual font x-height. Original TeX remains unchanged in JSON IR.
+- Paired absolute-value and norm fences use native Typst atoms, including fixed
+  source sizes. Scripts attach to the whole fenced expression. Conditional,
+  relation and evaluation bars retain their roles.
+- Prime shorthand keeps primes and indices on their original base. Compiled
+  regressions check TeX script boundaries before domains, mixed norm indices,
+  Lorentz/Besov exponents, fractions, limits and nested scripts.
 - Failed WordPress image proxies and obsolete Wikimedia thumbnails can recover
   their explicitly encoded original image. Download limits and delays still apply.
 - HTML error responses are rejected even when their URL ends in `.png`.
@@ -41,8 +49,8 @@ sample pages were inspected for reply indentation, avatars, equations and theore
 captions; page thumbnails and text bounds were checked for clipping. Raw LaTeX
 in the rebuilt samples matches their previous saved IR.
 
-Only these two samples were rebuilt locally. Other existing PDFs retain their
-older layout until a queued refresh; the daily limit stays at ten attempts.
+Only these three samples were built locally. Other existing PDFs retain their
+older rendering until a queued refresh; the daily limit stays at ten attempts.
 
 Genuinely unavailable source images and malformed source TeX remain explicit
 failures with diagnostics. An abrupt process kill between three file replacements

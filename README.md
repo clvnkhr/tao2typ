@@ -26,6 +26,12 @@ avatar is recorded as a warning without discarding the discussion. Equations
 retain their source labels, including `\tag` and `\tag*`; theorem numbers and
 reference text are preserved rather than assigned new counters.
 
+Paired `|...|` and `\|...\|` render as native Typst `abs` and `norm` atoms,
+so indices attach to the whole expression. TeX script arguments retain their
+boundaries before following parentheses, and prime shorthand retains its
+superscript attachment. These conversions affect the rendering copy only;
+the IR and captured HTML preserve the original source.
+
 ## Run locally
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and

@@ -88,6 +88,7 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
         "ir.py",
         "parser.py",
         "typst.py",
+        "tex.py",
         "pipeline.py",
         "source.py",
         "raw.py",
@@ -100,3 +101,6 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
     assert after_fetch_fix != original
     (tmp_path / "pipeline.py").write_text("Assets fixed")
     assert pipeline.converter_fingerprint() != after_fetch_fix
+    after_asset_fix = pipeline.converter_fingerprint()
+    (tmp_path / "tex.py").write_text("Math argument boundaries fixed")
+    assert pipeline.converter_fingerprint() != after_asset_fix

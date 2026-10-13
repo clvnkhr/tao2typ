@@ -9,10 +9,13 @@ from datetime import datetime
 from urllib.parse import unquote
 
 from tao2typ.ir import Comment, Node, Post
+from tao2typ.tex import DELIMITER_HELPERS, normalize_delimiters, normalize_scripts
 
 MITEX_VERSION = "0.2.7"
 _EX_RAISEBOX = re.compile(r"(?<!\\)\\raisebox\s*\{\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)\s*ex\s*\}")
-_EX_HELPERS = r"""
+_MATH_HELPERS = (
+    DELIMITER_HELPERS
+    + r"""
 // TeX ex dimensions use the current font's x-height, not a guessed em ratio.
 #import "@preview/mitex:0.2.7": mitex-convert, mitex-scope
 #let tao-raisebox(space, body) = context {
@@ -27,10 +30,15 @@ _EX_HELPERS = r"""
 }
 #let tao-math(source, block: false, ..args) = {
   let converted = mitex-convert(source)
-  let body = eval("$" + converted + "$", scope: mitex-scope + (raisebox: tao-raisebox))
+  let body = eval("$" + converted + "$", scope: mitex-scope + (
+    raisebox: tao-raisebox, lr: tao-lr,
+    big: body => tao-big(body, 1.2em), Big: body => tao-big(body, 1.8em),
+    bigg: body => tao-big(body, 2.4em), Bigg: body => tao-big(body, 3em),
+  ))
   math.equation(block: block, body, ..args)
 }
 """
+)
 
 
 def _string(value: str) -> str:
@@ -97,6 +105,7 @@ def _legacy_tex(source: str) -> str:
     source = re.sub(r"(?<!\\)\\textcircled\s*\{([A-Za-z0-9])\}", circled, source)
     # eqnarray has the same source alignment points; no counter is introduced.
     source = re.sub(r"\\(begin|end)\{eqnarray\*?\}", r"\\\1{aligned}", source)
+    source = normalize_scripts(source)
     return re.sub(
         r"(?<!\\)(\\sqrt\s*(?:\[[^\]\n]*\]\s*)?)([^\s\\{}\[])",
         r"\1{\2}",
@@ -178,6 +187,7 @@ class _Renderer:
             node.attrs["id"] for node in post.walk() if node.kind == "anchor" and "id" in node.attrs
         }
         self.emitted_anchors: set[str] = set()
+        self.uses_math_helpers = False
 
     def nodes(self, nodes: list[Node]) -> str:
         return "".join(self.node(node) for node in nodes)
@@ -319,7 +329,9 @@ class _Renderer:
                 source = source[: matrix_number.start("separator")].rstrip()
             source = re.sub(r"^\\displaystyle\s*", "", source)
             source += node.attrs.get("punctuation", "")
-        if _EX_RAISEBOX.search(source):
+        source = normalize_delimiters(source)
+        if _EX_RAISEBOX.search(source) or re.search(r"\\left\s*(?:\||\\\|)", source):
+            self.uses_math_helpers = True
             equation = f"#tao-math({_string(source)}, block: {str(display).lower()})"
         else:
             command = "mitex" if display else "mi"
@@ -449,9 +461,7 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 #line(length: 100%, stroke: 0.7pt + rgb("d9dfe8"))
 #v(10pt)
 """
-    if any(node.kind == "math" and _EX_RAISEBOX.search(node.text) for node in post.walk()):
-        preamble += _EX_HELPERS
-    result = preamble + "\n" + renderer.blocks(post.body) + "\n"
+    result = "\n" + renderer.blocks(post.body) + "\n"
     if post.comments:
         count = sum(1 for _ in _comments(post.comments))
         result += (
@@ -460,7 +470,9 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
         )
         result += "\n\n".join(renderer.comment(comment) for comment in post.comments)
         result += "\n"
-    return result
+    if renderer.uses_math_helpers:
+        preamble += _MATH_HELPERS
+    return preamble + result
 
 
 def _comments(comments: list[Comment]):
