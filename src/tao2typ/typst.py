@@ -473,7 +473,8 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 
 #text(size: 9pt, fill: rgb("596477"))[#text({_string(post.blog_title)})]
 #v(5pt)
-#text(size: 23pt, weight: "semibold")[#text({_string(post.title)})]
+#block(above: 0pt, below: 0pt)[#set par(justify: false)
+#text(size: 23pt, weight: "semibold", hyphenate: false)[#text({_string(post.title)})]]
 #v(7pt)
 #text(size: 10pt)[#text({_string(post.author + " · " + _friendly_date(post.published_at))})]
 #v(3pt)
