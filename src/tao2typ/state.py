@@ -26,6 +26,7 @@ class PostState:
     converted_modified_at: str | None = None
     next_check_at: str | None = None
     content_sha256: str | None = None
+    converter_fingerprint: str | None = None
     pdf: str | None = None
     ir: str | None = None
     typst: str | None = None

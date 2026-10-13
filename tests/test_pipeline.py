@@ -393,5 +393,4 @@ def test_same_url_image_bytes_invalidate_pdf_cache_without_rewriting_unchanged_a
     assert asset.read_bytes() == b"image version one"
     assert asset.stat().st_mtime_ns == unchanged_mtime
     assert any(path.read_bytes() == image_bytes for path in (tmp_path / "assets").glob("*.png"))
-    assert asset.stat().st_mtime_ns != unchanged_mtime
     assert archive(tmp_path).posts["1"].content_sha256 != original.content_sha256

@@ -112,8 +112,25 @@ class _Parser:
     def __init__(self, url: str) -> None:
         self.url = url
         self.warnings: list[str] = []
+        self._in_comment_body = False
+
+    def _avatar(self, tag: Tag) -> bool:
+        if tag.name != "img":
+            return False
+        classes = _attr(tag, "class").split()
+        source = _attr(tag, "src") or _attr(tag, "data-src")
+        host = (urlparse(urljoin(self.url, source)).hostname or "").lower()
+        alternative = _attr(tag, "alt").lower().replace("’", "'").strip()
+        return (
+            any(item == "avatar" or item.startswith("avatar-") for item in classes)
+            or host == "gravatar.com"
+            or host.endswith(".gravatar.com")
+            or alternative.endswith("'s avatar")
+        )
 
     def _skip(self, tag: Tag) -> bool:
+        if self._in_comment_body and self._avatar(tag):
+            return True
         if tag.name in _SKIP_TAGS:
             return True
         if tag.name == "script" and not _attr(tag, "type").startswith("math/tex"):
@@ -214,6 +231,10 @@ class _Parser:
             if urlparse(url).scheme not in {"http", "https", "mailto"}:
                 return prefix + children
             if not children:
+                if self._in_comment_body and any(
+                    self._avatar(image) for image in element.find_all("img")
+                ):
+                    return prefix
                 children = [Node("text", href)]
             return prefix + [Node("link", attrs={"url": url}, children=children)]
         styles = {
@@ -409,7 +430,11 @@ class _Parser:
             )
             if timestamp is None and isinstance(permalink, Tag):
                 timestamp = _date(permalink.get_text(" ", strip=True))
-            body = self.blocks(content.children)
+            self._in_comment_body = True
+            try:
+                body = self.blocks(content.children)
+            finally:
+                self._in_comment_body = False
             identifier = (
                 _attr(owner, "id")
                 or hashlib.sha256(

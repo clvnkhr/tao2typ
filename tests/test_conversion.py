@@ -208,3 +208,46 @@ def test_rich_fixture_compiles_with_typst(tmp_path: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert pdf.read_bytes().startswith(b"%PDF-")
+
+
+def test_tao_theme_comments_omit_avatars_and_preserve_content_and_replies() -> None:
+    # Match the older Tao theme's comment structure, using self-authored prose.
+    html = r"""<h1 class="post-title">Fixture</h1><div class="post-content">
+    <p><img class="avatar" src="https://secure.gravatar.com/a" alt="Post image"></p></div>
+    <div id="comments"><div class="comment depth-1 vcard" id="comment-30">
+      <div class="comment-metadata">
+        <p class="comment-permalink"><a href="#comment-30">28 February, 2007 at 7:56 am</a></p>
+        <p class="comment-author"><strong class="fn"><a href="https://example.org/">
+          Example reader</a></strong></p>
+      </div>
+      <div class="comment-content">
+        <img class="avatar avatar-32" src="https://secure.gravatar.com/blavatar/hash?s=32"
+          alt="Unknown's avatar">
+        <img src="https://secure.gravatar.com/avatar/other?s=32">
+        <a href="https://example.org/profile"><img src="https://example.org/photo"
+          alt="Reader’s avatar"></a>
+        <p>Real content <img class="latex" alt="\mathbb{R}">
+          <img src="https://example.org/diagram.png" alt="A mathematical diagram"></p>
+        <div class="cs-rating pd-rating"></div>
+      </div>
+      <ul class="children"><li class="comment depth-2" id="comment-31">
+        <div class="comment-metadata"><p class="comment-author"><strong class="fn">
+          Reply reader</strong></p><p class="comment-permalink"><a href="#comment-31">
+          28 February, 2007 at 8:00 am</a></p></div>
+        <div class="comment-content"><img class="avatar" src="https://example.org/photo">
+          <p>A reply with <img class="latex" alt="x^2">.</p></div>
+      </li></ul>
+    </div></div>"""
+    post = parse_post(html, URL)
+    assert [image.attrs["url"] for image in _kinds(post, "image")] == [
+        "https://secure.gravatar.com/a",
+        "https://example.org/diagram.png",
+    ]
+    assert len(post.comments) == 1
+    parent = post.comments[0]
+    assert parent.author == "Example reader"
+    assert parent.published_at == "2007-02-28T07:56:00"
+    assert parent.replies[0].author == "Reply reader"
+    assert parent.replies[0].published_at == "2007-02-28T08:00:00"
+    assert [node.text for node in _kinds(post, "math")] == [r"\mathbb{R}", "x^2"]
+    assert not any("profile" in node.attrs.get("url", "") for node in parent.walk())

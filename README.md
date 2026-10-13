@@ -29,6 +29,11 @@ uv run tao2typ convert 'https://terrytao.wordpress.com/2022/10/03/what-are-the-o
 uv run tao2typ batch
 ```
 
+For the first local batch, `bash scripts/first-batch.sh` also commits and pushes
+the generated archive when it finishes. Progress is checkpointed after each
+post in `archive/state.json`; the final command report is in
+`.cache/first-batch.log`. Re-running resumes posts that still need work.
+
 Convert saved HTML (source attribution is required):
 
 ```sh
@@ -67,6 +72,7 @@ and modification timestamps; it fetches full HTML only for posts needing work.
 | Established post | Check on every subsequent annual birthday |
 | New permalink in the homepage’s Recent Comments widget | Refresh its parent post and comments |
 | Source modification timestamp changes | Refresh even if it is an old post |
+| Parser, IR, or rendering code changes | Refresh outputs made with older converter code |
 | Missing PDF or failed conversion | Remains due until a successful conversion |
 
 Calendar arithmetic preserves the source publication offset; job/check timestamps

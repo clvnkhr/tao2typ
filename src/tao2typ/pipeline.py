@@ -27,6 +27,14 @@ def parse_timestamp(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
+def converter_fingerprint() -> str:
+    directory = Path(__file__).parent
+    digest = hashlib.sha256(__version__.encode())
+    for name in ("ir.py", "parser.py", "typst.py"):
+        digest.update((directory / name).read_bytes())
+    return digest.hexdigest()
+
+
 def image_urls(post: Post) -> set[str]:
     # Traverse the serializable IR, including nested comment replies.
     def visit(value: Any) -> set[str]:
@@ -44,15 +52,31 @@ def image_urls(post: Post) -> set[str]:
     return visit(post.to_dict())
 
 
+def asset_extension(url: str, data: bytes) -> str:
+    """Image service URLs frequently have no suffix, or lie about their type."""
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return ".png"
+    if data.startswith(b"\xff\xd8\xff"):
+        return ".jpg"
+    if data.startswith((b"GIF87a", b"GIF89a")):
+        return ".gif"
+    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
+        return ".webp"
+    if b"<svg" in data[:512].lower():
+        return ".svg"
+    suffix = Path(urlsplit(url).path).suffix.lower()
+    if suffix in {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}:
+        return suffix
+    raise ValueError(f"Unrecognized image data from {url}")
+
+
 def resolve_assets(post: Post, client: BlogClient, output: Path) -> dict[str, str]:
     assets: dict[str, str] = {}
     for url in sorted(image_urls(post)):
-        suffix = Path(urlsplit(url).path).suffix.lower()
-        if suffix not in {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}:
-            suffix = ".png"
         # Revalidate images during a scheduled refresh: publishers can replace
         # the bytes at an existing URL without changing the article markup.
         data = client.fetch_asset(url)
+        suffix = asset_extension(url, data)
         name = hashlib.sha256(url.encode()).hexdigest() + "-" + hashlib.sha256(data).hexdigest()
         relative = Path("assets") / (name + suffix)
         path = output / relative
@@ -161,6 +185,7 @@ def run_batch(
     output.mkdir(parents=True, exist_ok=True)
     state_path = output / "state.json"
     state = ArchiveState.load(state_path)
+    fingerprint = converter_fingerprint()
     report: dict[str, Any] = {
         "schema_version": 1,
         "started_at": timestamp(now),
@@ -220,6 +245,8 @@ def run_batch(
                 reasons.append("source-modified")
             if post_state.pdf and not (output / post_state.pdf).exists():
                 reasons.append("missing-pdf")
+            if post_state.pdf and post_state.converter_fingerprint != fingerprint:
+                reasons.append("converter-changed")
             if force:
                 reasons.append("forced")
             if reasons and published <= now:
@@ -269,6 +296,7 @@ def run_batch(
                     next_scheduled_check(parse_timestamp(post_state.published_at), completed)
                 )
                 post_state.content_sha256 = artifacts["content_sha256"]
+                post_state.converter_fingerprint = fingerprint
                 post_state.pdf = artifacts["pdf"]
                 post_state.ir = artifacts["ir"]
                 post_state.typst = artifacts["typst"]
