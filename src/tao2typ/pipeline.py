@@ -295,6 +295,11 @@ def run_batch(
             if time.monotonic() - started_monotonic >= max_seconds:
                 report["time_budget_reached"] = True
                 break
+            attempt_day = (now if clock_supplied else datetime.now(UTC)).date().isoformat()
+            if daily_limit is not None:
+                if state.daily_attempts.get(attempt_day, 0) >= daily_limit:
+                    report["daily_limit_reached"] = True
+                    break
             result: dict[str, Any] = {
                 "id": post_state.id,
                 "url": post_state.url,
@@ -304,7 +309,7 @@ def run_batch(
             if daily_limit is not None:
                 # Reserve the budget before fetching/compiling. An interrupted
                 # or failed attempt still consumes runner time.
-                state.daily_attempts[quota_day] = state.daily_attempts.get(quota_day, 0) + 1
+                state.daily_attempts[attempt_day] = state.daily_attempts.get(attempt_day, 0) + 1
                 state.save(state_path)
             try:
                 pages = client.fetch_post_pages(post_state.url)
@@ -344,6 +349,11 @@ def run_batch(
             except Exception as exc:
                 post_state.last_error = str(exc)
                 result.update(status="failed", error=str(exc))
+            finished_day = (now if clock_supplied else datetime.now(UTC)).date().isoformat()
+            if daily_limit is not None and finished_day != attempt_day:
+                # An attempt spanning midnight also uses the new day's budget,
+                # so a manual rerun cannot generate an eleventh PDF that day.
+                state.daily_attempts[finished_day] = state.daily_attempts.get(finished_day, 0) + 1
             report["results"].append(result)
             state.save(state_path)
             write_json(queue_path, {"updated_at": timestamp(now), "posts": queue})
