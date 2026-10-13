@@ -188,12 +188,27 @@ class _Parser:
         if "latex" not in classes and "latex" not in query and "latex.php" not in src:
             return None
         # alt is not URL-encoded. parse_qs decodes a query exactly once, including +.
-        latex = _attr(tag, "alt") or (query.get("latex") or [""])[0]
+        alternative = _attr(tag, "alt")
+        encoded_source = (query.get("latex") or [""])[0]
+        latex = alternative or encoded_source
+        attrs = {"display": "false"}
+        if alternative and encoded_source.count("\\") > alternative.count("\\"):
+            # Some old comment alt attributes lost some or all backslashes.
+            # Recover only when the URL TeX becomes exactly the alt text by
+            # deleting backslashes at their existing positions (plus whitespace
+            # normalization). A merely different alt remains authoritative.
+            pattern = "".join(
+                r"\\?" if character == "\\" else re.escape(character)
+                for character in _normalize(encoded_source).strip()
+            )
+            if re.fullmatch(pattern, _normalize(alternative).strip()):
+                latex = encoded_source
+                attrs.update(tex_source="image-url", original_alt=alternative)
         latex = re.sub(r"^\s*\$latex\s+", "", latex).strip()
         if not latex:
             self.warnings.append(f"Math image has no LaTeX alternative: {src}")
             return Node("image", attrs={"url": urljoin(self.url, src), "alt": "Equation"})
-        return Node("math", latex, {"display": "false"})
+        return Node("math", latex, attrs)
 
     def inline(self, element: PageElement) -> list[Node]:
         if isinstance(element, HtmlComment):

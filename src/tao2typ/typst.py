@@ -118,6 +118,9 @@ def _legacy_tex(source: str) -> str:
     Original source remains untouched in the IR.
     """
     source = re.sub(r"(?<!\\)\\mbox(?![A-Za-z])", r"\\text", source)
+    # MiTeX drops hbox's text styling and spaces. Its simple braced form is
+    # horizontal text like mbox; primitive forms such as hbox to ... stay intact.
+    source = re.sub(r"(?<!\\)\\hbox(?=\s*\{)", r"\\text", source)
     source = re.sub(r"(?<!\\)\\hdots(?![A-Za-z])", r"\\ldots", source)
     source = re.sub(r"(?<!\\)\\textbullet(?![A-Za-z])", r"\\bullet", source)
     # TeX's \null is an empty box, not a mathematical symbol.

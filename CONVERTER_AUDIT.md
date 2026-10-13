@@ -31,6 +31,12 @@ prime rendering.
 - Percent-encoded internal fragments resolve to their source anchors.
 - Supported legacy TeX aliases and numeric `\raisebox{...ex}` offsets compile;
   `ex` uses the actual font x-height. Original TeX remains unchanged in JSON IR.
+- Braced `\hbox` text retains upright operator names and phrase spacing through
+  `\text` in the rendering copy. Primitive box-width forms remain unchanged.
+- When a math image's alt text demonstrably lost TeX backslashes, the parser
+  restores the encoded image-source TeX and retains the original alt in IR.
+  Recovery requires an exact match after deleting backslashes at their original
+  positions; unrelated alt text remains authoritative.
 - Paired absolute-value and norm fences use native Typst atoms, including fixed
   source sizes. Scripts attach to the whole fenced expression. Conditional,
   relation and evaluation bars retain their roles.
@@ -85,6 +91,11 @@ is not a fully atomic transaction; a later retry repairs the output set. No audi
 can establish that every future WordPress markup or TeX construct is supported.
 Plain bar pairing is heuristic; ambiguous notation and arbitrary macro argument
 syntax remain limits. Explicit directional fences avoid that ambiguity.
+The 20-post sample received a further visual spot-check of 84 pages across all
+20 PDFs, including later article sections and deep comments. This exposed the
+legacy text-box issue in 14 PDFs and six damaged alt attributes in Stirling's
+comments. All 15 affected PDFs were rebuilt offline and the changed pages
+visually rechecked. Source typos confirmed in captured HTML were retained.
 Alignment only groups existing adjacent display rows; it does not invent line
 breaks in a single formula. Fully outer-grouped formulas and nested decorated
 relation macros may remain separately centered when no safe pivot is found.

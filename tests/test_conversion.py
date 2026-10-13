@@ -146,6 +146,62 @@ def test_tex_url_decoding_and_alt_have_distinct_encoding_rules() -> None:
     assert maths[-1].attrs["display"] == "true"
 
 
+@pytest.mark.parametrize(
+    ("alternative", "source"),
+    [
+        ("{log x}", r"{\log x}"),
+        ("{sum_{m=1}^n epsilon_m = C + O(1/n)}", r"{\sum_{m=1}^n \epsilon_m = C + O(1/n)}"),
+        (
+            r"\displaystyle \int_m^{m+1} \log x dx = frac{1}{2} \log m + \epsilon_m",
+            r"\displaystyle \int_m^{m+1} \log x\ dx = \frac{1}{2} \log m + \epsilon_m",
+        ),
+    ],
+)
+def test_math_image_recovers_only_deleted_backslashes_from_encoded_source(
+    alternative: str, source: str
+) -> None:
+    from html import escape
+    from urllib.parse import urlencode
+
+    url = "https://s0.wp.com/latex.php?" + urlencode({"latex": source})
+    html = (
+        '<div class="post-content"><p><img class="latex" '
+        f'alt="{escape(alternative, quote=True)}" src="{escape(url, quote=True)}"></p></div>'
+    )
+    math = _kinds(parse_post(html, URL), "math")[0]
+    assert math.text == source
+    assert math.attrs == {
+        "display": "false",
+        "tex_source": "image-url",
+        "original_alt": alternative,
+    }
+
+
+@pytest.mark.parametrize(
+    ("alternative", "source"),
+    [
+        (r"\alpha + x", r"\beta + \gamma"),
+        ("x+y%20z", r"x + y + \epsilon"),
+        # A backslash moved to another character rather than being deleted.
+        (r"log \x + y", r"\log x + \y"),
+    ],
+)
+def test_math_image_keeps_independent_alt_text_and_does_not_infer_commands(
+    alternative: str, source: str
+) -> None:
+    from html import escape
+    from urllib.parse import urlencode
+
+    url = "https://s0.wp.com/latex.php?" + urlencode({"latex": source})
+    html = (
+        '<div class="post-content"><p><img class="latex" '
+        f'alt="{escape(alternative, quote=True)}" src="{escape(url, quote=True)}"></p></div>'
+    )
+    math = _kinds(parse_post(html, URL), "math")[0]
+    assert math.text == alternative
+    assert "tex_source" not in math.attrs
+
+
 def test_unambiguous_math_delimiters_leave_dollars_as_prose() -> None:
     html = r"""<div class="post-content"><p>Cost $5. Inline \(x + 1\).
     Display \[\int x\,dx\] and $$y^2$$.</p></div>"""
