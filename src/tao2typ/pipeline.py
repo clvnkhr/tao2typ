@@ -8,15 +8,16 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+
+import httpx
 
 from tao2typ import __version__
-from tao2typ.ir import Post
+from tao2typ.ir import Comment, Node, Post
 from tao2typ.metadata import merge_metadata
 from tao2typ.naming import artifact_stems
 from tao2typ.parser import parse_post
 from tao2typ.schedule import next_scheduled_check, plan_refresh
-from tao2typ.source import BlogClient
+from tao2typ.source import BlogClient, SourceError
 from tao2typ.state import ArchiveState, PostState, write_json
 from tao2typ.typst import render_post
 
@@ -32,7 +33,7 @@ def parse_timestamp(value: str) -> datetime:
 def converter_fingerprint() -> str:
     directory = Path(__file__).parent
     digest = hashlib.sha256(__version__.encode())
-    for name in ("ir.py", "parser.py", "typst.py"):
+    for name in ("ir.py", "parser.py", "typst.py", "pipeline.py", "source.py"):
         digest.update((directory / name).read_bytes())
     return digest.hexdigest()
 
@@ -66,19 +67,41 @@ def asset_extension(url: str, data: bytes) -> str:
         return ".webp"
     if b"<svg" in data[:512].lower():
         return ".svg"
-    suffix = Path(urlsplit(url).path).suffix.lower()
-    if suffix in {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}:
-        return suffix
     raise ValueError(f"Unrecognized image data from {url}")
 
 
 def resolve_assets(post: Post, client: BlogClient, output: Path) -> dict[str, str]:
     assets: dict[str, str] = {}
+    # Avatars are optional decoration. An unavailable avatar must not prevent
+    # preserving a discussion, while missing article diagrams still fail loudly.
+    required: set[str] = set()
+
+    def require(nodes: list[Node]) -> None:
+        required.update(
+            node.attrs["url"]
+            for root in nodes
+            for node in root.walk()
+            if node.kind == "image" and node.attrs.get("url")
+        )
+
+    def require_comments(comments: list[Comment]) -> None:
+        for comment in comments:
+            require(comment.body)
+            require_comments(comment.replies)
+
+    require(post.body)
+    require_comments(post.comments)
     for url in sorted(image_urls(post)):
         # Revalidate images during a scheduled refresh: publishers can replace
         # the bytes at an existing URL without changing the article markup.
-        data = client.fetch_asset(url)
-        suffix = asset_extension(url, data)
+        try:
+            data = client.fetch_asset(url)
+            suffix = asset_extension(url, data)
+        except (httpx.HTTPError, SourceError, ValueError) as error:
+            if url in required:
+                raise
+            post.warnings.append(f"Comment avatar unavailable: {url}: {error}")
+            continue
         name = hashlib.sha256(url.encode()).hexdigest() + "-" + hashlib.sha256(data).hexdigest()
         relative = Path("assets") / (name + suffix)
         path = output / relative
@@ -118,7 +141,11 @@ def save_post(
     *,
     previous_digest: str | None = None,
 ) -> dict[str, str]:
-    """Stage all outputs; compilation failure preserves the prior IR/Typst/PDF."""
+    """Stage outputs and roll back a failed or interrupted artifact promotion.
+
+    Each replacement is atomic; handled failures preserve the previous complete
+    set. A process kill during promotion can still leave mixed generations.
+    """
     paths = {"ir": f"ir/{stem}.json", "typst": f"typst/{stem}.typ", "pdf": f"pdfs/{stem}.pdf"}
     source = output / paths["typst"]
     pdf = output / paths["pdf"]
@@ -126,6 +153,13 @@ def save_post(
     pdf.parent.mkdir(parents=True, exist_ok=True)
     staged_source = source.with_name(source.stem + ".tmp.typ")
     staged_pdf = pdf.with_name(pdf.stem + ".tmp.pdf")
+    ir = output / paths["ir"]
+    staged_ir = ir.with_name(ir.stem + ".tmp.json")
+    promotions = [(staged_ir, ir), (staged_source, source), (staged_pdf, pdf)]
+    backups = {
+        target: target.with_name(target.stem + ".previous" + target.suffix)
+        for _, target in promotions
+    }
     assets = resolve_assets(post, client, output) if client else {}
     payload = post.to_dict()
     rendered = render_post(post, assets=assets)
@@ -142,23 +176,48 @@ def save_post(
     ).hexdigest()
     if previous_digest == digest and all((output / path).exists() for path in paths.values()):
         return {**paths, "content_sha256": digest}
+    attempted: list[Path] = []
+    originals: set[Path] = set()
+    recovery_backups: set[Path] = set()
     try:
         staged_source.write_text(rendered, encoding="utf-8")
         compile_typst(staged_source, staged_pdf, output)
-        write_json(output / paths["ir"], payload)
-        staged_source.replace(source)
-        staged_pdf.replace(pdf)
+        write_json(staged_ir, payload)
+        # Copy before changing any canonical path. Backups also retain the old
+        # bytes when an interrupt lands immediately after a replacement.
+        for _, target in promotions:
+            if target.exists():
+                shutil.copy2(target, backups[target])
+                originals.add(target)
+        for staged, target in promotions:
+            attempted.append(target)
+            staged.replace(target)
         (output / "failures" / (stem + ".json")).unlink(missing_ok=True)
         (output / "failures" / (stem + ".typ")).unlink(missing_ok=True)
-    except Exception:
+    except BaseException as error:
+        for target in reversed(attempted):
+            try:
+                if target in originals:
+                    backups[target].replace(target)
+                else:
+                    target.unlink(missing_ok=True)
+            except OSError as rollback_error:
+                # Keep any backup that could not be restored for recovery.
+                recovery_backups.add(backups[target])
+                error.add_note(f"Could not restore {target}: {rollback_error}")
         # Preserve an inspectable IR/source for unsupported equations, while the
         # canonical paths keep the last successfully compiled document.
-        write_json(output / "failures" / (stem + ".json"), payload)
-        (output / "failures" / (stem + ".typ")).write_text(rendered, encoding="utf-8")
+        if isinstance(error, Exception):
+            write_json(output / "failures" / (stem + ".json"), payload)
+            (output / "failures" / (stem + ".typ")).write_text(rendered, encoding="utf-8")
         raise
     finally:
-        staged_source.unlink(missing_ok=True)
-        staged_pdf.unlink(missing_ok=True)
+        for staged, _ in promotions:
+            staged.unlink(missing_ok=True)
+        staged_ir.with_suffix(staged_ir.suffix + ".tmp").unlink(missing_ok=True)
+        for backup in backups.values():
+            if backup not in recovery_backups:
+                backup.unlink(missing_ok=True)
     return {**paths, "content_sha256": digest}
 
 
@@ -249,6 +308,11 @@ def run_batch(
                 reasons.append("source-modified")
             if post_state.pdf and not (output / post_state.pdf).exists():
                 reasons.append("missing-pdf")
+            if post_state.pdf:
+                for kind in ("typst", "ir"):
+                    path = getattr(post_state, kind)
+                    if not path or not (output / path).is_file():
+                        reasons.append(f"missing-{kind}")
             if post_state.pdf and post_state.converter_fingerprint != fingerprint:
                 reasons.append("converter-changed")
             if force:

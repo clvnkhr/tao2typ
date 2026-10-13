@@ -21,6 +21,8 @@ class Node:
     table_cell, codeblock, figure, caption, divider. Inline kinds: text, math,
     image, link, anchor, strong, emphasis, strike, code, sub, sup, break.
     Math stores *original LaTeX*, with ``display=true`` for displayed equations.
+    An external source label uses ``number``; ``punctuation`` and
+    ``number_suffix`` retain punctuation before and after that label.
     """
 
     kind: str
@@ -59,8 +61,11 @@ class Comment:
     url: str
     body: list[Node] = field(default_factory=list)
     replies: list[Comment] = field(default_factory=list)
+    avatar: Node | None = None
 
     def walk(self) -> Iterator[Node]:
+        if self.avatar is not None:
+            yield from self.avatar.walk()
         for node in self.body:
             yield from node.walk()
         for reply in self.replies:
@@ -74,6 +79,7 @@ class Comment:
             "url": self.url,
             "body": [node.to_dict() for node in self.body],
             "replies": [reply.to_dict() for reply in self.replies],
+            "avatar": self.avatar.to_dict() if self.avatar is not None else None,
         }
 
     @classmethod
@@ -85,6 +91,9 @@ class Comment:
             url=str(value["url"]),
             body=[Node.from_dict(node) for node in value.get("body", [])],
             replies=[cls.from_dict(reply) for reply in value.get("replies", [])],
+            avatar=Node.from_dict(value["avatar"])
+            if isinstance(value.get("avatar"), dict)
+            else None,
         )
 
 

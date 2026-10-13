@@ -6,10 +6,31 @@ import hashlib
 import re
 from collections.abc import Mapping
 from datetime import datetime
+from urllib.parse import unquote
 
 from tao2typ.ir import Comment, Node, Post
 
 MITEX_VERSION = "0.2.7"
+_EX_RAISEBOX = re.compile(r"(?<!\\)\\raisebox\s*\{\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)\s*ex\s*\}")
+_EX_HELPERS = r"""
+// TeX ex dimensions use the current font's x-height, not a guessed em ratio.
+#import "@preview/mitex:0.2.7": mitex-convert, mitex-scope
+#let tao-raisebox(space, body) = context {
+  let dimension = if space.has("children") {
+    space.children.filter(it => it.has("text")).map(it => it.text).join("").replace(" ", "")
+  } else { space.text }
+  if dimension.ends-with("ex") {
+    let magnitude = float(dimension.slice(0, -2))
+    let x-height = measure(text(top-edge: "x-height", bottom-edge: "baseline", "x")).height
+    text(baseline: -magnitude * x-height, body)
+  } else { mitex-scope.at("raisebox")(space, body) }
+}
+#let tao-math(source, block: false, ..args) = {
+  let converted = mitex-convert(source)
+  let body = eval("$" + converted + "$", scope: mitex-scope + (raisebox: tao-raisebox))
+  math.equation(block: block, body, ..args)
+}
+"""
 
 
 def _string(value: str) -> str:
@@ -48,18 +69,105 @@ def _friendly_date(value: str | None) -> str:
 
 
 def _legacy_tex(source: str) -> str:
-    """Normalize two legacy TeX forms unsupported by the pinned MiTeX parser.
+    """Normalize equivalent legacy TeX forms unsupported by pinned MiTeX.
 
     Bracing sqrt's next ordinary token preserves TeX's exact argument semantics:
     ``\\sqrt(n)`` becomes ``\\sqrt{(}n)``, not a newly invented radicand ``n``.
     Original source remains untouched in the IR.
     """
     source = re.sub(r"(?<!\\)\\mbox(?![A-Za-z])", r"\\text", source)
+    source = re.sub(r"(?<!\\)\\hdots(?![A-Za-z])", r"\\ldots", source)
+    source = re.sub(r"(?<!\\)\\textbullet(?![A-Za-z])", r"\\bullet", source)
+    # TeX's \null is an empty box, not a mathematical symbol.
+    source = re.sub(r"(?<!\\)\\null(?![A-Za-z])", "{}", source)
+
+    # Unicode encodes exactly the single characters used by legacy posts.
+    def circled(match: re.Match[str]) -> str:
+        character = match.group(1)
+        if "a" <= character <= "z":
+            symbol = chr(0x24D0 + ord(character) - ord("a"))
+        elif "A" <= character <= "Z":
+            symbol = chr(0x24B6 + ord(character) - ord("A"))
+        elif character == "0":
+            symbol = "⓪"
+        else:
+            symbol = chr(0x2460 + int(character) - 1)
+        return r"\text{" + symbol + "}"
+
+    source = re.sub(r"(?<!\\)\\textcircled\s*\{([A-Za-z0-9])\}", circled, source)
+    # eqnarray has the same source alignment points; no counter is introduced.
+    source = re.sub(r"\\(begin|end)\{eqnarray\*?\}", r"\\\1{aligned}", source)
     return re.sub(
         r"(?<!\\)(\\sqrt\s*(?:\[[^\]\n]*\]\s*)?)([^\s\\{}\[])",
         r"\1{\2}",
         source,
     )
+
+
+def _tags(source: str) -> list[tuple[int, int, str, bool]]:
+    """Read explicit TeX tags without truncating nested groups in a label."""
+    result: list[tuple[int, int, str, bool]] = []
+    for match in re.finditer(r"(?<!\\)\\tag(\*)?\s*\{", source):
+        depth = 1
+        position = match.end()
+        while position < len(source) and depth:
+            character = source[position]
+            if character == "\\":
+                position += 2
+                continue
+            if character == "{":
+                depth += 1
+            elif character == "}":
+                depth -= 1
+            position += 1
+        if depth:
+            raise ValueError("Unclosed explicit equation tag in source TeX")
+        result.append((match.start(), position, source[match.end() : position - 1], bool(match[1])))
+    return result
+
+
+def _without_tags(source: str, tags: list[tuple[int, int, str, bool]]) -> str:
+    for start, end, _, _ in reversed(tags):
+        source = source[:start] + source[end:]
+    return source.strip()
+
+
+def _equation_rows(source: str) -> list[str] | None:
+    environment = re.fullmatch(
+        r"\\begin\{(align\*?|aligned|eqnarray\*?|gather\*?)\}(.*)\\end\{\1\}",
+        source.strip(),
+        re.DOTALL,
+    )
+    if environment is None:
+        return None
+    body = environment[2]
+    rows: list[str] = []
+    braces = nested = start = position = 0
+    while position < len(body):
+        character = body[position]
+        if character == "\\":
+            nested_environment = re.match(r"\\(begin|end)\{[^}]+\}", body[position:])
+            if nested_environment:
+                nested += 1 if nested_environment[1] == "begin" else -1
+                position += nested_environment.end()
+                continue
+            if body.startswith(r"\\", position) and braces == nested == 0:
+                rows.append(body[start:position].strip())
+                position += 2
+                row_spacing = re.match(r"\s*\[[+-]?[\d.]+(?:pt|em|ex|mm|cm)\]", body[position:])
+                if row_spacing:
+                    position += row_spacing.end()
+                start = position
+                continue
+            position += 2
+            continue
+        if character == "{":
+            braces += 1
+        elif character == "}":
+            braces -= 1
+        position += 1
+    rows.append(body[start:].strip())
+    return [row for row in rows if row]
 
 
 class _Renderer:
@@ -96,6 +204,7 @@ class _Renderer:
         if kind == "link":
             url = node.attrs.get("url", self.post.url)
             base, separator, fragment = url.partition("#")
+            fragment = unquote(fragment)
             if (
                 separator
                 and base.rstrip("/") == self.post.url.split("#")[0].rstrip("/")
@@ -161,20 +270,75 @@ class _Renderer:
         display = node.attrs.get("display") == "true"
         source = _legacy_tex(node.text.strip())
         number = node.attrs.get("number")
+        tags = _tags(source)
+        # MiTeX ignores \tag. Keep each explicit source label, including tagged
+        # rows inside align, while never assigning numbers to untagged rows.
+        if len(tags) > 1:
+            rows = _equation_rows(source)
+            if rows is None or len(rows) < 2:
+                raise ValueError("Multiple equation tags without separable source rows")
+            return (
+                "#block(width: 100%)[\n"
+                + "\n\n".join(
+                    self.math(
+                        Node(
+                            "math", r"\begin{aligned}" + row + r"\end{aligned}", {"display": "true"}
+                        )
+                    )
+                    for row in rows
+                )
+                + "\n]"
+            )
+        starred = False
+        if tags:
+            _, _, tag_number, starred = tags[0]
+            number = number or tag_number
+            source = _without_tags(source, tags)
+            display = True
         if display:
             # WordPress bakes equation numbers into image TeX. Preserve those
             # numbers explicitly, rather than renumbering the article.
-            match = re.search(r"(?:\\[ ,;!]|\\quad|\\qquad)+\s*\((\d+[a-z]?)\)\s*$", source)
+            match = re.search(
+                r"(?:\\[ ,;!]|\\quad|\\qquad)+\s*\((\d+(?:\.\d+)*[a-z]?)\)\s*$",
+                source,
+                re.IGNORECASE,
+            )
             if match:
                 number = number or match.group(1)
                 source = source[: match.start()].rstrip()
+            elif matrix_number := re.search(
+                r"\\end\{(?:[pbBvV]?matrix|smallmatrix)\}(?P<separator>\s+)"
+                r"\((?P<number>\d+(?:\.\d+)*[a-z]?)\)\s*$",
+                source,
+                re.IGNORECASE,
+            ):
+                # The legacy LaTeX2WP matrix display has no TeX spacer before
+                # its baked-in label. Restrict this fallback to a closed matrix
+                # environment: ordinary x + (10), O(1), and tuples stay intact.
+                number = number or matrix_number["number"]
+                source = source[: matrix_number.start("separator")].rstrip()
             source = re.sub(r"^\\displaystyle\s*", "", source)
-        command = "mitex" if display else "mi"
-        equation = f"#{command}({_string(source)})"
+            source += node.attrs.get("punctuation", "")
+        if _EX_RAISEBOX.search(source):
+            equation = f"#tao-math({_string(source)}, block: {str(display).lower()})"
+        else:
+            command = "mitex" if display else "mi"
+            equation = f"#{command}({_string(source)})"
         if number and display:
+            suffix = node.attrs.get("number_suffix", "")
+            label = (number if starred else "(" + number + ")") + suffix
+            if "\\" in number or "{" in number:
+                content = f"#mi({_string(number)})"
+                if not starred:
+                    content = '#text("(")' + content + '#text(")")'
+                if suffix:
+                    content += f"#text({_string(suffix)})"
+            else:
+                content = f"#text({_string(label)})"
+            # Native equation numbering centers the equation across the whole
+            # text measure and places the *source* label at the right margin.
             return (
-                "#grid(columns: (1fr, auto), align: (center, right + horizon), "
-                f"column-gutter: 10pt, [{equation}], [#text({_string('(' + number + ')')})])"
+                f"#block(width: 100%)[#set math.equation(numbering: n => [{content}])\n{equation}]"
             )
         return equation
 
@@ -223,14 +387,28 @@ class _Renderer:
             f"#link({_string(comment.url)})[#strong[#text({_string(comment.author)})]]"
             f'#text(size: 9pt, fill: rgb("596477"), {_string(date)})'
         )
+        if comment.avatar is not None:
+            avatar = comment.avatar
+            url = avatar.attrs.get("url", "")
+            if url in self.assets:
+                portrait = (
+                    "#box(width: 22pt, height: 22pt, radius: 50%, clip: true)["
+                    f"#image({_string(self.assets[url])}, width: 22pt, height: 22pt, "
+                    f'fit: "cover", alt: {_string("Avatar of " + comment.author)})]'
+                )
+                header = (
+                    "#grid(columns: (22pt, 1fr), column-gutter: 7pt, "
+                    f"align: (left + horizon), [{portrait}], [{header}])"
+                )
         body = self.blocks(comment.body)
         current = (
-            f"#block(width: 100%, breakable: true, above: 10pt, below: 6pt)[\n{header}\n\n{body}\n]"
+            "#block(width: 100%, breakable: true, above: 10pt, below: 6pt)[\n"
+            f"#block(sticky: true, above: 0pt, below: 4pt)[{header}]\n\n{body}\n]"
         )
         replies = "\n\n".join(self.comment(reply, depth + 1) for reply in comment.replies)
         if replies:
-            # Cap indentation to keep very deep discussions readable.
-            inset = "10pt" if depth < 3 else "0pt"
+            # Keep every reply level visible, with a smaller step in deep threads.
+            inset = "18pt" if depth < 3 else "9pt"
             current += f"\n\n#pad(left: {inset})[\n{replies}\n]"
         return current
 
@@ -271,6 +449,8 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 #line(length: 100%, stroke: 0.7pt + rgb("d9dfe8"))
 #v(10pt)
 """
+    if any(node.kind == "math" and _EX_RAISEBOX.search(node.text) for node in post.walk()):
+        preamble += _EX_HELPERS
     result = preamble + "\n" + renderer.blocks(post.body) + "\n"
     if post.comments:
         count = sum(1 for _ in _comments(post.comments))

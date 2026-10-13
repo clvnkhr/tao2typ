@@ -1,5 +1,6 @@
 """Exercise durable batch progress without HTTP requests or a Typst binary."""
 
+import base64
 import json
 import os
 from collections.abc import Iterator, Sequence
@@ -301,6 +302,48 @@ def test_compile_failure_preserves_outputs_check_dates_and_comment_retry(
     assert (tmp_path / original.pdf).read_bytes() != old_outputs[original.pdf]
 
 
+@pytest.mark.parametrize("interruption", [OSError, KeyboardInterrupt])
+@pytest.mark.parametrize("prior_outputs", [True, False])
+@pytest.mark.parametrize("after_replacement", [True, False])
+def test_failed_artifact_promotion_restores_complete_previous_set(
+    tmp_path: Path,
+    compiler: FakeCompiler,
+    monkeypatch: pytest.MonkeyPatch,
+    interruption: type[BaseException],
+    prior_outputs: bool,
+    after_replacement: bool,
+) -> None:
+    post = Post(title="Original", url="https://example.com/post/", body=[Node("text", "old")])
+    paths = [
+        tmp_path / path / f"post.{ext}"
+        for path, ext in [("ir", "json"), ("typst", "typ"), ("pdfs", "pdf")]
+    ]
+    if prior_outputs:
+        pipeline.save_post(post, "post", tmp_path, None)
+    originals = {path: path.read_bytes() for path in paths if path.exists()}
+    post.title = "Updated"
+    post.body = [Node("text", "new")]
+    replace = Path.replace
+
+    def interrupted(self: Path, target: Path) -> Path:
+        if self.name == "post.tmp.pdf":
+            if after_replacement:
+                replace(self, target)
+            raise interruption("Final PDF promotion interrupted")
+        return replace(self, target)
+
+    monkeypatch.setattr(Path, "replace", interrupted)
+    with pytest.raises(interruption):
+        pipeline.save_post(post, "post", tmp_path, None)
+    for path in paths:
+        if path in originals:
+            assert path.read_bytes() == originals[path]
+        else:
+            assert not path.exists()
+    assert list(tmp_path.rglob("*.tmp.*")) == []
+    assert list(tmp_path.rglob("*.previous.*")) == []
+
+
 def test_discovery_failure_is_logged_without_partial_inventory(
     tmp_path: Path, compiler: FakeCompiler
 ) -> None:
@@ -357,6 +400,25 @@ def test_missing_pdf_is_repaired_before_schedule_due(
     assert (tmp_path / post.pdf).exists()
 
 
+@pytest.mark.parametrize("kind", ["typst", "ir"])
+def test_missing_retained_source_is_repaired_without_waiting_for_birthday(
+    tmp_path: Path, compiler: FakeCompiler, kind: str
+) -> None:
+    published = instant(2007, 4, 15)
+    now = instant(2026, 10, 13)
+    client = FakeBlogClient([metadata(1, published)])
+    pipeline.run_batch(tmp_path, client, now=now)
+    post = archive(tmp_path).posts["1"]
+    path = getattr(post, kind)
+    assert path is not None
+    (tmp_path / path).unlink()
+    report = pipeline.run_batch(tmp_path, client, now=now + timedelta(days=1))
+    assert report["results"][0]["reasons"] == [f"missing-{kind}"]
+    assert report["converted"] == 1 and compiler.calls == 2
+    assert (tmp_path / path).is_file()
+    assert report["remaining"] == 0
+
+
 def test_soft_deadline_checkpoints_success_and_counts_unattempted_posts(
     tmp_path: Path, compiler: FakeCompiler, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -392,7 +454,13 @@ def test_same_url_image_bytes_invalidate_pdf_cache_without_rewriting_unchanged_a
     client = FakeBlogClient([metadata(1, instant(2026, 10, 1))])
     image_url = "https://terrytao.files.wordpress.com/2026/10/figure.png"
     fetched_assets: list[str] = []
-    image_bytes = b"image version one"
+    first_image = base64.b64decode(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+    )
+    second_image = base64.b64decode(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNg+M8AAAICAQB7CYF4AAAAAElFTkSuQmCC"
+    )
+    image_bytes = first_image
 
     def fetch_asset(url: str) -> bytes:
         fetched_assets.append(url)
@@ -429,11 +497,11 @@ def test_same_url_image_bytes_invalidate_pdf_cache_without_rewriting_unchanged_a
     assert compiler.calls == 1
     assert asset.stat().st_mtime_ns == unchanged_mtime
     assert archive(tmp_path).posts["1"].content_sha256 == original.content_sha256
-    image_bytes = b"image version two"
+    image_bytes = second_image
     report = pipeline.run_batch(tmp_path, client, now=published + timedelta(days=2), force=True)
     assert report["converted"] == 1 and compiler.calls == 2
     assert fetched_assets == [image_url, image_url, image_url]
-    assert asset.read_bytes() == b"image version one"
+    assert asset.read_bytes() == first_image
     assert asset.stat().st_mtime_ns == unchanged_mtime
-    assert any(path.read_bytes() == image_bytes for path in (tmp_path / "assets").glob("*.png"))
+    assert any(path.read_bytes() == second_image for path in (tmp_path / "assets").glob("*.png"))
     assert archive(tmp_path).posts["1"].content_sha256 != original.content_sha256

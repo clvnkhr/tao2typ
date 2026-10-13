@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
 from types import TracebackType
-from urllib.parse import parse_qs, quote, urljoin, urlsplit, urlunsplit
+from urllib.parse import parse_qs, parse_qsl, quote, urlencode, urljoin, urlsplit, urlunsplit
 
 import httpx
 from bs4 import BeautifulSoup
@@ -31,10 +31,41 @@ _POST_PATH = re.compile(
 )
 _COMMENT_FRAGMENT = re.compile(r"^comment-\d+$")
 _RETRY_STATUS = frozenset({408, 429, 500, 502, 503, 504})
+_PROXY_IMAGE_HOST = re.compile(r"i[012]\.wp\.com")
+_WIKIMEDIA_THUMB = re.compile(r"^(/wikipedia/[^/]+)/thumb/([0-9a-f]/[0-9a-f]{2}/[^/]+)/[^/]+$")
+_PROXY_PARAMETERS = frozenset(
+    {"crop", "fit", "h", "lb", "quality", "resize", "ssl", "strip", "w", "zoom"}
+)
 
 
 class SourceError(RuntimeError):
     """An incomplete or inconsistent source must not become a successful batch."""
+
+
+def _original_asset(url: str) -> str | None:
+    """Recover only the source explicitly encoded in a failed image-service URL.
+
+    Photon proxies can retain broken thumbnails for years. Wikimedia also
+    rejects historical thumbnail widths while keeping the original file. Each
+    transformation removes one service layer; downloads retain normal limits.
+    """
+    parts = urlsplit(url)
+    if _PROXY_IMAGE_HOST.fullmatch(parts.hostname or ""):
+        original = urlsplit("https://" + parts.path.lstrip("/"))
+        if original.hostname and "." in original.hostname and not original.username:
+            query = urlencode(
+                [
+                    (key, value)
+                    for key, value in parse_qsl(parts.query, keep_blank_values=True)
+                    if key not in _PROXY_PARAMETERS
+                ]
+            )
+            return urlunsplit(("https", original.netloc, original.path, query, ""))
+    if parts.hostname == "upload.wikimedia.org" and (
+        match := _WIKIMEDIA_THUMB.fullmatch(parts.path)
+    ):
+        return urlunsplit((parts.scheme, parts.netloc, f"{match[1]}/{match[2]}", "", ""))
+    return None
 
 
 @dataclass(frozen=True)
@@ -458,9 +489,22 @@ class BlogClient:
         return pages
 
     def fetch_asset(self, url: str) -> bytes:
-        """Fetch a linked image over HTTP(S), capped at 20 MiB after decompression."""
+        """Fetch an image, recovering failed Photon/Wikimedia service URLs.
+
+        At most two source transformations follow permanent 400/404 responses.
+        A rate limit, authorization error or oversized response remains a failure.
+        All requests retain the normal delay, retries and 20 MiB download cap.
+        """
         parts = urlsplit(url)
         if parts.scheme not in {"http", "https"} or not parts.hostname:
             raise ValueError(f"Asset URL must use HTTP or HTTPS: {url}")
         url = urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
-        return self._request(url).content
+        for attempt in range(3):
+            try:
+                return self._request(url).content
+            except httpx.HTTPStatusError as error:
+                original = _original_asset(url)
+                if error.response.status_code not in {400, 404} or not original or attempt == 2:
+                    raise
+                url = original
+        raise AssertionError("Unreachable image fallback state")

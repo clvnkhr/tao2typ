@@ -20,6 +20,12 @@ screenshots. PDFs include the source link and publication date, serif text,
 page numbers, and styled theorem quotations. Unknown HTML can produce explicit
 IR warnings. Unsupported TeX or images fail visibly and retain the previous PDF.
 
+Replies follow the site's nesting, including its older sibling-list markup.
+Commenter avatars appear beside author metadata and are optional: an unavailable
+avatar is recorded as a warning without discarding the discussion. Equations
+retain their source labels, including `\tag` and `\tag*`; theorem numbers and
+reference text are preserved rather than assigned new counters.
+
 ## Run locally
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and

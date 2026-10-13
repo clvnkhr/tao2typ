@@ -39,7 +39,11 @@ _BLOCK_TAGS = {
 _SKIP_TAGS = {"style", "noscript", "iframe", "form", "button", "nav", "svg"}
 _SKIP_CLASSES = {"sharedaddy", "jp-relatedposts", "cs-rating", "wpcnt", "adsbygoogle"}
 _MATH_TEXT = re.compile(r"(\\\[(.+?)\\\]|\\\((.+?)\\\)|\$\$(.+?)\$\$)", re.DOTALL)
-_NUMBER = re.compile(r"\((\d+[a-z]?)\)\s*$", re.IGNORECASE)
+_NUMBER = re.compile(
+    r"(?P<punctuation>[.,;:!?]?)\s*\((?P<number>\d+(?:\.\d+)*[a-z]?)\)"
+    r"\s*(?P<number_suffix>[.,;:!?]?)\s*$",
+    re.IGNORECASE,
+)
 
 
 def _attr(tag: Tag, name: str, default: str = "") -> str:
@@ -106,6 +110,28 @@ def _metadata_date(soup: BeautifulSoup, name: str) -> str | None:
         if isinstance(time, Tag):
             return _date(_attr(time, "datetime") or time.get_text(" ", strip=True))
     return None
+
+
+def _comment_owner(element: Tag) -> Tag | None:
+    """Find the closest actual comment, rather than a metadata/body wrapper."""
+    return next(
+        (
+            parent
+            for parent in element.parents
+            if isinstance(parent, Tag)
+            and (
+                "comment" in _attr(parent, "class").split()
+                or re.fullmatch(r"(?:div-)?comment-\d+", _attr(parent, "id"))
+            )
+        ),
+        None,
+    )
+
+
+def _owned_one(owner: Tag, selector: str) -> Tag | None:
+    # select_one can borrow a reply's author/time/avatar when the parent has
+    # missing metadata. Never let a descendant comment fill its parent's data.
+    return next((tag for tag in owner.select(selector) if _comment_owner(tag) is owner), None)
 
 
 class _Parser:
@@ -290,7 +316,7 @@ class _Parser:
         anchor = _attr(tag, "id") or (_attr(tag, "name") if name == "a" else "")
         prefix = [Node("anchor", attrs={"id": anchor})] if anchor else []
         if name in {"div", "section", "article", "a"}:
-            if set(_attr(tag, "class").split()) & {"math", "math-display"}:
+            if set(_attr(tag, "class").split()) & {"math", "math-inline", "math-display"}:
                 return self.inline(tag)
             return prefix + self.blocks(tag.children)
         if name == "blockquote":
@@ -383,46 +409,56 @@ class _Parser:
             # LaTeX2WP encodes section titles as centered bold paragraphs.
             if significant and all(node.kind == "strong" for node in significant):
                 return prefix + [Node("heading", attrs={"level": "1"}, children=children)]
-            if any(node.kind == "math" for node in significant):
+            # Older posts also use dash-framed section titles with inline
+            # maths, e.g. "— Linear functionals on L^p —". Centering alone
+            # must not turn their inline formula into a separate display.
+            title_text = tag.get_text(" ", strip=True)
+            if len(title_text) > 2 and re.fullmatch(r"[—–]\s*.+?\s*[—–]", title_text):
+                return prefix + [Node("heading", attrs={"level": "1"}, children=children)]
+            number = (
+                _NUMBER.fullmatch(significant[1].text.strip())
+                if len(significant) == 2
+                and significant[0].kind == "math"
+                and significant[1].kind == "text"
+                else None
+            )
+            if significant and (
+                all(node.kind == "math" for node in significant) or number is not None
+            ):
                 for node in children:
                     if node.kind == "math":
                         node.attrs["display"] = "true"
-                if (
-                    len(significant) == 2
-                    and significant[0].kind == "math"
-                    and significant[1].kind == "text"
-                ):
-                    number = _NUMBER.fullmatch(significant[1].text.strip())
-                    if number:
-                        significant[0].attrs["number"] = number.group(1)
-                        children.remove(significant[1])
-                # Preserve any other centered text alongside the equations.
-                return prefix + [Node("paragraph", attrs={"align": "center"}, children=children)]
+                if number is not None:
+                    significant[0].attrs["number"] = number.group("number")
+                    for attribute in ("punctuation", "number_suffix"):
+                        if value := number.group(attribute):
+                            significant[0].attrs[attribute] = value
+                    children.remove(significant[1])
+            return prefix + (
+                [Node("paragraph", attrs={"align": "center"}, children=children)]
+                if children
+                else []
+            )
         return prefix + ([Node("paragraph", children=children)] if children else [])
 
-    def comments(self, soup: BeautifulSoup) -> list[Comment]:
-        result: list[Comment] = []
+    def comments(self, soup: BeautifulSoup) -> list[tuple[Comment, str | None]]:
+        records: list[tuple[Tag, Comment]] = []
         owners: dict[int, Comment] = {}
         for content in soup.select("#comments .comment-content, .commentlist .comment-content"):
-            owner = next(
-                (
-                    parent
-                    for parent in content.parents
-                    if isinstance(parent, Tag)
-                    and (
-                        "comment" in _attr(parent, "class").split()
-                        or _attr(parent, "id").startswith("comment-")
-                    )
-                ),
-                content.parent,
-            )
-            if not isinstance(owner, Tag):
+            owner = _comment_owner(content)
+            if owner is None or id(owner) in owners:
                 continue
-            author = owner.select_one(".comment-author .fn, .comment-author, .fn")
-            permalink = owner.select_one(
-                ".comment-permalink a, a.comment-permalink, .comment-meta a, .comment-metadata a"
+            author = _owned_one(owner, ".comment-author .fn, .fn") or _owned_one(
+                owner, ".comment-author"
             )
-            time = owner.select_one("time")
+            # Prefer a comment permalink over unrelated links in metadata.
+            permalink = _owned_one(
+                owner,
+                ".comment-permalink a, a.comment-permalink",
+            ) or _owned_one(
+                owner, '.comment-meta a[href*="#comment-"], .comment-metadata a[href*="#comment-"]'
+            )
+            time = _owned_one(owner, "time")
             timestamp = (
                 _date(_attr(time, "datetime") or time.get_text(" ", strip=True))
                 if isinstance(time, Tag)
@@ -436,7 +472,7 @@ class _Parser:
             finally:
                 self._in_comment_body = False
             identifier = (
-                _attr(owner, "id")
+                _attr(owner, "id").removeprefix("div-")
                 or hashlib.sha256(
                     (str(author) + str(timestamp) + str(content)).encode()
                 ).hexdigest()[:16]
@@ -450,14 +486,59 @@ class _Parser:
                 else self.url + "#" + identifier,
                 body,
             )
-            parent_comment = next(
-                (owners[id(parent)] for parent in owner.parents if id(parent) in owners), None
+            avatar = next(
+                (
+                    image
+                    for image in owner.find_all("img")
+                    if _comment_owner(image) is owner and self._avatar(image)
+                ),
+                None,
             )
-            if parent_comment is None:
-                result.append(comment)
-            else:
-                parent_comment.replies.append(comment)
+            if isinstance(avatar, Tag):
+                source = _attr(avatar, "src") or _attr(avatar, "data-src")
+                if source:
+                    comment.avatar = Node(
+                        "image",
+                        attrs={
+                            "url": urljoin(self.url, source),
+                            "alt": _attr(avatar, "alt") or f"{comment.author}'s avatar",
+                            "width": _attr(avatar, "width"),
+                            "height": _attr(avatar, "height"),
+                        },
+                    )
             owners[id(owner)] = comment
+            records.append((owner, comment))
+
+        result: list[tuple[Comment, str | None]] = []
+        depths: dict[int, Comment] = {}
+        for owner, comment in records:
+            parent_comment = None
+            for ancestor in owner.parents:
+                if not isinstance(ancestor, Tag):
+                    continue
+                if id(ancestor) in owners:
+                    parent_comment = owners[id(ancestor)]
+                    break
+                if ancestor.name in {"ul", "ol"} and "children" in _attr(ancestor, "class").split():
+                    # Tao's live theme closes div.comment before its reply
+                    # list. The list is a sibling, unlike WordPress's usual
+                    # nested li.comment fixture. Its preceding comment owns it.
+                    previous = ancestor.find_previous_sibling()
+                    if isinstance(previous, Tag):
+                        candidates = [previous, *previous.find_all(True)]
+                        parent_comment = next(
+                            (owners[id(tag)] for tag in candidates if id(tag) in owners), None
+                        )
+                    if parent_comment is not None:
+                        break
+            depth_match = re.search(r"\bdepth-(\d+)\b", _attr(owner, "class"))
+            if depth_match:
+                depth = int(depth_match.group(1))
+                if parent_comment is None and depth > 1:
+                    parent_comment = depths.get(depth - 1)
+                depths = {level: value for level, value in depths.items() if level < depth}
+                depths[depth] = comment
+            result.append((comment, parent_comment.id if parent_comment is not None else None))
         return result
 
 
@@ -499,20 +580,27 @@ def parse_post(
         else "What’s new",
     )
     seen: dict[str, Comment] = {}
-
-    def append_unique(comments: list[Comment], output: list[Comment]) -> None:
-        for comment in comments:
-            replies = comment.replies
-            comment.replies = []
-            if comment.id in seen:
-                # Duplicate parent wrappers can appear on successive pages.
-                append_unique(replies, seen[comment.id].replies)
-                continue
-            seen[comment.id] = comment
-            append_unique(replies, comment.replies)
-            output.append(comment)
-
+    parents: dict[str, str] = {}
     for page in [soup, *(BeautifulSoup(page, "html.parser") for page in comment_pages)]:
-        append_unique(parser.comments(page), post.comments)
+        for comment, parent in parser.comments(page):
+            if comment.id not in seen:
+                seen[comment.id] = comment
+            elif seen[comment.id].avatar is None:
+                seen[comment.id].avatar = comment.avatar
+            if parent is not None:
+                parents.setdefault(comment.id, parent)
+    # Rebuild once after all pages: an orphan seen on one comment page may
+    # acquire its parent from a later page's repeated wrapper.
+    for identifier, comment in seen.items():
+        parent = parents.get(identifier)
+        ancestors = {identifier}
+        while parent is not None and parent not in ancestors:
+            ancestors.add(parent)
+            parent = parents.get(parent)
+        if parent in ancestors:
+            parser.warnings.append(f"Cyclic comment ancestry for {identifier}; kept at top level")
+            parents.pop(identifier, None)
+        target = seen.get(parents.get(identifier, ""))
+        (target.replies if target is not None else post.comments).append(comment)
     post.warnings = parser.warnings
     return post

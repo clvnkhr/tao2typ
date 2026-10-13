@@ -388,6 +388,81 @@ def test_permanent_http_errors_are_not_retried() -> None:
     assert attempts == 1
 
 
+def test_failed_wordpress_proxy_and_old_wikimedia_thumbnail_recover_original() -> None:
+    # These exact URLs failed in the initial local batch. Wikimedia now refuses
+    # the old 100px thumbnail, but the original SVG is still available.
+    proxy = (
+        "https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/thumb/1/11/"
+        "Complete_bipartite_graph_K3%2C3.svg/100px-Complete_bipartite_graph_K3%2C3.svg.png"
+    )
+    thumbnail = proxy.replace("https://i0.wp.com/", "https://")
+    original = (
+        "https://upload.wikimedia.org/wikipedia/commons/1/11/Complete_bipartite_graph_K3%2C3.svg"
+    )
+    requests: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(str(request.url))
+        return (
+            httpx.Response(200, content=b'<svg xmlns="http://www.w3.org/2000/svg"/>')
+            if str(request.url) == original
+            else httpx.Response(400)
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert client.fetch_asset(proxy).startswith(b"<svg")
+    assert requests == [proxy, thumbnail, original]
+
+
+def test_failed_wordpress_proxy_strips_only_service_parameters() -> None:
+    requests: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(str(request.url))
+        return httpx.Response(404 if len(requests) == 1 else 200, content=b"image")
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert client.fetch_asset("https://i2.wp.com/images.example/a.png?resize=20%2C20&v=3")
+    assert requests == [
+        "https://i2.wp.com/images.example/a.png?resize=20%2C20&v=3",
+        "https://images.example/a.png?v=3",
+    ]
+
+
+@pytest.mark.parametrize("status", [403, 429])
+def test_image_fallback_does_not_bypass_access_errors_or_rate_limits(status: int) -> None:
+    requests: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(str(request.url))
+        return httpx.Response(status)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0, retries=0)
+        with pytest.raises(httpx.HTTPStatusError) as failure:
+            client.fetch_asset("https://i0.wp.com/images.example/a.png")
+    assert failure.value.response.status_code == status
+    assert len(requests) == 1
+
+
+def test_image_origin_fallback_retains_decoded_download_limit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(source, "MAX_RESPONSE_BYTES", 100)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.host == "i0.wp.com":
+            return httpx.Response(404)
+        return httpx.Response(200, content=b"x" * 101)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(SourceError, match="20 MiB"):
+            client.fetch_asset("https://i0.wp.com/images.example/a.png")
+
+
 def test_asset_rejects_non_http_scheme_without_request() -> None:
     with BlogClient(interval=0) as client:
         with pytest.raises(ValueError, match="HTTP or HTTPS"):

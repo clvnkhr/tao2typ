@@ -210,7 +210,7 @@ def test_rich_fixture_compiles_with_typst(tmp_path: Path) -> None:
     assert pdf.read_bytes().startswith(b"%PDF-")
 
 
-def test_tao_theme_comments_omit_avatars_and_preserve_content_and_replies() -> None:
+def test_tao_theme_comments_separate_avatars_from_prose_and_preserve_replies() -> None:
     # Match the older Tao theme's comment structure, using self-authored prose.
     html = r"""<h1 class="post-title">Fixture</h1><div class="post-content">
     <p><img class="avatar" src="https://secure.gravatar.com/a" alt="Post image"></p></div>
@@ -239,12 +239,18 @@ def test_tao_theme_comments_omit_avatars_and_preserve_content_and_replies() -> N
       </li></ul>
     </div></div>"""
     post = parse_post(html, URL)
-    assert [image.attrs["url"] for image in _kinds(post, "image")] == [
+    body_images = [node for root in post.body for node in root.walk() if node.kind == "image"]
+    body_images += [
+        node for root in post.comments[0].body for node in root.walk() if node.kind == "image"
+    ]
+    assert [image.attrs["url"] for image in body_images] == [
         "https://secure.gravatar.com/a",
         "https://example.org/diagram.png",
     ]
     assert len(post.comments) == 1
     parent = post.comments[0]
+    assert parent.avatar is not None
+    assert parent.avatar.attrs["url"] == "https://secure.gravatar.com/blavatar/hash?s=32"
     assert parent.author == "Example reader"
     assert parent.published_at == "2007-02-28T07:56:00"
     assert parent.replies[0].author == "Reply reader"
