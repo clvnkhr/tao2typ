@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="120" viewBox="0 0 920 120">
+  <rect width="920" height="120" fill="#f5f6f8" rx="10"/>
+  <g fill="#ffffff" stroke="#98a4b6" stroke-width="1.5">
+    <rect x="25" y="30" width="170" height="60" rx="6"/>
+    <rect x="255" y="30" width="170" height="60" rx="6"/>
+    <rect x="485" y="30" width="170" height="60" rx="6"/>
+    <rect x="715" y="30" width="170" height="60" rx="6"/>
+  </g>
+  <g stroke="#275d8c" stroke-width="2" fill="none">
+    <path d="M205 60h40m-8-6 8 6-8 6"/>
+    <path d="M435 60h40m-8-6 8 6-8 6"/>
+    <path d="M665 60h40m-8-6 8 6-8 6"/>
+  </g>
+  <g fill="#253247" font-family="serif" font-size="22" text-anchor="middle">
+    <text x="110" y="68">HTML</text>
+    <text x="340" y="68">Structured IR</text>
+    <text x="570" y="68">Typst</text>
+    <text x="800" y="68">PDF</text>
+  </g>
+</svg>

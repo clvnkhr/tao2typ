@@ -1,0 +1,6 @@
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.json text eol=lf
+*.typ text eol=lf

@@ -1,0 +1,56 @@
+"""Durable, reviewable state. A successful PDF is the unit of progress."""
+
+import json
+from dataclasses import asdict, dataclass, field
+from pathlib import Path
+from typing import Any
+
+
+def write_json(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(path)
+
+
+@dataclass
+class PostState:
+    id: int
+    url: str
+    title: str
+    published_at: str
+    modified_at: str
+    last_checked_at: str | None = None
+    last_attempted_at: str | None = None
+    converted_at: str | None = None
+    converted_modified_at: str | None = None
+    next_check_at: str | None = None
+    content_sha256: str | None = None
+    pdf: str | None = None
+    ir: str | None = None
+    typst: str | None = None
+    last_error: str | None = None
+    pending_comments: list[str] = field(default_factory=list)
+    seen_comments: list[str] = field(default_factory=list)
+
+
+@dataclass
+class ArchiveState:
+    schema_version: int = 1
+    last_discovered_at: str | None = None
+    posts: dict[str, PostState] = field(default_factory=dict)
+
+    @classmethod
+    def load(cls, path: Path) -> "ArchiveState":
+        if not path.exists():
+            return cls()
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        if raw.get("schema_version") != 1:
+            raise ValueError("Unsupported archive state schema; migrate it before running")
+        return cls(
+            last_discovered_at=raw.get("last_discovered_at"),
+            posts={key: PostState(**post) for key, post in raw["posts"].items()},
+        )
+
+    def save(self, path: Path) -> None:
+        write_json(path, asdict(self))

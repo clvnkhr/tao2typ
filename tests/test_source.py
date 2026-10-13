@@ -1,0 +1,329 @@
+"""Offline tests for pagination completeness, invalidation, and HTTP limits."""
+
+import gzip
+from datetime import UTC, datetime, timedelta
+
+import httpx
+import pytest
+
+from tao2typ import source
+from tao2typ.source import BlogClient, SourceError, canonical_post_url, extract_recent_comments
+
+POST = "https://terrytao.wordpress.com/2024/01/31/example/"
+OTHER = "https://terrytao.wordpress.com/2024/02/01/other/"
+
+
+def metadata(identifier: int = 1, *, url: str = POST) -> dict[str, object]:
+    return {
+        "ID": identifier,
+        "URL": url,
+        "title": "Example &amp; <em>maths</em>",
+        "date": "2024-01-31T23:30:00-08:00",
+        "modified": "2024-02-01T00:15:00-08:00",
+    }
+
+
+@pytest.mark.parametrize(
+    "url",
+    [POST, POST.rstrip("/"), POST + "comment-page-7/#comment-25", POST + "?cpage=3"],
+)
+def test_post_url_canonicalization(url: str) -> None:
+    assert canonical_post_url(url) == POST
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.com/2024/01/31/example/",
+        "https://terrytao.wordpress.com.evil.example/2024/01/31/example/",
+        "https://terrytao.wordpress.com/about/",
+        "file:///2024/01/31/example/",
+        "https://terrytao.wordpress.com/2024/02/31/example/",
+        "https://user@terrytao.wordpress.com/2024/01/31/example/",
+    ],
+)
+def test_rejects_non_post_urls(url: str) -> None:
+    with pytest.raises(ValueError):
+        canonical_post_url(url)
+
+
+def test_recent_comment_widget_ignores_authors_avatars_and_body() -> None:
+    # This table mirrors the live blog's WordPress widget, which is not a <ul>.
+    html = f"""
+    <article><a href="{OTHER}#comment-999">Body comment link</a></article>
+    <div id="recent-comments-2" class="widget widget_recent_comments">
+      <h3>Recent Comments</h3><table class="recentcommentsavatar">
+        <tr><td><a href="https://author.example"><img src="avatar.png"></a></td>
+          <td><a href="https://author.example">Alice</a> on
+          <a href="{POST}comment-page-2/#comment-42">Example</a></td></tr>
+        <tr><td><a href="{POST}?cpage=3#comment-42">Same comment moved</a></td></tr>
+        <tr><td><a href="{POST}#comment-43">Newer comment</a></td></tr>
+        <tr><td><a href="https://example.com/2024/01/31/x/#comment-44">Other blog</a></td></tr>
+      </table>
+    </div>
+    """
+    comments = extract_recent_comments(html)
+    assert [comment.event_url for comment in comments] == [
+        POST + "#comment-42",
+        POST + "#comment-43",
+    ]
+    assert [comment.post_url for comment in comments] == [POST, POST]
+
+
+def test_missing_recent_comments_widget_is_an_error() -> None:
+    with pytest.raises(SourceError, match="Recent Comments"):
+        extract_recent_comments("<h1>A changed theme or HTTP challenge</h1>")
+    assert extract_recent_comments('<div class="widget_recent_comments"></div>') == []
+
+
+def test_discovery_uses_cursor_and_timezone_aware_api_dates() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        if "page_handle" not in request.url.params:
+            return httpx.Response(
+                200,
+                json={
+                    "found": 2,
+                    "posts": [metadata()],
+                    "meta": {"next_page": "value=2024-01-31T23:30:00-08:00&id=1"},
+                },
+            )
+        return httpx.Response(200, json={"found": 2, "posts": [metadata(2, url=OTHER)]})
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        posts = list(client.discover_posts(page_size=1))
+    assert len(requests) == 2
+    assert [post.id for post in posts] == [1, 2]
+    assert posts[0].title == "Example & maths"
+    assert posts[0].published_at.utcoffset() == timedelta(hours=-8)
+    assert posts[0].published_at.astimezone(UTC).isoformat() == "2024-02-01T07:30:00+00:00"
+    assert requests[1].url.params["page_handle"].endswith("&id=1")
+
+
+def test_discovery_filter_is_modified_time_not_publication() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(200, json={"found": 0, "posts": []})
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert list(client.discover_posts(modified_after=datetime(2024, 1, 1, tzinfo=UTC))) == []
+    assert requests[0].url.params["modified_after"] == "2024-01-01T00:00:00+00:00"
+    assert "after" not in requests[0].url.params
+
+
+def test_cursor_remaining_count_does_not_truncate_the_old_post_inventory() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        page = len(requests)
+        return httpx.Response(
+            200,
+            json={
+                # Real WordPress cursor responses reduce found on every page.
+                "found": 4 - page,
+                "posts": [metadata(page, url=POST if page == 1 else OTHER)],
+                "meta": {"next_page": f"cursor-{page}"},
+            },
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert [post.id for post in client.discover_posts(page_size=1)] == [1, 2, 3]
+    assert len(requests) == 3
+
+
+def test_discovery_raises_on_cursor_cycle_instead_of_silently_truncating() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={"found": 2, "posts": [metadata()], "meta": {"next_page": "same"}},
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(SourceError, match="without advancing"):
+            list(client.discover_posts())
+
+
+def test_discovery_falls_back_to_page_numbers_without_cursors() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        page = int(request.url.params.get("page", "1"))
+        return httpx.Response(
+            200, json={"found": 2, "posts": [metadata(page, url=POST if page == 1 else OTHER)]}
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert len(list(client.discover_posts(page_size=1))) == 2
+    assert requests[1].url.params["page"] == "2"
+
+
+def test_discovery_requires_real_publication_timestamp() -> None:
+    data = metadata()
+    data["date"] = "2024-01-31T23:30:00"
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={"found": 1, "posts": [data]})
+        )
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(SourceError, match="timezone"):
+            list(client.discover_posts())
+
+
+def test_empty_metadata_page_cannot_hide_missing_posts() -> None:
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={"found": 2, "posts": []})
+        )
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(SourceError, match="before discovery completed"):
+            list(client.discover_posts())
+
+
+@pytest.mark.parametrize("count", [None, True, -1, "1143"])
+def test_missing_or_malformed_count_cannot_report_empty_inventory(count: object) -> None:
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={"found": count, "posts": []})
+        )
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(SourceError, match="invalid total post count"):
+            list(client.discover_posts())
+
+
+def test_lookup_by_slug_checks_returned_canonical_permalink() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(200, json=metadata())
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert client.lookup_post(POST + "comment-page-3/#comment-1").id == 1
+        with pytest.raises(SourceError, match="another post"):
+            client.lookup_post(OTHER)
+    assert requests[0].url.path.endswith("posts/slug:example/")
+
+
+def test_comment_pages_traverse_older_newer_with_cycle_guard() -> None:
+    requests: list[str] = []
+    html_pages = {
+        POST: f'<h1>Post</h1><a href="{POST}comment-page-2/#comments">Older</a>',
+        POST + "comment-page-2/": (
+            f'<a href="{POST}?cpage=1#comments">Older</a>'
+            f'<a href="{POST}comment-page-3/#comments">Newer</a>'
+            f'<a href="{OTHER}comment-page-1/#comments">Unrelated</a>'
+        ),
+        POST + "?cpage=1": f'<a href="{POST}comment-page-2/#comments">Newer</a>',
+        POST + "comment-page-3/": f'<a href="{POST}comment-page-2/#comments">Older</a>',
+    }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(str(request.url))
+        return httpx.Response(200, text=html_pages[str(request.url)])
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        pages = client.fetch_post_pages(POST)
+    assert len(pages) == 4
+    assert len(requests) == len(set(requests)) == 4
+    assert not any(url.startswith(OTHER) for url in requests)
+
+
+def test_comment_page_limit_does_not_report_partial_success() -> None:
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, text=f'<a href="{POST}comment-page-2/">Older</a>')
+        )
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0, max_comment_pages=1)
+        with pytest.raises(SourceError, match="exceeds 1 pages"):
+            client.fetch_post_pages(POST)
+
+
+def test_retry_after_and_polite_interval() -> None:
+    now = 0.0
+    waits: list[float] = []
+    attempts = 0
+
+    def sleep(seconds: float) -> None:
+        nonlocal now
+        waits.append(seconds)
+        now += seconds
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            return httpx.Response(429, headers={"Retry-After": "4"})
+        return httpx.Response(200, content=b"image")
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=1, sleep=sleep, monotonic=lambda: now)
+        assert client.fetch_asset("https://uploads.example/image.png") == b"image"
+        assert client.fetch_asset("https://uploads.example/image.png") == b"image"
+    assert attempts == 3
+    assert waits == [4, 1]
+
+
+def test_permanent_http_errors_are_not_retried() -> None:
+    attempts = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal attempts
+        attempts += 1
+        return httpx.Response(404)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(httpx.HTTPStatusError):
+            client.fetch_asset("https://uploads.example/missing.png")
+    assert attempts == 1
+
+
+def test_asset_rejects_non_http_scheme_without_request() -> None:
+    with BlogClient(interval=0) as client:
+        with pytest.raises(ValueError, match="HTTP or HTTPS"):
+            client.fetch_asset("file:///private/tmp/image.png")
+
+
+def test_asset_download_limit_checks_decoded_size(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(source, "MAX_RESPONSE_BYTES", 100)
+    compressed = gzip.compress(b"x" * 101)
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200, headers={"Content-Encoding": "gzip"}, content=compressed
+            )
+        )
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(SourceError, match="20 MiB"):
+            client.fetch_asset("https://uploads.example/huge.png")
+
+
+def test_gzip_response_is_decoded_once() -> None:
+    compressed = gzip.compress(b"actual image bytes")
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200, headers={"Content-Encoding": "gzip"}, content=compressed
+            )
+        )
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        assert client.fetch_asset("https://uploads.example/image.svg") == b"actual image bytes"

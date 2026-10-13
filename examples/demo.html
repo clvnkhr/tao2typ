@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Converter demonstration</title>
+  <meta property="article:published_time" content="2026-10-13T09:00:00Z">
+  <meta property="article:modified_time" content="2026-10-13T09:00:00Z">
+</head>
+<body>
+  <h1 class="entry-title">Converter demonstration</h1>
+  <div class="entry-content">
+    <p>A self-authored fixture demonstrating mathematics, structure, assets, and comments.</p>
+
+    <h2>Mathematics and structure</h2>
+    <p>Let <img class="latex" alt="f(x) = e^{-x^2}" />. Its Gaussian integral is</p>
+    <p align="center"><a name="gaussian"></a><img class="latex"
+      alt="\displaystyle \int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi} \qquad (1)" /></p>
+    <p>Equation <a href="#gaussian">(1)</a> retains its original number and link.
+      Unicode prose also survives: α, β, and the relation x ≥ 0.</p>
+    <blockquote>
+      <p><strong>Proposition 1 (A simple bound).</strong>
+        For every real <img class="latex" alt="x" />,
+        <img class="latex" alt="0 &lt; e^{-x^2} \leq 1" />.</p>
+      <p><em>Proof.</em> The exponent is nonpositive, and the exponential is
+        positive and increasing.</p>
+    </blockquote>
+
+    <h2>Lists, tables, and images</h2>
+    <ol start="1">
+      <li>Parse HTML into a versioned intermediate representation.
+        <ul><li>Keep original LaTeX and source links.</li>
+          <li>Keep dates and threaded comments.</li></ul>
+      </li>
+      <li>Render the same representation into readable Typst.</li>
+      <li>Compile to a PDF and record the outcome.</li>
+    </ol>
+    <table>
+      <thead><tr><th>Input</th><th>Preserved information</th></tr></thead>
+      <tbody>
+        <tr><td>Mathematics</td><td>Original LaTeX, display mode, equation number</td></tr>
+        <tr><td>Images</td><td>Source URL, alternative text, local asset mapping</td></tr>
+        <tr><td>Comments</td><td>Author, timestamp, permalink, reply structure</td></tr>
+      </tbody>
+    </table>
+    <figure>
+      <img src="demo-diagram.svg" alt="HTML to intermediate representation to Typst to PDF" />
+      <figcaption>A small local asset accompanies the generated document.</figcaption>
+    </figure>
+
+    <h2>Literal text remains literal</h2>
+    <p>Literal text: <code>#panic("example")</code>, [brackets], $currency, and
+      <code>\frac12</code>. Formatting: <strong>strong</strong>, <em>emphasis</em>,
+      <del>deleted</del>, H<sub>2</sub>O, and x<sup>2</sup>.</p>
+    <pre><code class="language-python">post = parse_post(html, source_url)
+ir_json = post.to_dict()
+typst_source = render_post(post, assets)
+</code></pre>
+  </div>
+  <div id="comments">
+    <ol class="commentlist">
+      <li class="comment" id="comment-demo-1">
+        <div class="comment-author"><cite class="fn">Example reader</cite></div>
+        <div class="comment-metadata"><a href="#comment-demo-1">
+          <time datetime="2026-10-13T10:00:00Z">13 October 2026</time></a></div>
+        <div class="comment-content"><p>The derivative
+          <img class="latex" alt="f'(x) = -2xe^{-x^2}" /> should be preserved too.</p></div>
+        <ul class="children">
+          <li class="comment" id="comment-demo-2">
+            <div class="comment-author"><cite class="fn">Example author</cite></div>
+            <div class="comment-metadata"><a href="#comment-demo-2">
+              <time datetime="2026-10-13T10:30:00Z">13 October 2026</time></a></div>
+            <div class="comment-content"><p>This reply stays beneath its parent.</p></div>
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+</body>
+</html>

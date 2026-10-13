@@ -1,0 +1,829 @@
+{
+  "schema_version": 1,
+  "title": "Converter demonstration",
+  "url": "https://example.org/tao2typ/converter-demonstration/",
+  "published_at": "2026-10-13T09:00:00+00:00",
+  "modified_at": "2026-10-13T09:00:00+00:00",
+  "author": "tao2typ fixture",
+  "blog_title": "tao2typ · Converter demonstration",
+  "body": [
+    {
+      "kind": "paragraph",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "text",
+          "text": "A self-authored fixture demonstrating mathematics, structure, assets, and comments.",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "",
+      "attrs": {
+        "level": "1"
+      },
+      "children": [
+        {
+          "kind": "text",
+          "text": "Mathematics and structure",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "paragraph",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "text",
+          "text": "Let ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "math",
+          "text": "f(x) = e^{-x^2}",
+          "attrs": {
+            "display": "false"
+          },
+          "children": []
+        },
+        {
+          "kind": "text",
+          "text": ". Its Gaussian integral is",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "paragraph",
+      "text": "",
+      "attrs": {
+        "align": "center"
+      },
+      "children": [
+        {
+          "kind": "anchor",
+          "text": "",
+          "attrs": {
+            "id": "gaussian"
+          },
+          "children": []
+        },
+        {
+          "kind": "math",
+          "text": "\\displaystyle \\int_{-\\infty}^{\\infty} e^{-x^2}\\,dx = \\sqrt{\\pi} \\qquad (1)",
+          "attrs": {
+            "display": "true"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "paragraph",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "text",
+          "text": "Equation ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "link",
+          "text": "",
+          "attrs": {
+            "url": "https://example.org/tao2typ/converter-demonstration/#gaussian"
+          },
+          "children": [
+            {
+              "kind": "text",
+              "text": "(1)",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "text",
+          "text": " retains its original number and link. Unicode prose also survives: α, β, and the relation x ≥ 0.",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "quote",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "paragraph",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "strong",
+              "text": "",
+              "attrs": {},
+              "children": [
+                {
+                  "kind": "text",
+                  "text": "Proposition 1 (A simple bound).",
+                  "attrs": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "kind": "text",
+              "text": " For every real ",
+              "attrs": {},
+              "children": []
+            },
+            {
+              "kind": "math",
+              "text": "x",
+              "attrs": {
+                "display": "false"
+              },
+              "children": []
+            },
+            {
+              "kind": "text",
+              "text": ", ",
+              "attrs": {},
+              "children": []
+            },
+            {
+              "kind": "math",
+              "text": "0 < e^{-x^2} \\leq 1",
+              "attrs": {
+                "display": "false"
+              },
+              "children": []
+            },
+            {
+              "kind": "text",
+              "text": ".",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "emphasis",
+              "text": "",
+              "attrs": {},
+              "children": [
+                {
+                  "kind": "text",
+                  "text": "Proof.",
+                  "attrs": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "kind": "text",
+              "text": " The exponent is nonpositive, and the exponential is positive and increasing.",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "",
+      "attrs": {
+        "level": "1"
+      },
+      "children": [
+        {
+          "kind": "text",
+          "text": "Lists, tables, and images",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "list",
+      "text": "",
+      "attrs": {
+        "ordered": "true",
+        "start": "1"
+      },
+      "children": [
+        {
+          "kind": "list_item",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "paragraph",
+              "text": "",
+              "attrs": {},
+              "children": [
+                {
+                  "kind": "text",
+                  "text": "Parse HTML into a versioned intermediate representation.",
+                  "attrs": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "kind": "list",
+              "text": "",
+              "attrs": {
+                "ordered": "false",
+                "start": "1"
+              },
+              "children": [
+                {
+                  "kind": "list_item",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "paragraph",
+                      "text": "",
+                      "attrs": {},
+                      "children": [
+                        {
+                          "kind": "text",
+                          "text": "Keep original LaTeX and source links.",
+                          "attrs": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "kind": "list_item",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "paragraph",
+                      "text": "",
+                      "attrs": {},
+                      "children": [
+                        {
+                          "kind": "text",
+                          "text": "Keep dates and threaded comments.",
+                          "attrs": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "list_item",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "paragraph",
+              "text": "",
+              "attrs": {},
+              "children": [
+                {
+                  "kind": "text",
+                  "text": "Render the same representation into readable Typst.",
+                  "attrs": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "list_item",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "paragraph",
+              "text": "",
+              "attrs": {},
+              "children": [
+                {
+                  "kind": "text",
+                  "text": "Compile to a PDF and record the outcome.",
+                  "attrs": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "table",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "table_row",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "true",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Input",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "true",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Preserved information",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table_row",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "false",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Mathematics",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "false",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Original LaTeX, display mode, equation number",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table_row",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "false",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Images",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "false",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Source URL, alternative text, local asset mapping",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table_row",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "false",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Comments",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "table_cell",
+              "text": "",
+              "attrs": {
+                "header": "false",
+                "colspan": "1",
+                "rowspan": "1"
+              },
+              "children": [
+                {
+                  "kind": "paragraph",
+                  "text": "",
+                  "attrs": {},
+                  "children": [
+                    {
+                      "kind": "text",
+                      "text": "Author, timestamp, permalink, reply structure",
+                      "attrs": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "figure",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "paragraph",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "image",
+              "text": "",
+              "attrs": {
+                "url": "https://example.org/tao2typ/converter-demonstration/demo-diagram.svg",
+                "alt": "HTML to intermediate representation to Typst to PDF",
+                "width": "",
+                "height": ""
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "caption",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "A small local asset accompanies the generated document.",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "heading",
+      "text": "",
+      "attrs": {
+        "level": "1"
+      },
+      "children": [
+        {
+          "kind": "text",
+          "text": "Literal text remains literal",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "paragraph",
+      "text": "",
+      "attrs": {},
+      "children": [
+        {
+          "kind": "text",
+          "text": "Literal text: ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "code",
+          "text": "#panic(\"example\")",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "text",
+          "text": ", [brackets], $currency, and ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "code",
+          "text": "\\frac12",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "text",
+          "text": ". Formatting: ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "strong",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "strong",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "text",
+          "text": ", ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "emphasis",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "emphasis",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "text",
+          "text": ", ",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "strike",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "deleted",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "text",
+          "text": ", H",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "sub",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "2",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "O, and x",
+          "attrs": {},
+          "children": []
+        },
+        {
+          "kind": "sup",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "2",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "text",
+          "text": ".",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "kind": "codeblock",
+      "text": "post = parse_post(html, source_url)\nir_json = post.to_dict()\ntypst_source = render_post(post, assets)\n",
+      "attrs": {
+        "language": "python"
+      },
+      "children": []
+    }
+  ],
+  "comments": [
+    {
+      "id": "comment-demo-1",
+      "author": "Example reader",
+      "published_at": "2026-10-13T10:00:00+00:00",
+      "url": "https://example.org/tao2typ/converter-demonstration/#comment-demo-1",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "",
+          "attrs": {},
+          "children": [
+            {
+              "kind": "text",
+              "text": "The derivative ",
+              "attrs": {},
+              "children": []
+            },
+            {
+              "kind": "math",
+              "text": "f'(x) = -2xe^{-x^2}",
+              "attrs": {
+                "display": "false"
+              },
+              "children": []
+            },
+            {
+              "kind": "text",
+              "text": " should be preserved too.",
+              "attrs": {},
+              "children": []
+            }
+          ]
+        }
+      ],
+      "replies": [
+        {
+          "id": "comment-demo-2",
+          "author": "Example author",
+          "published_at": "2026-10-13T10:30:00+00:00",
+          "url": "https://example.org/tao2typ/converter-demonstration/#comment-demo-2",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "",
+              "attrs": {},
+              "children": [
+                {
+                  "kind": "text",
+                  "text": "This reply stays beneath its parent.",
+                  "attrs": {},
+                  "children": []
+                }
+              ]
+            }
+          ],
+          "replies": []
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}
