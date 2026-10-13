@@ -52,11 +52,15 @@ Use the actual filenames listed in `archive/README.md`. To attempt an entire
 initial archive in one batch, use the default `--max-posts 0`. To refresh the entire archive
 regardless of schedule, add `--force`. Run the full first batch locally to avoid
 using Actions minutes for the initial archive. Local batches have a five-hour soft
-time limit and checkpoint after each post. The daily workflow is limited to 25
-due posts or ten minutes, with a fifteen-minute job timeout; any remaining backlog
+time limit and checkpoint after each post. The daily workflow is limited to ten
+PDF attempts per UTC day or ten minutes, with a fifteen-minute job timeout; any remaining backlog
 resumes on the next run. Use `--max-posts` or `--max-seconds` to adjust a local
 batch. The converter waits one second between requests and
 retries transient errors with backoff. `--interval` adjusts this locally.
+
+The daily quota survives manual reruns and counts failed attempts too. Remaining
+posts stay in `archive/queue.json`; the next day receives a fresh budget. The first
+local batch has no daily quota and does not consume the Actions allowance.
 
 ## Daily updates
 
@@ -102,6 +106,7 @@ Generated files are committed directly to this private repository:
 ```text
 archive/
   state.json        # source dates, check dates, pending/seen comments, hashes
+  queue.json        # due posts awaiting successful conversion
   jobs/*.json       # one timestamped report per batch
   ir/*.json         # versioned intermediate documents
   typst/*.typ       # escaped, independently compilable Typst source

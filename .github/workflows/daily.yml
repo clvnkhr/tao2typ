@@ -5,10 +5,6 @@ on:
     - cron: "23 6 * * *"
   workflow_dispatch:
     inputs:
-      max_posts:
-        description: "Maximum due posts this run (0 = all)"
-        default: "25"
-        type: string
       force:
         description: "Refresh all posts regardless of schedule"
         default: false
@@ -39,7 +35,6 @@ jobs:
       - name: Convert due posts
         id: batch
         env:
-          MAX_POSTS: ${{ inputs.max_posts || '25' }}
           FORCE: ${{ inputs.force || 'false' }}
         shell: bash
         run: |
@@ -47,7 +42,7 @@ jobs:
             echo "::notice::Run bash scripts/first-batch.sh locally to seed the archive first."
             exit 0
           fi
-          args=(batch --output archive --max-posts "$MAX_POSTS" --max-seconds 600)
+          args=(batch --output archive --max-posts 10 --daily-limit 10 --max-seconds 600)
           if [[ "$FORCE" == "true" ]]; then args+=(--force); fi
           uv run tao2typ "${args[@]}"
       - name: Preserve PDFs, state and timestamped reports even after partial failure

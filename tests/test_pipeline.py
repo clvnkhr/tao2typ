@@ -20,6 +20,46 @@ def instant(year: int, month: int, day: int) -> datetime:
     return datetime(year, month, day, 12, tzinfo=UTC)
 
 
+def test_daily_budget_survives_reruns_and_queues_the_rest(
+    tmp_path: Path, compiler: "FakeCompiler"
+) -> None:
+    client = FakeBlogClient([metadata(i, instant(2026, 10, 1)) for i in range(1, 13)])
+    now = instant(2026, 10, 13)
+    first = pipeline.run_batch(tmp_path, client, now=now, max_posts=10, daily_limit=10)
+    assert first["converted"] == compiler.calls == 10
+    assert first["remaining"] == 2
+    queue = json.loads((tmp_path / "queue.json").read_text())["posts"]
+    assert {entry["id"] for entry in queue} == {11, 12}
+    again = pipeline.run_batch(tmp_path, client, now=now, max_posts=10, daily_limit=10)
+    assert again["results"] == [] and again["remaining"] == 2
+    assert compiler.calls == 10
+    assert archive(tmp_path).daily_attempts == {"2026-10-13": 10}
+    tomorrow = pipeline.run_batch(
+        tmp_path, client, now=now + timedelta(days=1), max_posts=10, daily_limit=10
+    )
+    assert tomorrow["converted"] == 2 and tomorrow["remaining"] == 0
+    assert compiler.calls == 12
+    assert archive(tmp_path).daily_attempts["2026-10-14"] == 2
+    assert json.loads((tmp_path / "queue.json").read_text())["posts"] == []
+
+
+def test_failed_attempt_consumes_daily_budget_but_local_batch_is_unrestricted(
+    tmp_path: Path, compiler: "FakeCompiler"
+) -> None:
+    client = FakeBlogClient([metadata(1, instant(2026, 10, 1))])
+    now = instant(2026, 10, 13)
+    compiler.fail = True
+    failed = pipeline.run_batch(tmp_path, client, now=now, daily_limit=1)
+    assert failed["failed"] == failed["remaining"] == 1
+    assert len(json.loads((tmp_path / "queue.json").read_text())["posts"]) == 1
+    again = pipeline.run_batch(tmp_path, client, now=now, daily_limit=1)
+    assert again["results"] == [] and compiler.calls == 1
+    compiler.fail = False
+    local = pipeline.run_batch(tmp_path, client, now=now)
+    assert local["converted"] == 1 and local["remaining"] == 0
+    assert archive(tmp_path).daily_attempts == {"2026-10-13": 1}
+
+
 def metadata(identifier: int, published: datetime) -> PostMetadata:
     # Deliberately use another URL date: WordPress metadata is the source of truth.
     return PostMetadata(

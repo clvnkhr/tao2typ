@@ -21,6 +21,7 @@ def main() -> int:
     batch.add_argument("--output", type=Path, default=Path("archive"))
     batch.add_argument("--max-posts", type=int, default=0, help="0 converts every due post")
     batch.add_argument("--max-seconds", type=float, default=18_000, help="Soft batch time limit")
+    batch.add_argument("--daily-limit", type=int, help="Durable attempt budget per UTC day")
     batch.add_argument(
         "--force", action="store_true", help="Refresh every post, ignoring its schedule"
     )
@@ -103,6 +104,7 @@ def main() -> int:
             max_posts=args.max_posts,
             force=args.force,
             max_seconds=args.max_seconds,
+            daily_limit=args.daily_limit,
         )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 1 if report["failed"] or report["errors"] else 0

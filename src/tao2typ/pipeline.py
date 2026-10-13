@@ -179,11 +179,14 @@ def run_batch(
     max_posts: int = 0,
     force: bool = False,
     max_seconds: float = 18_000,
+    daily_limit: int | None = None,
 ) -> dict[str, Any]:
     if max_posts < 0:
         raise ValueError("max_posts must be non-negative (0 means unlimited)")
     if max_seconds <= 0:
         raise ValueError("max_seconds must be positive")
+    if daily_limit is not None and daily_limit < 0:
+        raise ValueError("daily_limit must be non-negative")
     started_monotonic = time.monotonic()
     clock_supplied = now is not None
     now = now or datetime.now(UTC)
@@ -194,6 +197,7 @@ def run_batch(
     state_path = output / "state.json"
     state = ArchiveState.load(state_path)
     fingerprint = converter_fingerprint()
+    quota_day = now.date().isoformat()
     report: dict[str, Any] = {
         "schema_version": 1,
         "started_at": timestamp(now),
@@ -201,6 +205,7 @@ def run_batch(
         "force": force,
         "max_posts": max_posts,
         "max_seconds": max_seconds,
+        "daily_limit": daily_limit,
         "results": [],
         "errors": [],
     }
@@ -276,6 +281,16 @@ def run_batch(
         state.save(state_path)
         write_json(report_path, report)
         selected = candidates[:max_posts] if max_posts else candidates
+        if daily_limit is not None:
+            allowance = max(0, daily_limit - state.daily_attempts.get(quota_day, 0))
+            selected = selected[:allowance]
+            report["daily_allowance"] = allowance
+        queue = [
+            {"id": post.id, "url": post.url, "title": post.title, "reasons": reasons}
+            for post, reasons in candidates
+        ]
+        queue_path = output / "queue.json"
+        write_json(queue_path, {"updated_at": timestamp(now), "posts": queue})
         for post_state, reasons in selected:
             if time.monotonic() - started_monotonic >= max_seconds:
                 report["time_budget_reached"] = True
@@ -286,6 +301,11 @@ def run_batch(
                 "reasons": reasons,
             }
             post_state.last_attempted_at = timestamp(now)
+            if daily_limit is not None:
+                # Reserve the budget before fetching/compiling. An interrupted
+                # or failed attempt still consumes runner time.
+                state.daily_attempts[quota_day] = state.daily_attempts.get(quota_day, 0) + 1
+                state.save(state_path)
             try:
                 pages = client.fetch_post_pages(post_state.url)
                 post = parse_post(
@@ -314,6 +334,7 @@ def run_batch(
                 post_state.seen_comments.extend(post_state.pending_comments)
                 post_state.pending_comments.clear()
                 post_state.last_error = None
+                queue = [entry for entry in queue if entry["id"] != post_state.id]
                 result.update(
                     status="converted",
                     checked_at=timestamp(completed),
@@ -325,8 +346,9 @@ def run_batch(
                 result.update(status="failed", error=str(exc))
             report["results"].append(result)
             state.save(state_path)
+            write_json(queue_path, {"updated_at": timestamp(now), "posts": queue})
             write_json(report_path, report)
-        report["remaining"] = len(candidates) - len(report["results"])
+        report["remaining"] = len(queue)
     except Exception as exc:
         report["errors"].append({"stage": "discovery", "error": str(exc)})
     finally:

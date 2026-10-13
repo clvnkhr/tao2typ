@@ -40,6 +40,7 @@ class ArchiveState:
     schema_version: int = 1
     last_discovered_at: str | None = None
     posts: dict[str, PostState] = field(default_factory=dict)
+    daily_attempts: dict[str, int] = field(default_factory=dict)
 
     @classmethod
     def load(cls, path: Path) -> "ArchiveState":
@@ -51,6 +52,7 @@ class ArchiveState:
         return cls(
             last_discovered_at=raw.get("last_discovered_at"),
             posts={key: PostState(**post) for key, post in raw["posts"].items()},
+            daily_attempts=raw.get("daily_attempts", {}),
         )
 
     def save(self, path: Path) -> None:
