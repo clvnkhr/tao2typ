@@ -99,6 +99,51 @@ def test_norm_chain_continuations_share_equality_and_inequality_column(tmp_path:
     assert_common_column(relations)
 
 
+def test_polynomial_calculation_keeps_glyph_clearance_from_surrounding_prose(
+    tmp_path: Path,
+) -> None:
+    # The two adjacent E_3 displays in the polynomial-bases post originally
+    # collided with "For instance" and the following paragraph.
+    rows = [
+        r"\displaystyle E_3(x) = A(4,0) x^0 + A(4,1) x^1 + A(4,2) x^2 + A(4,3) x^3",
+        r"\displaystyle = 1 + 11x + 11x^2 + x^3.",
+    ]
+    following = (
+        "These particular coefficients also have useful combinatorial interpretations. "
+        "For instance:"
+    )
+    post = Post(
+        "Eulerian polynomial",
+        URL,
+        body=[Node("paragraph", children=[Node("text", "For instance")])]
+        + [display(row) for row in rows]
+        + [Node("paragraph", children=[Node("text", following)])],
+    )
+    words = rendered_words(tmp_path, post)
+    preceding_end = next(i for i, word in enumerate(words) if word.text == "instance")
+    following_start = next(i for i, word in enumerate(words) if word.text == "These")
+    preceding_words = words[preceding_end - 1 : preceding_end + 1]
+    calculation_words = words[preceding_end + 1 : following_start]
+    following_words = words[following_start : following_start + len(following.split())]
+    assert [word.text for word in preceding_words] == ["For", "instance"]
+    assert [word.text for word in following_words] == following.split()
+    assert (
+        len({word.attrib["page"] for word in preceding_words + calculation_words + following_words})
+        == 1
+    )
+    relations = [word for word in calculation_words if (word.text or "").startswith("=")]
+    assert len(relations) == 2
+    assert_common_column(relations)
+    before_gap = min(float(word.attrib["yMin"]) for word in calculation_words) - max(
+        float(word.attrib["yMax"]) for word in preceding_words
+    )
+    after_gap = min(float(word.attrib["yMin"]) for word in following_words) - max(
+        float(word.attrib["yMax"]) for word in calculation_words
+    )
+    assert before_gap >= 3, before_gap
+    assert after_gap >= 3, after_gap
+
+
 def test_wrapped_numbered_equations_align_and_preserve_original_row_labels(tmp_path: Path) -> None:
     # Legacy LaTeX2WP uses an anchor surrounding each display paragraph. The
     # parser flattens those wrappers into anchor + paragraph sibling nodes.

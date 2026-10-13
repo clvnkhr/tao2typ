@@ -48,6 +48,11 @@ prime rendering.
   products, inequality chains and repeated source labels. Short aligned runs
   stay on one page; longer runs remain breakable. The original Notes 12 typo
   `\psi_j)` is retained.
+- A further local sample covers 20 previously unconverted posts across
+  2007–2026. This exposed and fixed zero outer spacing around aligned runs;
+  compiled glyph-gap regressions now prevent collisions with surrounding prose.
+  Unnumbered single displays wider than their local text measure shrink
+  uniformly with layout reflow, preserving the source and existing line breaks.
 - Failed WordPress image proxies and obsolete Wikimedia thumbnails can recover
   their explicitly encoded original image. Download limits and delays still apply.
 - HTML error responses are rejected even when their URL ends in `.png`.

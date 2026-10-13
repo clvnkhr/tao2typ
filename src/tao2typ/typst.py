@@ -18,8 +18,19 @@ _ALIGNMENT_HELPERS = f"""
 #import "@preview/equate:{EQUATE_VERSION}": equate, share-align
 #let tao-aligned(body, keep: true) = {{
   show: equate.with(sub-numbering: false)
-  block(breakable: not keep, above: 0pt, below: 0pt, share-align(body))
+  block(breakable: not keep, above: 1em, below: 1em, share-align(body))
 }}
+"""
+_DISPLAY_FIT_HELPERS = """
+// Fit an unnumbered single display to its actual local text measure.
+#let tao-fit-display(body) = context layout(size => {
+  let natural = [#show math.equation: set block(width: auto)
+  #body]
+  let width = measure(natural).width
+  if width > size.width {
+    align(center, scale((size.width / width) * 100%, reflow: true, natural))
+  } else { body }
+})
 """
 _EX_RAISEBOX = re.compile(r"(?<!\\)\\raisebox\s*\{\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)\s*ex\s*\}")
 _MATH_HELPERS = (
@@ -212,6 +223,7 @@ class _Renderer:
         self.emitted_anchors: set[str] = set()
         self.uses_math_helpers = False
         self.uses_aligned_math = False
+        self.uses_display_fitting = False
 
     def nodes(self, nodes: list[Node]) -> str:
         return "".join(self.node(node) for node in nodes)
@@ -469,6 +481,9 @@ class _Renderer:
             return (
                 f"#block(width: 100%)[#set math.equation(numbering: n => [{content}])\n{equation}]"
             )
+        if display and not aligned:
+            self.uses_display_fitting = True
+            return f"#tao-fit-display[{equation}]"
         return equation
 
     def image(self, node: Node) -> str:
@@ -601,6 +616,8 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
         preamble += _MATH_HELPERS
     if renderer.uses_aligned_math:
         preamble += _ALIGNMENT_HELPERS
+    if renderer.uses_display_fitting:
+        preamble += _DISPLAY_FIT_HELPERS
     return preamble + result
 
 
