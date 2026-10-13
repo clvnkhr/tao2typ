@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import time
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -166,6 +167,7 @@ def save_post(
     client: BlogClient | None,
     *,
     previous_digest: str | None = None,
+    converted_at: datetime | None = None,
 ) -> dict[str, str]:
     """Stage outputs and roll back a failed or interrupted artifact promotion.
 
@@ -188,7 +190,9 @@ def save_post(
     }
     assets = resolve_assets(post, client, output) if client else {}
     payload = post.to_dict()
-    rendered = render_post(post, assets=assets)
+    # Conversion time is provenance, not a content change. Hash a render copy
+    # without its date so a fresh check alone cannot regenerate an identical PDF.
+    rendered_for_digest = render_post(replace(post, converted_at=None), assets=assets)
     image_digests = {
         url: hashlib.sha256((source.parent / relative).read_bytes()).hexdigest()
         for url, relative in assets.items()
@@ -196,18 +200,28 @@ def save_post(
     digest = hashlib.sha256(
         (
             json.dumps(
-                {key: value for key, value in payload.items() if key != "source_manifest"},
+                {
+                    key: value
+                    for key, value in payload.items()
+                    if key not in {"source_manifest", "converted_at"}
+                },
                 ensure_ascii=False,
                 sort_keys=True,
             )
-            + rendered
+            + rendered_for_digest
             + json.dumps(image_digests, sort_keys=True)
         ).encode()
     ).hexdigest()
     if previous_digest == digest and all((output / path).exists() for path in paths.values()):
         # Refresh capture provenance without recompiling identical document content.
-        write_json(output / paths["ir"], payload)
-        return {**paths, "content_sha256": digest}
+        previous_post = Post.from_dict(json.loads(ir.read_text(encoding="utf-8")))
+        if previous_post.converted_at:
+            post.converted_at = previous_post.converted_at
+            write_json(ir, post.to_dict())
+            return {**paths, "content_sha256": digest, "converted_at": post.converted_at}
+    post.converted_at = timestamp(converted_at or datetime.now(UTC))
+    payload = post.to_dict()
+    rendered = render_post(post, assets=assets)
     attempted: list[Path] = []
     originals: set[Path] = set()
     recovery_backups: set[Path] = set()
@@ -250,7 +264,7 @@ def save_post(
         for backup in backups.values():
             if backup not in recovery_backups:
                 backup.unlink(missing_ok=True)
-    return {**paths, "content_sha256": digest}
+    return {**paths, "content_sha256": digest, "converted_at": post.converted_at}
 
 
 def write_index(state: ArchiveState, output: Path) -> None:
@@ -427,11 +441,16 @@ def run_batch(
                 )
                 post.source_manifest = capture.manifest_path
                 artifacts = save_post(
-                    post, stem, output, client, previous_digest=post_state.content_sha256
+                    post,
+                    stem,
+                    output,
+                    client,
+                    previous_digest=post_state.content_sha256,
+                    converted_at=now if clock_supplied else None,
                 )
                 completed = now if clock_supplied else datetime.now(UTC)
                 post_state.last_checked_at = timestamp(completed)
-                post_state.converted_at = timestamp(completed)
+                post_state.converted_at = artifacts["converted_at"]
                 post_state.converted_modified_at = post_state.modified_at
                 post_state.next_check_at = timestamp(
                     next_scheduled_check(parse_timestamp(post_state.published_at), completed)

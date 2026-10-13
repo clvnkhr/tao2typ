@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -106,6 +107,7 @@ def main() -> int:
         return 0
     if args.command == "render":
         post = Post.from_dict(json.loads(args.ir.read_text(encoding="utf-8")))
+        post.converted_at = datetime.now(UTC).isoformat()
         args.output.parent.mkdir(parents=True, exist_ok=True)
         # Existing archive image assets can be located independently of fetching HTML.
         assets = {}

@@ -10,6 +10,7 @@ import json
 import re
 import shutil
 from collections import Counter
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
 from unicodedata import normalize
@@ -30,6 +31,18 @@ def _public_url(value: object) -> str:
     url = str(value or "")
     parsed = urlsplit(url)
     return url if parsed.scheme in {"http", "https"} and parsed.netloc else "#"
+
+
+def _conversion_date(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    try:
+        converted = datetime.fromisoformat(value)
+        if converted.tzinfo is not None:
+            converted = converted.astimezone(UTC)
+        return converted.date().isoformat()
+    except ValueError:
+        return ""
 
 
 def _terms(post: dict[str, Any], kind: str) -> list[dict[str, Any]]:
@@ -270,7 +283,8 @@ def _post_markup(
         for kind, label in (("pdf", "PDF"), ("typst", ".typ"), ("ir", "JSON"))
         if (url := downloads[kind])
     )
-    availability = "" if ready else "Pending"
+    converted = _conversion_date(post.get("converted_at")) if ready else ""
+    availability = f'Converted <time datetime="{converted}">{converted}</time>' if converted else ""
     ready_class = " ready" if ready else ""
     return (
         f'<li class="post" {attrs}><div class="post-meta">'

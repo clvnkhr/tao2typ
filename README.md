@@ -20,6 +20,11 @@ screenshots. PDFs include the source link and publication date, serif text,
 page numbers, and styled theorem quotations. Unknown HTML can produce explicit
 IR warnings. Unsupported TeX or images fail visibly and retain the previous PDF.
 
+Each PDF and Typst source has a small `tao2typ` conversion-date line near the
+top. Conversion timestamps are retained in the IR and shown in the catalogue;
+an unchanged refresh keeps the existing date and avoids recompilation. The
+catalogue identifies this as an unofficial personal site.
+
 Replies follow the site's nesting, including its older sibling-list markup.
 Commenter avatars appear beside author metadata and are optional: an unavailable
 avatar is recorded as a warning without discarding the discussion. Equations

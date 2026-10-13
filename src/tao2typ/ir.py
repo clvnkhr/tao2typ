@@ -110,6 +110,7 @@ class Post:
     warnings: list[str] = field(default_factory=list)
     schema_version: int = SCHEMA_VERSION
     source_manifest: str | None = None
+    converted_at: str | None = None
 
     def walk(self) -> Iterator[Node]:
         for node in self.body:
@@ -125,6 +126,7 @@ class Post:
             "url": self.url,
             "published_at": self.published_at,
             "modified_at": self.modified_at,
+            "converted_at": self.converted_at,
             "author": self.author,
             "blog_title": self.blog_title,
             "body": [node.to_dict() for node in self.body],
@@ -145,6 +147,7 @@ class Post:
             url=str(value["url"]),
             published_at=value.get("published_at"),
             modified_at=value.get("modified_at"),
+            converted_at=value.get("converted_at"),
             author=str(value.get("author", "Terence Tao")),
             blog_title=str(value.get("blog_title", "What’s new")),
             body=[Node.from_dict(node) for node in value.get("body", [])],

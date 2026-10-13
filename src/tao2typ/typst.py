@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import re
 from collections.abc import Mapping
-from datetime import datetime
+from datetime import UTC, datetime
 from urllib.parse import unquote
 
 from tao2typ.ir import Comment, Node, Post
@@ -74,6 +74,20 @@ def _friendly_date(value: str | None) -> str:
         return f"{date.day} {date:%B %Y}"
     except ValueError:
         return value
+
+
+def _conversion_date(value: str | None) -> str:
+    if value:
+        try:
+            return (
+                datetime.fromisoformat(value.replace("Z", "+00:00"))
+                .astimezone(UTC)
+                .date()
+                .isoformat()
+            )
+        except ValueError:
+            pass
+    return "date unavailable"
 
 
 def _legacy_tex(source: str) -> str:
@@ -432,8 +446,15 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
     TeX, URLs, and filenames enter the document through string literals.
     """
     renderer = _Renderer(post, assets or {})
+    conversion_note = " · converted to Typst " + _conversion_date(post.converted_at) + " (UTC)"
+    provenance = (
+        '#text(size: 6.5pt, fill: rgb("596477"))['
+        '#link("https://clvnkhr.github.io/tao2typ/")[#text("tao2typ")]'
+        f"#text({_string(conversion_note)})]"
+    )
     preamble = f"""// Generated from tao2typ IR schema {post.schema_version}.
 // Original article: {post.url.replace(chr(10), " ").replace(chr(13), " ")}
+// Converted to Typst by tao2typ: {_string(post.converted_at or "unavailable")}
 #import "@preview/mitex:{MITEX_VERSION}": mi, mitex
 #set document(title: {_string(post.title)}, author: {_string(post.author)})
 #set page(paper: "a4", margin: (x: 24mm, y: 23mm), numbering: "1", number-align: center)
@@ -457,6 +478,8 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 #text(size: 10pt)[#text({_string(post.author + " · " + _friendly_date(post.published_at))})]
 #v(3pt)
 #text(size: 8pt)[#link({_string(post.url)})[#text({_string(post.url)})]]
+#v(3pt)
+{provenance}
 #v(9pt)
 #line(length: 100%, stroke: 0.7pt + rgb("d9dfe8"))
 #v(10pt)

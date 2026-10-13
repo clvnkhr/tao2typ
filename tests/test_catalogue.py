@@ -36,6 +36,7 @@ def fixture_archive(tmp_path: Path) -> Path:
                     "1": {
                         "title": 'Einstein’s <derivation> & "E=mc²"',
                         "published_at": "2007-12-28T12:00:00+00:00",
+                        "converted_at": "2026-10-14T01:15:00+02:00",
                         "url": "https://terrytao.wordpress.com/2007/12/28/einstein/",
                         "pdf": "pdfs/einstein-e-mc2.pdf",
                         "typst": "typst/einstein-e-mc2.typ",
@@ -57,6 +58,7 @@ def fixture_archive(tmp_path: Path) -> Path:
                     "2": {
                         "title": "Queued post",
                         "published_at": "2026-10-13T12:00:00Z",
+                        "converted_at": "2026-10-12T12:00:00Z",
                         "url": "https://terrytao.wordpress.com/2026/10/13/queued/",
                     },
                 }
@@ -93,10 +95,35 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     )
     assert soup.select(".post")[0]["data-title"] == "Queued post"
     assert "archive" not in soup.get_text().lower()
-    assert not soup.select("footer")
+    assert selected(soup, ".site-note").get_text() == (
+        "An unofficial personal site converting Terence Tao’s blog posts to PDFs with Typst."
+    )
     assert selected(soup, "a.pdf").get_text() == "PDF"
     assert selected(soup, "a.typst").get_text() == ".typ"
-    assert "Pending" in soup.select(".post")[0].get_text()
+    assert "Pending" not in soup.get_text()
+    assert selected(soup.select(".post")[0], ".availability").get_text() == ""
+    assert selected(soup.select(".post")[1], ".availability").get_text() == ("Converted 2026-10-13")
+    assert attribute(selected(soup.select(".post")[1], ".availability time"), "datetime") == (
+        "2026-10-13"
+    )
+
+
+@pytest.mark.parametrize(
+    "converted_at", [None, "", "not a date", "2026-02-30T12:00:00Z", ["2026-10-13"]]
+)
+def test_missing_or_invalid_conversion_date_stays_blank(
+    tmp_path: Path, converted_at: object
+) -> None:
+    archive = fixture_archive(tmp_path)
+    raw = json.loads((archive / "state.json").read_text())
+    raw["posts"]["1"]["converted_at"] = converted_at
+    (archive / "state.json").write_text(json.dumps(raw))
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    ready_post = selected(soup, '.post[data-ready="true"]')
+    assert selected(ready_post, ".availability").get_text() == ""
+    assert selected(ready_post, ".post-meta > time").get_text() == "2007-12-28"
 
 
 def test_titles_and_taxonomy_are_escaped_and_original_names_retained(tmp_path: Path) -> None:
