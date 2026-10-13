@@ -310,13 +310,51 @@ def _tokens(source: str) -> list[_Token]:
     return result
 
 
+def _starts_paired_fence(tokens: list[_Token], index: int) -> bool:
+    """A complete following fence makes adjacency a product of math atoms.
+
+    Earlier normalization passes turn plain pairs into explicit left/right
+    atoms. Recognizing those atoms allows a whole chain of adjacent factors to
+    become native fences, rather than leaving every intermediate pair as bars.
+    Only complete explicit pairs are accepted; a lone opening is insufficient.
+    """
+    opening = tokens[index]
+    # A fixed-size pair canonicalizes as \big{\left|...\right|}.
+    if opening.size and opening.text == "{" and index + 1 < len(tokens):
+        index += 1
+        opening = tokens[index]
+    family = _FAMILY.get(opening.text)
+    if opening.direction != "left" or family is None:
+        return False
+    group_depth = 0
+    openings: list[int] = []
+    for token in tokens[index:]:
+        if token.direction == "left":
+            openings.append(group_depth)
+        elif token.direction == "right":
+            # TeX does not permit a left/right pair to cross an argument group.
+            if not openings or openings[-1] != group_depth:
+                return False
+            openings.pop()
+            if not openings:
+                return _FAMILY.get(token.text) == family
+        elif token.text == "{" and not token.direction:
+            group_depth += 1
+        elif token.text == "}" and not token.direction:
+            if group_depth == 0 or openings[-1] == group_depth:
+                return False
+            group_depth -= 1
+    return False
+
+
 def _safe_implicit_open(
     tokens: list[_Token], index: int, family: str, enclosing_family: str = ""
 ) -> bool:
     """Recognize multiplication by a fenced atom without swallowing a|b|c.
 
     A second bar at this syntactic level must be followed by a script, operator,
-    closing delimiter or end. A following operand makes a relation chain ambiguous.
+    closing delimiter, complete fence or end. A following ordinary operand makes
+    a relation chain ambiguous.
     """
     depth = 0
     for position in range(index + 1, len(tokens)):
@@ -335,6 +373,7 @@ def _safe_implicit_open(
                 following.text in _CLOSE | _OPERATORS
                 or following.text in "^_+-=*/<>,:;&"
                 or following.direction == "right"
+                or _starts_paired_fence(tokens, position + 1)
                 # Multiplication inside a different enclosing fence is clear:
                 # |a\|u\|| and \|a|x|\| do not form relation chains.
                 or enclosing_family != family

@@ -42,6 +42,12 @@ Plain bars still require a heuristic: ambiguous sequences and arbitrary TeX
 macro argument syntax cannot be resolved universally by this lexer. Explicit
 `\left`/`\right` or `\lvert`/`\rvert` directions make the intended pairing clear.
 
+Consecutive display rows align at top-level relations; leading `+`/`-`
+continuations can share a binary-operator alignment. Prose and structural block
+boundaries end the group. Pinned `@preview/equate:0.3.3` shares the alignment
+while retaining each original equation label, including sublabels such as
+`(3a)` and `(3b)`. The source TeX in the IR is unchanged.
+
 ## Run locally
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and

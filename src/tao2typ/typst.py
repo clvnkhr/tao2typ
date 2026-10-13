@@ -8,10 +8,19 @@ from collections.abc import Mapping
 from datetime import UTC, datetime
 from urllib.parse import unquote
 
+from tao2typ.alignment import alignment_pivot, with_alignment
 from tao2typ.ir import Comment, Node, Post
 from tao2typ.tex import DELIMITER_HELPERS, normalize_delimiters, normalize_scripts
 
 MITEX_VERSION = "0.2.7"
+EQUATE_VERSION = "0.3.3"
+_ALIGNMENT_HELPERS = f"""
+#import "@preview/equate:{EQUATE_VERSION}": equate, share-align
+#let tao-aligned(body, keep: true) = {{
+  show: equate.with(sub-numbering: false)
+  block(breakable: not keep, above: 0pt, below: 0pt, share-align(body))
+}}
+"""
 _EX_RAISEBOX = re.compile(r"(?<!\\)\\raisebox\s*\{\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)\s*ex\s*\}")
 _MATH_HELPERS = (
     DELIMITER_HELPERS
@@ -202,12 +211,111 @@ class _Renderer:
         }
         self.emitted_anchors: set[str] = set()
         self.uses_math_helpers = False
+        self.uses_aligned_math = False
 
     def nodes(self, nodes: list[Node]) -> str:
         return "".join(self.node(node) for node in nodes)
 
     def blocks(self, nodes: list[Node]) -> str:
-        return "\n\n".join(self.node(node) for node in nodes)
+        rendered: list[str] = []
+        position = 0
+        while position < len(nodes):
+            if self.display_row(nodes[position]) is None:
+                rendered.append(self.node(nodes[position]))
+                position += 1
+                continue
+            rows: list[tuple[Node, list[Node]]] = [(nodes[position], [])]
+            end = position + 1
+            pending: list[Node] = []
+            while end < len(nodes):
+                node = nodes[end]
+                if node.kind == "anchor" or node.kind == "text" and not node.text.strip():
+                    pending.append(node)
+                elif self.display_row(node) is not None:
+                    rows.append((node, pending))
+                    pending = []
+                else:
+                    break
+                end += 1
+            # Anchors belonging to following prose must not move into a math group.
+            end -= len(pending)
+            rendered.extend(self.display_run(rows))
+            position = end
+        return "\n\n".join(rendered)
+
+    @staticmethod
+    def display_row(node: Node) -> Node | None:
+        if node.kind == "math" and node.attrs.get("display") == "true":
+            return node
+        if node.kind != "paragraph":
+            return None
+        significant = [
+            child
+            for child in node.children
+            if child.kind != "anchor" and not (child.kind == "text" and not child.text.strip())
+        ]
+        if (
+            len(significant) == 1
+            and significant[0].kind == "math"
+            and significant[0].attrs.get("display") == "true"
+        ):
+            return significant[0]
+        return None
+
+    def display_run(self, rows: list[tuple[Node, list[Node]]]) -> list[str]:
+        pivots = []
+        for node, _ in rows:
+            math = self.display_row(node)
+            assert math is not None
+            pivots.append(alignment_pivot(normalize_delimiters(_legacy_tex(math.text))))
+        result: list[str] = []
+        start = 0
+        while start < len(rows):
+            pivot = pivots[start]
+            if pivot is None or pivot.kind == "continuation":
+                node, prefix = rows[start]
+                result.append(self.nodes(prefix) + self.node(node))
+                start += 1
+                continue
+            mode = "binary" if pivot.kind == "binary" else "relation"
+            allowed = {mode, "explicit", "continuation"}
+            end = start + 1
+            while end < len(rows):
+                following = pivots[end]
+                if following is None or following.kind not in allowed:
+                    break
+                end += 1
+            group = rows[start:end]
+            continuations = any(
+                p is not None and p.kind == "continuation" for p in pivots[start:end]
+            )
+            if len(group) < 2 or mode == "binary" and not continuations:
+                for node, prefix in group:
+                    result.append(self.nodes(prefix) + self.node(node))
+            else:
+                contents: list[str] = []
+                for node, prefix in group:
+                    contents.append(self.nodes(prefix))
+                    if node.kind == "paragraph":
+                        contents.append(
+                            "".join(
+                                self.math(child, aligned=True)
+                                if child.kind == "math"
+                                else self.node(child)
+                                for child in node.children
+                            )
+                        )
+                    else:
+                        contents.append(self.math(node, aligned=True))
+                result.append(self.aligned_block(contents))
+            start = end
+        return result
+
+    def aligned_block(self, contents: list[str]) -> str:
+        self.uses_aligned_math = True
+        # Keep short calculations together, while long source runs can paginate.
+        keep = sum("#tao-math(" in item for item in contents) <= 6
+        return f"#tao-aligned(keep: {str(keep).lower()})[\n" + "\n\n".join(contents) + "\n]"
 
     def node(self, node: Node) -> str:
         kind = node.kind
@@ -290,7 +398,7 @@ class _Renderer:
             return self.blocks(node.children)
         raise ValueError(f"Cannot render unknown IR node kind: {kind}")
 
-    def math(self, node: Node) -> str:
+    def math(self, node: Node, *, aligned: bool = False) -> str:
         display = node.attrs.get("display") == "true"
         source = _legacy_tex(node.text.strip())
         number = node.attrs.get("number")
@@ -301,17 +409,8 @@ class _Renderer:
             rows = _equation_rows(source)
             if rows is None or len(rows) < 2:
                 raise ValueError("Multiple equation tags without separable source rows")
-            return (
-                "#block(width: 100%)[\n"
-                + "\n\n".join(
-                    self.math(
-                        Node(
-                            "math", r"\begin{aligned}" + row + r"\end{aligned}", {"display": "true"}
-                        )
-                    )
-                    for row in rows
-                )
-                + "\n]"
+            return self.aligned_block(
+                [self.math(Node("math", row, {"display": "true"}), aligned=True) for row in rows]
             )
         starred = False
         if tags:
@@ -344,7 +443,9 @@ class _Renderer:
             source = re.sub(r"^\\displaystyle\s*", "", source)
             source += node.attrs.get("punctuation", "")
         source = normalize_delimiters(source)
-        if _EX_RAISEBOX.search(source) or re.search(r"\\left\s*(?:\||\\\|)", source):
+        if aligned:
+            source = with_alignment(source) or source
+        if aligned or _EX_RAISEBOX.search(source) or re.search(r"\\left\s*(?:\||\\\|)", source):
             self.uses_math_helpers = True
             equation = f"#tao-math({_string(source)}, block: {str(display).lower()})"
         else:
@@ -361,6 +462,8 @@ class _Renderer:
                     content += f"#text({_string(suffix)})"
             else:
                 content = f"#text({_string(label)})"
+            if aligned:
+                return f"#tao-math({_string(source)}, block: true, numbering: n => [{content}])"
             # Native equation numbering centers the equation across the whole
             # text measure and places the *source* label at the right margin.
             return (
@@ -496,6 +599,8 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
         result += "\n"
     if renderer.uses_math_helpers:
         preamble += _MATH_HELPERS
+    if renderer.uses_aligned_math:
+        preamble += _ALIGNMENT_HELPERS
     return preamble + result
 
 

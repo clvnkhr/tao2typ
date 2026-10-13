@@ -81,6 +81,34 @@ from tao2typ.typst import render_post
         (r"|x^{a_b} + y|", r"\left|x^{a_b} + y\right|"),
         ("2|x|", r"2\left|x\right|"),
         ("|x| |y|", r"\left|x\right| \left|y\right|"),
+        ("|u| |w| |v|", r"\left|u\right| \left|w\right| \left|v\right|"),
+        ("|u||w||v|", r"\left|u\right|\left|w\right|\left|v\right|"),
+        (
+            "a|u| |w| |v| |z|",
+            r"a\left|u\right| \left|w\right| \left|v\right| \left|z\right|",
+        ),
+        (
+            r"\|u\| \|w\| \|v\|",
+            r"\left\|u\right\| \left\|w\right\| \left\|v\right\|",
+        ),
+        (
+            r"|u| \|w\| |v|",
+            r"\left|u\right| \left\|w\right\| \left|v\right|",
+        ),
+        (
+            r"|u| |w| \bigl|v\bigr|",
+            r"\left|u\right| \left|w\right| \big{\left|v\right|}",
+        ),
+        (
+            r"|u| |w| \left|x\right)",
+            r"\left|u\right| |w| \left|x\right)",
+        ),
+        (r"|u| |w| \left|x", r"\left|u\right| |w| \left|x"),
+        (
+            r"|u| |w| \left|{x}\right|",
+            r"\left|u\right| \left|w\right| \left|{x}\right|",
+        ),
+        (r"|u| |w| \left|{x\right|}", r"\left|u\right| |w| \left|{x\right|}"),
         ("P(|X|<1|Y=y)", r"P(\left|X\right|<1|Y=y)"),
         (r"\{x : |x|<1\}", r"\{x : \left|x\right|<1\}"),
         (r"\left(|x|+1\right)", r"\left(\left|x\right|+1\right)"),
@@ -253,6 +281,66 @@ def test_renderer_keeps_nested_fences_as_complete_atoms(
                 actual.append(first["text"])
     assert actual == fences
     assert node.text == source + "_p"  # Original LaTeX is never rewritten in the IR.
+
+
+@pytest.mark.parametrize(
+    ("source", "fences"),
+    [
+        (r"|u| |w| |\nabla w|", ["|", "|", "|"]),
+        (r"|u||w||\nabla w|", ["|", "|", "|"]),
+        (r"a |u| |w| |v| |z|", ["|", "|", "|", "|"]),
+        (r"\|u\| \|w\| \|v\|", ["‖", "‖", "‖"]),
+        (r"|u| \|w\| |v|", ["|", "‖", "|"]),
+        (
+            r"\displaystyle  |u \cdot \partial_j(w_j w)| \leq |u| |w| |\nabla w|"
+            r" \leq \nu |\nabla w|^2 + \frac{1}{4 \nu} |u|^2 |w|^2",
+            ["|"] * 7,
+        ),
+    ],
+)
+def test_adjacent_products_have_no_detached_vertical_bars(
+    tmp_path: Path, source: str, fences: list[str]
+) -> None:
+    """The live weak-Navier–Stokes bound's middle |w| must be one native atom."""
+    compiler = shutil.which("typst")
+    if compiler is None:
+        pytest.skip("Typst is required for native adjacent fence verification")
+    node = Node("math", source, attrs={"display": "true"})
+    document = render_post(Post("Adjacent factors", "https://example.org/factors/", body=[node]))
+    marker = "#set math.equation(numbering: none)"
+    document = document.replace(
+        marker,
+        marker + "\n#show math.equation: it => [#metadata(it.body) <fence-probe> #it]",
+    )
+    path = tmp_path / "adjacent-fences.typ"
+    path.write_text(document, encoding="utf-8")
+    query = subprocess.run(
+        [compiler, "query", str(path), "<fence-probe>", "--field", "value"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+    assert query.returncode == 0, query.stderr
+    compiled = _contents(json.loads(query.stdout)[-1])
+    actual = []
+    for item in compiled:
+        body = item.get("body")
+        if item.get("func") != "lr" or not isinstance(body, dict):
+            continue
+        children = body.get("children")
+        if not isinstance(children, list) or len(children) < 2:
+            continue
+        first, last = children[0], children[-1]
+        if isinstance(first, dict) and isinstance(last, dict):
+            if first.get("text") in {"|", "‖"} and first.get("text") == last.get("text"):
+                actual.append(first["text"])
+    assert actual == fences
+    # Every vertical glyph belongs to a complete native pair. None is a loose
+    # punctuation atom, which is what gave the middle |w| its incorrect spacing.
+    bars = [item for item in compiled if item.get("text") in {"|", "‖"}]
+    assert len(bars) == 2 * len(fences)
+    assert node.text == source
 
 
 @pytest.mark.parametrize(

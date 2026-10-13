@@ -89,6 +89,7 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
         "parser.py",
         "typst.py",
         "tex.py",
+        "alignment.py",
         "pipeline.py",
         "source.py",
         "raw.py",
@@ -104,3 +105,6 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
     after_asset_fix = pipeline.converter_fingerprint()
     (tmp_path / "tex.py").write_text("Math argument boundaries fixed")
     assert pipeline.converter_fingerprint() != after_asset_fix
+    after_tex_fix = pipeline.converter_fingerprint()
+    (tmp_path / "alignment.py").write_text("Shared display alignment fixed")
+    assert pipeline.converter_fingerprint() != after_tex_fix

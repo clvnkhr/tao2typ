@@ -40,6 +40,7 @@ def converter_fingerprint() -> str:
         "parser.py",
         "typst.py",
         "tex.py",
+        "alignment.py",
         "pipeline.py",
         "source.py",
         "raw.py",

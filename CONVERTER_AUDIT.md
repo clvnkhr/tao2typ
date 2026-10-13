@@ -36,6 +36,18 @@ prime rendering.
 - Nested fence scopes include half-open intervals, floor/ceiling delimiters and
   arbitrary explicit left/right glyph pairs. Standard functions and binary
   operators keep inner absolute-value and norm pairs nested correctly.
+- Adjacent fenced factors such as `|u| |w| |\nabla w|` all become native atoms.
+  Compiled regressions check that no loose fence glyphs remain.
+- Adjacent display rows align at top-level relation operators, with binary
+  continuation support and source-row anchors retained. Scoped `equate:0.3.3`
+  keeps each original source tag and subtag. PDF geometry tests check alignment
+  columns and number placement for the weak-convergence, norm-chain and Euler
+  systems reported during inspection.
+- Fresh cross-note checks cover 245B Notes 12 (locally compact Hausdorff spaces)
+  and Notes 2 (amenability): summation conditions, cardinality fences, norm
+  products, inequality chains and repeated source labels. Short aligned runs
+  stay on one page; longer runs remain breakable. The original Notes 12 typo
+  `\psi_j)` is retained.
 - Failed WordPress image proxies and obsolete Wikimedia thumbnails can recover
   their explicitly encoded original image. Download limits and delays still apply.
 - HTML error responses are rejected even when their URL ends in `.png`.
@@ -64,3 +76,6 @@ is not a fully atomic transaction; a later retry repairs the output set. No audi
 can establish that every future WordPress markup or TeX construct is supported.
 Plain bar pairing is heuristic; ambiguous notation and arbitrary macro argument
 syntax remain limits. Explicit directional fences avoid that ambiguity.
+Alignment only groups existing adjacent display rows; it does not invent line
+breaks in a single formula. Fully outer-grouped formulas and nested decorated
+relation macros may remain separately centered when no safe pivot is found.
