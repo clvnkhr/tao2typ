@@ -22,11 +22,11 @@ def test_week_month_and_first_birthday_follow_publication() -> None:
     published = instant(2026, 10, 1)
     week = instant(2026, 10, 8)
     month = instant(2026, 11, 1)
-    year = instant(2027, 10, 1)
+    year = instant(2027, 10, 1, 0)
     assert next_scheduled_check(published, published) == week
     assert next_scheduled_check(published, week) == month
     assert next_scheduled_check(published, month) == year
-    assert next_scheduled_check(published, year) == instant(2028, 10, 1)
+    assert next_scheduled_check(published, year) == instant(2028, 10, 1, 0)
 
 
 @pytest.mark.parametrize(
@@ -44,23 +44,23 @@ def test_month_uses_calendar_arithmetic(published: datetime, expected: datetime)
 
 def test_leap_day_birthdays_return_to_original_date() -> None:
     published = instant(2020, 2, 29)
-    assert next_scheduled_check(published, instant(2020, 3, 29)) == instant(2021, 2, 28)
-    assert next_scheduled_check(published, instant(2023, 2, 28)) == instant(2024, 2, 29)
-    assert next_scheduled_check(published, instant(2024, 2, 28)) == instant(2024, 2, 29)
-    assert next_scheduled_check(published, instant(2024, 2, 29)) == instant(2025, 2, 28)
+    assert next_scheduled_check(published, instant(2020, 3, 29)) == instant(2021, 2, 28, 0)
+    assert next_scheduled_check(published, instant(2023, 2, 28)) == instant(2024, 2, 29, 0)
+    assert next_scheduled_check(published, instant(2024, 2, 28)) == instant(2024, 2, 29, 0)
+    assert next_scheduled_check(published, instant(2024, 2, 29)) == instant(2025, 2, 28, 0)
 
 
 def test_old_post_is_placed_on_next_birthday_after_initial_batch() -> None:
     published = instant(2007, 4, 15)
     assert plan_refresh(published, None, now=instant(2026, 10, 13)).due
     checked = instant(2026, 10, 13)
-    assert next_scheduled_check(published, checked) == instant(2027, 4, 15)
+    assert next_scheduled_check(published, checked) == instant(2027, 4, 15, 0)
 
 
 def test_old_post_checked_before_this_year_birthday_is_due_on_birthday() -> None:
     published = instant(2007, 10, 15)
     checked = instant(2026, 10, 13)
-    birthday = instant(2026, 10, 15)
+    birthday = instant(2026, 10, 15, 0)
     assert next_scheduled_check(published, checked) == birthday
     assert not plan_refresh(published, checked, now=birthday - timedelta(seconds=1)).due
     assert plan_refresh(published, checked, now=birthday).reasons == ("birthday",)
@@ -71,7 +71,7 @@ def test_missed_milestones_require_one_catch_up_check() -> None:
     now = instant(2026, 10, 13)
     assert plan_refresh(published, published, now=now).due
     # Persisting one successful check covers all of the missed dates.
-    assert next_scheduled_check(published, now) == instant(2027, 5, 10)
+    assert next_scheduled_check(published, now) == instant(2027, 5, 10, 0)
     assert not plan_refresh(published, now, now=now).due
 
 
@@ -89,7 +89,7 @@ def test_unseen_recent_comment_triggers_early_refresh() -> None:
     plan = plan_refresh(published, checked, now=now, recent_comment=True)
     assert plan.due
     assert plan.reasons == ("recent-comment",)
-    assert plan.next_check_at == instant(2027, 4, 15)
+    assert plan.next_check_at == instant(2027, 4, 15, 0)
     assert not plan_refresh(published, now, now=now, recent_comment=False).due
 
 
@@ -121,14 +121,22 @@ def test_calendar_arithmetic_preserves_source_date_across_utc_boundary() -> None
     month = datetime(2024, 3, 29, 3, tzinfo=UTC)
     assert next_scheduled_check(published, published + timedelta(days=7)) == month
     # The source birthday is February 28 even though publication was February 29
-    # in UTC. Its 2025 anniversary falls on March 1 in UTC.
-    assert next_scheduled_check(published, month) == datetime(2025, 3, 1, 3, tzinfo=UTC)
+    # in UTC. The anniversary becomes due at midnight of the source date.
+    assert next_scheduled_check(published, month) == datetime(2025, 2, 28, 4, tzinfo=UTC)
 
 
 def test_birthday_year_uses_publication_timezone() -> None:
     published = datetime(2007, 1, 1, 1, tzinfo=timezone(timedelta(hours=14)))
     checked = datetime(2026, 12, 31, 22, tzinfo=UTC)
-    assert next_scheduled_check(published, checked) == datetime(2027, 12, 31, 11, tzinfo=UTC)
+    assert next_scheduled_check(published, checked) == datetime(2027, 12, 31, 10, tzinfo=UTC)
+
+
+def test_early_daily_scan_checks_birthday_before_publication_hour() -> None:
+    published = datetime(2020, 10, 13, 23, 45, tzinfo=UTC)
+    checked = instant(2026, 10, 12)
+    scan = datetime(2026, 10, 13, 6, 23, tzinfo=UTC)
+    assert plan_refresh(published, checked, now=scan).reasons == ("birthday",)
+    assert next_scheduled_check(published, scan) == instant(2027, 10, 13, 0)
 
 
 @pytest.mark.parametrize("argument", ["published_at", "last_checked_at", "now"])

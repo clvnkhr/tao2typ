@@ -146,6 +146,14 @@ def save_post(
         write_json(output / paths["ir"], payload)
         staged_source.replace(source)
         staged_pdf.replace(pdf)
+        (output / "failures" / (stem + ".json")).unlink(missing_ok=True)
+        (output / "failures" / (stem + ".typ")).unlink(missing_ok=True)
+    except Exception:
+        # Preserve an inspectable IR/source for unsupported equations, while the
+        # canonical paths keep the last successfully compiled document.
+        write_json(output / "failures" / (stem + ".json"), payload)
+        (output / "failures" / (stem + ".typ")).write_text(rendered, encoding="utf-8")
+        raise
     finally:
         staged_source.unlink(missing_ok=True)
         staged_pdf.unlink(missing_ok=True)
@@ -197,6 +205,7 @@ def run_batch(
         "errors": [],
     }
     report_path = output / "jobs" / (now.strftime("%Y%m%dT%H%M%S.%fZ") + ".json")
+    write_json(report_path, report)
     try:
         # Small metadata-only pages scan the complete inventory every run. This also
         # detects modifications to older posts without relying on an RSS window.
@@ -264,6 +273,8 @@ def run_batch(
             )
         )
         report["due"] = len(candidates)
+        state.save(state_path)
+        write_json(report_path, report)
         selected = candidates[:max_posts] if max_posts else candidates
         for post_state, reasons in selected:
             if time.monotonic() - started_monotonic >= max_seconds:

@@ -43,7 +43,14 @@ def _calendar_month_after(value: datetime) -> datetime:
 def _birthday(value: datetime, year: int) -> datetime:
     # Anchor each anniversary to the original date: a leap-day post returns to
     # February 29 in leap years even after being checked on February 28.
-    return value.replace(year=year, day=min(value.day, monthrange(year, value.month)[1]))
+    return value.replace(
+        year=year,
+        day=min(value.day, monthrange(year, value.month)[1]),
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
 
 
 def _next_milestone(
@@ -71,7 +78,9 @@ def next_scheduled_check(published_at: datetime, last_checked_at: datetime | Non
     Check initially, at seven days, one calendar month, one calendar year, and
     every annual birthday thereafter. Calendar arithmetic retains the source
     publication timezone; returned dates are in UTC. A date absent in the target
-    month or year is clamped to its final day.
+    month or year is clamped to its final day. Birthdays become due at midnight
+    of the source calendar date so a daily scan checks them on that date. Week
+    and month milestones retain the publication time.
     """
     published_at = _aware(published_at)
     if last_checked_at is not None:

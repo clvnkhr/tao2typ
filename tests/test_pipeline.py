@@ -141,7 +141,7 @@ def test_unlimited_initial_batch_persists_source_dates_and_timestamped_report(
     assert first.published_at == published.isoformat()
     assert first.last_checked_at == first.converted_at == now.isoformat()
     assert first.next_check_at == instant(2026, 11, 1).isoformat()
-    assert state.posts["2"].next_check_at == instant(2027, 4, 15).isoformat()
+    assert state.posts["2"].next_check_at == instant(2027, 4, 15).replace(hour=0).isoformat()
     assert first.ir is not None
     ir = json.loads((tmp_path / first.ir).read_text())
     assert ir["published_at"] == first.published_at
@@ -185,7 +185,10 @@ def test_missed_checks_are_collapsed_into_one_refresh(
     assert report["converted"] == 1
     assert compiler.calls == 1
     assert len(client.fetched) == 2
-    assert archive(tmp_path).posts["1"].next_check_at == instant(2028, 9, 1).isoformat()
+    assert (
+        archive(tmp_path).posts["1"].next_check_at
+        == instant(2028, 9, 1).replace(hour=0).isoformat()
+    )
     assert pipeline.run_batch(tmp_path, client, now=later + timedelta(days=1))["due"] == 0
 
 

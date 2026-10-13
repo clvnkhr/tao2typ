@@ -82,6 +82,8 @@ then return to February 29 in leap years. Importing an older post performs one
 initial check and places its next check on the original publication timeline;
 it does not restart the week/month schedule from the import date. A delayed job
 catches up in one refresh and skips milestones already covered by that check.
+Birthday checks become due at source-date midnight, so publication later in the
+day does not defer its check until the next day’s scan.
 
 Recent comment events are keyed by their full permalink (including the comment
 ID), queued durably, and acknowledged only after PDF compilation succeeds.
@@ -105,6 +107,7 @@ archive/
   typst/*.typ       # escaped, independently compilable Typst source
   pdfs/*.pdf        # stable filenames: publication date + WordPress ID
   assets/*          # image assets addressed by URL + content hashes
+  failures/*        # diagnostic IR/Typst for failed compilations
   README.md         # chronological PDF index
 ```
 

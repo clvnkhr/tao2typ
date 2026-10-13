@@ -43,6 +43,10 @@ jobs:
           FORCE: ${{ inputs.force || 'false' }}
         shell: bash
         run: |
+          if [[ ! -f archive/state.json ]]; then
+            echo "::notice::Run bash scripts/first-batch.sh locally to seed the archive first."
+            exit 0
+          fi
           args=(batch --output archive --max-posts "$MAX_POSTS" --max-seconds 600)
           if [[ "$FORCE" == "true" ]]; then args+=(--force); fi
           uv run tao2typ "${args[@]}"

@@ -47,6 +47,21 @@ def _friendly_date(value: str | None) -> str:
         return value
 
 
+def _legacy_tex(source: str) -> str:
+    """Normalize two legacy TeX forms unsupported by the pinned MiTeX parser.
+
+    Bracing sqrt's next ordinary token preserves TeX's exact argument semantics:
+    ``\\sqrt(n)`` becomes ``\\sqrt{(}n)``, not a newly invented radicand ``n``.
+    Original source remains untouched in the IR.
+    """
+    source = re.sub(r"(?<!\\)\\mbox(?![A-Za-z])", r"\\text", source)
+    return re.sub(
+        r"(?<!\\)(\\sqrt\s*(?:\[[^\]\n]*\]\s*)?)([^\s\\{}\[])",
+        r"\1{\2}",
+        source,
+    )
+
+
 class _Renderer:
     def __init__(self, post: Post, assets: Mapping[str, str]) -> None:
         self.post = post
@@ -144,7 +159,7 @@ class _Renderer:
 
     def math(self, node: Node) -> str:
         display = node.attrs.get("display") == "true"
-        source = node.text.strip()
+        source = _legacy_tex(node.text.strip())
         number = node.attrs.get("number")
         if display:
             # WordPress bakes equation numbers into image TeX. Preserve those

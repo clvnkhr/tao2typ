@@ -251,3 +251,30 @@ def test_tao_theme_comments_omit_avatars_and_preserve_content_and_replies() -> N
     assert parent.replies[0].published_at == "2007-02-28T08:00:00"
     assert [node.text for node in _kinds(post, "math")] == [r"\mathbb{R}", "x^2"]
     assert not any("profile" in node.attrs.get("url", "") for node in parent.walk())
+
+
+def test_legacy_sqrt_and_mbox_compile_without_changing_ir(tmp_path: Path) -> None:
+    # These exact legacy patterns failed in the first real 2007 post batch.
+    legacy = r"(\sqrt(n))^{-1} + \sqrt 2 + \mbox{for all } x"
+    node = Node("math", legacy, {"display": "true"})
+    post = Post("Legacy TeX compatibility", URL, body=[node])
+    source_text = render_post(post)
+    assert node.text == legacy
+    assert r"\\sqrt{(}n)" in source_text
+    assert r"\\sqrt {2}" in source_text
+    assert r"\\text{for all }" in source_text
+    compiler = shutil.which("typst")
+    if compiler is None:
+        pytest.skip("Typst is not installed; CI installs it for this compilation test")
+    source = tmp_path / "legacy.typ"
+    pdf = tmp_path / "legacy.pdf"
+    source.write_text(source_text, encoding="utf-8")
+    result = subprocess.run(
+        [compiler, "compile", str(source), str(pdf)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stderr
+    assert pdf.read_bytes().startswith(b"%PDF-")
