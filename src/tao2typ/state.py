@@ -32,6 +32,7 @@ class PostState:
     pdf: str | None = None
     ir: str | None = None
     typst: str | None = None
+    source_manifest: str | None = None
     last_error: str | None = None
     pending_comments: list[str] = field(default_factory=list)
     seen_comments: list[str] = field(default_factory=list)

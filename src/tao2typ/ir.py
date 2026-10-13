@@ -109,6 +109,7 @@ class Post:
     blog_title: str = "What’s new"
     warnings: list[str] = field(default_factory=list)
     schema_version: int = SCHEMA_VERSION
+    source_manifest: str | None = None
 
     def walk(self) -> Iterator[Node]:
         for node in self.body:
@@ -120,6 +121,7 @@ class Post:
         return {
             "schema_version": self.schema_version,
             "title": self.title,
+            "source_manifest": self.source_manifest,
             "url": self.url,
             "published_at": self.published_at,
             "modified_at": self.modified_at,
@@ -137,6 +139,9 @@ class Post:
             raise ValueError(f"Unsupported IR schema version: {version}")
         return cls(
             title=str(value["title"]),
+            source_manifest=str(value["source_manifest"])
+            if value.get("source_manifest") is not None
+            else None,
             url=str(value["url"]),
             published_at=value.get("published_at"),
             modified_at=value.get("modified_at"),

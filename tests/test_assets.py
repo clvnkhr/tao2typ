@@ -84,7 +84,14 @@ def test_image_shared_by_avatar_and_prose_remains_required(tmp_path: Path) -> No
 def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    for name in ("ir.py", "parser.py", "typst.py", "pipeline.py", "source.py"):
+    for name in (
+        "ir.py",
+        "parser.py",
+        "typst.py",
+        "pipeline.py",
+        "source.py",
+        "raw.py",
+    ):
         (tmp_path / name).write_text(name)
     monkeypatch.setattr(pipeline, "__file__", str(tmp_path / "pipeline.py"))
     original = pipeline.converter_fingerprint()

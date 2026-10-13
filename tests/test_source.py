@@ -331,10 +331,15 @@ def test_comment_pages_traverse_older_newer_with_cycle_guard() -> None:
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
         client = BlogClient(http_client=http_client, interval=0)
-        pages = client.fetch_post_pages(POST)
+        captured = []
+        pages = client.fetch_post_pages(POST, on_page=captured.append)
     assert len(pages) == 4
     assert len(requests) == len(set(requests)) == 4
     assert not any(url.startswith(OTHER) for url in requests)
+    assert [page.html for page in captured] == pages
+    assert [page.url for page in captured] == requests
+    assert [page.requested_url for page in captured] == requests
+    assert all(page.fetched_at.endswith("+00:00") for page in captured)
 
 
 def test_comment_page_limit_does_not_report_partial_success() -> None:

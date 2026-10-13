@@ -98,6 +98,16 @@ class RecentComment:
     post_url: str
 
 
+@dataclass(frozen=True)
+class FetchedPage:
+    """The exact decoded HTML passed to the parser, with HTTP provenance."""
+
+    html: str
+    url: str
+    requested_url: str
+    fetched_at: str
+
+
 def canonical_post_url(url: str) -> str:
     """Validate a dated Tao permalink and strip comment pages/query/fragment."""
     parts = urlsplit(url)
@@ -447,7 +457,9 @@ class BlogClient:
     def recent_comments(self) -> list[RecentComment]:
         return extract_recent_comments(self._request(SITE_URL).text)
 
-    def fetch_post_pages(self, url: str) -> list[str]:
+    def fetch_post_pages(
+        self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+    ) -> list[str]:
         """Fetch the post and every reachable comment page, with cycle protection.
 
         Follow only explicit pagination links for this same dated post, including
@@ -466,10 +478,15 @@ class BlogClient:
                 raise SourceError(f"Comment pagination exceeds {self.max_comment_pages} pages")
             seen.add(current)
             response = self._request(current)
+            html = response.text
+            if on_page is not None:
+                on_page(
+                    FetchedPage(html, str(response.url), current, datetime.now(UTC).isoformat())
+                )
             if canonical_post_url(str(response.request.url)) != canonical:
                 raise SourceError(f"Post fetch redirected to another post: {response.request.url}")
-            pages.append(response.text)
-            soup = BeautifulSoup(response.text, "html.parser")
+            pages.append(html)
+            soup = BeautifulSoup(html, "html.parser")
             for anchor in soup.select("a[href]"):
                 href = anchor.get("href")
                 if not isinstance(href, str):

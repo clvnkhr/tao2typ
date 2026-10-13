@@ -3,7 +3,7 @@
 import base64
 import json
 import os
-from collections.abc import Iterator, Sequence
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
@@ -13,7 +13,7 @@ import pytest
 
 from tao2typ import pipeline
 from tao2typ.ir import Node, Post
-from tao2typ.source import BlogClient, PostMetadata, RecentComment
+from tao2typ.source import BlogClient, FetchedPage, PostMetadata, RecentComment, SourceError
 from tao2typ.state import ArchiveState
 
 
@@ -93,9 +93,16 @@ class FakeBlogClient(BlogClient):
             raise self.recent_error
         return self.events
 
-    def fetch_post_pages(self, url: str) -> list[str]:
+    def fetch_post_pages(
+        self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+    ) -> list[str]:
         self.fetched.append(url)
-        return [self.html, "Comment page"]
+        pages = [self.html, "Comment page"]
+        if on_page:
+            for i, html in enumerate(pages):
+                page_url = url if i == 0 else url + f"comment-page-{i}/"
+                on_page(FetchedPage(html, page_url, page_url, instant(2026, 10, 13).isoformat()))
+        return pages
 
 
 @dataclass
@@ -213,6 +220,85 @@ def test_unchanged_post_is_skipped_until_week_boundary(
     assert (
         archive(tmp_path).posts["1"].last_checked_at == (published + timedelta(days=7)).isoformat()
     )
+
+
+def test_raw_refresh_updates_provenance_without_recompiling_identical_pdf(
+    tmp_path: Path, compiler: FakeCompiler
+) -> None:
+    client = FakeBlogClient([metadata(1, instant(2026, 10, 1))])
+    client.html = "Exact HTML with café\r\n"
+    now = instant(2026, 10, 13)
+    pipeline.run_batch(tmp_path, client, now=now)
+    first = archive(tmp_path).posts["1"]
+    assert first.source_manifest is not None
+    original = (tmp_path / first.source_manifest).read_bytes()
+    report = pipeline.run_batch(tmp_path, client, now=now + timedelta(days=1), force=True)
+    current = archive(tmp_path).posts["1"]
+    assert report["converted"] == 1 and compiler.calls == 1
+    assert current.source_manifest != first.source_manifest
+    assert (tmp_path / first.source_manifest).read_bytes() == original
+    assert current.ir is not None
+    ir = json.loads((tmp_path / current.ir).read_text())
+    assert ir["source_manifest"] == current.source_manifest
+    # Identical article/comment pages are shared by both timestamped manifests.
+    assert len(list((tmp_path / "raw" / "pages").glob("*.html"))) == 2
+
+
+def test_partial_fetch_failure_retains_received_raw_pages(
+    tmp_path: Path, compiler: FakeCompiler
+) -> None:
+    class PartialClient(FakeBlogClient):
+        def fetch_post_pages(
+            self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+        ) -> list[str]:
+            assert on_page is not None
+            on_page(FetchedPage("First page α\r\n", url, url, instant(2026, 10, 13).isoformat()))
+            raise SourceError("Later comment page unavailable")
+
+    report = pipeline.run_batch(
+        tmp_path, PartialClient([metadata(1, instant(2026, 10, 1))]), now=instant(2026, 10, 13)
+    )
+    state = archive(tmp_path).posts["1"]
+    assert report["failed"] == 1 and compiler.calls == 0
+    assert state.source_manifest is not None
+    manifest = json.loads((tmp_path / state.source_manifest).read_text())
+    assert manifest["complete"] is False
+    assert manifest["error"] == "Later comment page unavailable"
+    assert (tmp_path / manifest["pages"][0]["path"]).read_bytes() == "First page α\r\n".encode()
+
+
+def test_parser_failure_keeps_complete_raw_capture(
+    tmp_path: Path, compiler: FakeCompiler, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail_parse(*args: object, **kwargs: object) -> Post:
+        raise ValueError("Unsupported HTML")
+
+    monkeypatch.setattr(pipeline, "parse_post", fail_parse)
+    report = pipeline.run_batch(
+        tmp_path, FakeBlogClient([metadata(1, instant(2026, 10, 1))]), now=instant(2026, 10, 13)
+    )
+    state = archive(tmp_path).posts["1"]
+    assert report["failed"] == 1 and compiler.calls == 0
+    assert state.source_manifest is not None
+    manifest = json.loads((tmp_path / state.source_manifest).read_text())
+    assert manifest["complete"] is True and len(manifest["pages"]) == 2
+
+
+def test_failed_forced_refresh_retries_and_retains_each_source_attempt(
+    tmp_path: Path, compiler: FakeCompiler
+) -> None:
+    client = FakeBlogClient([metadata(1, instant(2007, 4, 15))])
+    now = instant(2026, 10, 13)
+    pipeline.run_batch(tmp_path, client, now=now)
+    client.html = "Changed discussion"
+    compiler.fail = True
+    failed = pipeline.run_batch(tmp_path, client, now=now + timedelta(days=1), force=True)
+    assert failed["failed"] == 1
+    compiler.fail = False
+    retried = pipeline.run_batch(tmp_path, client, now=now + timedelta(days=2))
+    assert retried["converted"] == 1
+    assert "previous-failure" in retried["results"][0]["reasons"]
+    assert len(list((tmp_path / "raw").glob("*/20*/manifest.json"))) == 3
 
 
 def test_missed_checks_are_collapsed_into_one_refresh(

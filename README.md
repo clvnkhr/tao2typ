@@ -120,6 +120,8 @@ archive/
   typst/*.typ       # escaped, independently compilable Typst source
   pdfs/*.pdf        # stable lower kebab case filenames from post permalinks
   assets/*          # image assets addressed by URL + content hashes
+  raw/pages/*.html  # exact decoded HTML parser input, addressed by SHA-256
+  raw/<post>/<job>/manifest.json # ordered pages, URLs, fetch times, source dates
   failures/*        # diagnostic IR/Typst for failed compilations
   README.md         # chronological PDF index
 ```
@@ -128,6 +130,23 @@ PDFs, `.typ` sources and IR JSON share readable lower kebab case names derived
 from the original post permalink, such as `what-should-we-tell-our-students.pdf`.
 Post IDs are appended only to resolve collisions. `uv run tao2typ migrate-names`
 renames existing outputs without downloading or recompiling them.
+
+Every fetch saves its HTML before parsing, including all comment pages. Each
+attempt has a timestamped manifest; unchanged HTML shares a content-addressed
+file. A failed fetch retains any pages already received, and a parsing or
+compilation failure retains its complete source capture. IR records the manifest
+used to create it. Refreshing raw provenance alone does not recompile an unchanged
+PDF. Older conversions are backfilled as their queued refreshes run.
+
+Reparse a complete capture offline, checking its page checksums first:
+
+```sh
+uv run tao2typ parse-raw archive/raw/<post>/<job>/manifest.json --output replay.ir.json
+```
+
+Raw HTML is kept in the repository; public download exports include PDF, Typst,
+IR and referenced images. Titles retain the source formatting: plain `L^p` stays
+plain when that is how the site presents it.
 
 ## Website
 

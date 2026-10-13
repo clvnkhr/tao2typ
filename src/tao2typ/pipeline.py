@@ -16,8 +16,9 @@ from tao2typ.ir import Comment, Node, Post
 from tao2typ.metadata import merge_metadata
 from tao2typ.naming import artifact_stems
 from tao2typ.parser import parse_post
+from tao2typ.raw import RawCapture
 from tao2typ.schedule import next_scheduled_check, plan_refresh
-from tao2typ.source import BlogClient, SourceError
+from tao2typ.source import BlogClient, FetchedPage, SourceError
 from tao2typ.state import ArchiveState, PostState, write_json
 from tao2typ.typst import render_post
 
@@ -33,9 +34,33 @@ def parse_timestamp(value: str) -> datetime:
 def converter_fingerprint() -> str:
     directory = Path(__file__).parent
     digest = hashlib.sha256(__version__.encode())
-    for name in ("ir.py", "parser.py", "typst.py", "pipeline.py", "source.py"):
+    for name in (
+        "ir.py",
+        "parser.py",
+        "typst.py",
+        "pipeline.py",
+        "source.py",
+        "raw.py",
+    ):
         digest.update((directory / name).read_bytes())
     return digest.hexdigest()
+
+
+def fetch_raw_pages(client: BlogClient, url: str, capture: RawCapture) -> list[str]:
+    """Persist each parser input before parsing, even if a later fetch fails."""
+
+    def record(page: FetchedPage) -> None:
+        capture.add(
+            page.html, page.url, requested_url=page.requested_url, fetched_at=page.fetched_at
+        )
+
+    try:
+        pages = client.fetch_post_pages(url, on_page=record)
+        capture.finish()
+        return pages
+    except BaseException as error:
+        capture.fail(str(error))
+        raise
 
 
 def image_urls(post: Post) -> set[str]:
@@ -169,12 +194,18 @@ def save_post(
     }
     digest = hashlib.sha256(
         (
-            json.dumps(payload, ensure_ascii=False, sort_keys=True)
+            json.dumps(
+                {key: value for key, value in payload.items() if key != "source_manifest"},
+                ensure_ascii=False,
+                sort_keys=True,
+            )
             + rendered
             + json.dumps(image_digests, sort_keys=True)
         ).encode()
     ).hexdigest()
     if previous_digest == digest and all((output / path).exists() for path in paths.values()):
+        # Refresh capture provenance without recompiling identical document content.
+        write_json(output / paths["ir"], payload)
         return {**paths, "content_sha256": digest}
     attempted: list[Path] = []
     originals: set[Path] = set()
@@ -230,6 +261,7 @@ def write_index(state: ArchiveState, output: Path) -> None:
                 f"- {post.published_at[:10]} · [{title}]({post.pdf}) · [source]({post.url})"
                 + (f" · [Typst]({post.typst})" if post.typst else "")
                 + (f" · [IR]({post.ir})" if post.ir else "")
+                + (f" · [HTML capture]({post.source_manifest})" if post.source_manifest else "")
             )
     (output / "README.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
 
@@ -304,11 +336,18 @@ def run_batch(
             )
             post_state.next_check_at = timestamp(plan.next_check_at)
             reasons = list(plan.reasons)
+            if post_state.last_error:
+                reasons.append("previous-failure")
             if post_state.converted_modified_at != post_state.modified_at:
                 reasons.append("source-modified")
             if post_state.pdf and not (output / post_state.pdf).exists():
                 reasons.append("missing-pdf")
             if post_state.pdf:
+                if (
+                    not post_state.source_manifest
+                    or not (output / post_state.source_manifest).is_file()
+                ):
+                    reasons.append("missing-raw-source")
                 for kind in ("typst", "ir"):
                     path = getattr(post_state, kind)
                     if not path or not (output / path).is_file():
@@ -366,7 +405,18 @@ def run_batch(
                 state.daily_attempts[attempt_day] = state.daily_attempts.get(attempt_day, 0) + 1
                 state.save(state_path)
             try:
-                pages = client.fetch_post_pages(post_state.url)
+                stem = stems[post_state.id]
+                capture = RawCapture(
+                    output,
+                    stem,
+                    post_state.url,
+                    published_at=post_state.published_at,
+                    modified_at=post_state.modified_at,
+                )
+                post_state.source_manifest = capture.manifest_path
+                result["source_manifest"] = capture.manifest_path
+                state.save(state_path)
+                pages = fetch_raw_pages(client, post_state.url, capture)
                 post = parse_post(
                     pages[0],
                     post_state.url,
@@ -374,7 +424,7 @@ def run_batch(
                     published_at=post_state.published_at,
                     modified_at=post_state.modified_at,
                 )
-                stem = stems[post_state.id]
+                post.source_manifest = capture.manifest_path
                 artifacts = save_post(
                     post, stem, output, client, previous_digest=post_state.content_sha256
                 )

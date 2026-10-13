@@ -13,9 +13,17 @@ from tao2typ.metadata import sync_metadata
 from tao2typ.migrate import migrate_existing_archive
 from tao2typ.naming import artifact_stem
 from tao2typ.parser import parse_post
-from tao2typ.pipeline import compile_typst, image_urls, run_batch, save_post, write_index
+from tao2typ.pipeline import (
+    compile_typst,
+    fetch_raw_pages,
+    image_urls,
+    run_batch,
+    save_post,
+    write_index,
+)
+from tao2typ.raw import RawCapture, load_raw_capture
 from tao2typ.source import BlogClient, canonical_post_url
-from tao2typ.state import ArchiveState
+from tao2typ.state import ArchiveState, write_json
 from tao2typ.typst import render_post
 
 
@@ -43,6 +51,11 @@ def main() -> int:
     render.add_argument("ir", type=Path)
     render.add_argument("--output", type=Path, required=True, help="Output .typ file")
     render.add_argument("--pdf", type=Path, help="Also compile to this PDF file")
+    replay = commands.add_parser(
+        "parse-raw", help="Reparse saved HTML without fetching or compiling"
+    )
+    replay.add_argument("manifest", type=Path)
+    replay.add_argument("--output", type=Path, required=True, help="Output IR JSON")
     migrate = commands.add_parser(
         "migrate-names", help="Rename existing outputs without conversion"
     )
@@ -59,6 +72,18 @@ def main() -> int:
         "--download-base-url", help="Export public documents/assets and use this hosting URL"
     )
     args = parser.parse_args()
+    if args.command == "parse-raw":
+        metadata, pages, archive = load_raw_capture(args.manifest)
+        post = parse_post(
+            pages[0],
+            metadata["post_url"],
+            comment_pages=pages[1:],
+            published_at=metadata.get("published_at"),
+            modified_at=metadata.get("modified_at"),
+        )
+        post.source_manifest = args.manifest.resolve().relative_to(archive).as_posix()
+        write_json(args.output, post.to_dict())
+        return 0
     if args.command == "migrate-names":
         result = migrate_existing_archive(args.output)
         write_index(ArchiveState.load(args.output / "state.json"), args.output)
@@ -120,9 +145,13 @@ def main() -> int:
         if local.is_file():
             if not args.url:
                 parser.error("Saved HTML requires --url for attribution")
-            post = parse_post(
-                local.read_text(encoding="utf-8"), args.url, published_at=args.published_at
-            )
+            html = local.read_bytes().decode("utf-8")
+            stem = args.stem or artifact_stem(local.stem, args.url, 0)
+            capture = RawCapture(args.output, stem, args.url, published_at=args.published_at)
+            capture.add(html, args.url)
+            capture.finish()
+            post = parse_post(html, args.url, published_at=args.published_at)
+            post.source_manifest = capture.manifest_path
             paths = save_post(
                 post, args.stem or artifact_stem(post.title, post.url, 0), args.output, None
             )
@@ -130,7 +159,15 @@ def main() -> int:
             url = canonical_post_url(args.source)
             with BlogClient() as client:
                 metadata = client.lookup_post(url)
-                pages = client.fetch_post_pages(url)
+                stem = args.stem or artifact_stem(metadata.title, url, metadata.id)
+                capture = RawCapture(
+                    args.output,
+                    stem,
+                    url,
+                    published_at=metadata.published_at.isoformat(),
+                    modified_at=metadata.modified_at.isoformat(),
+                )
+                pages = fetch_raw_pages(client, url, capture)
                 post = parse_post(
                     pages[0],
                     url,
@@ -138,12 +175,14 @@ def main() -> int:
                     published_at=metadata.published_at.isoformat(),
                     modified_at=metadata.modified_at.isoformat(),
                 )
+                post.source_manifest = capture.manifest_path
                 paths = save_post(
                     post,
-                    args.stem or artifact_stem(post.title, post.url, metadata.id),
+                    stem,
                     args.output,
                     client,
                 )
+        paths["source_manifest"] = capture.manifest_path
         print(json.dumps(paths, indent=2))
         return 0
     with BlogClient(interval=args.interval) as client:
