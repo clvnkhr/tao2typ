@@ -73,6 +73,11 @@ prime rendering.
 
 ## Verification and limits
 
+Typography uses conventional consecutive-paragraph indents, separate paragraph
+and block spacing, and bounded character-level justification. Ragged titles,
+headings and comments use optimized line breaking. Comment bodies retain reply
+indentation without adding first-line indents.
+
 Regression tests cover the live markup shapes, numbering, internal references,
 avatar downloads, pagination, page breaks, source recovery and rollback. Rendered
 sample pages were inspected for reply indentation, avatars, equations and theorem

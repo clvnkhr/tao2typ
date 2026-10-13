@@ -550,6 +550,7 @@ class _Renderer:
         body = self.blocks(comment.body)
         current = (
             "#block(width: 100%, breakable: true, above: 10pt, below: 6pt)[\n"
+            '#set par(justify: false, first-line-indent: 0pt, linebreaks: "optimized")\n'
             f"#block(sticky: true, above: 0pt, below: 4pt)[{header}]\n\n{body}\n]"
         )
         replies = "\n\n".join(self.comment(reply, depth + 1) for reply in comment.replies)
@@ -580,8 +581,14 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 #set document(title: {_string(post.title)}, author: {_string(post.author)})
 #set page(paper: "a4", margin: (x: 24mm, y: 23mm), numbering: "1", number-align: center)
 #set text(font: ("Libertinus Serif", "New Computer Modern"), size: 11pt, lang: "en")
-#set par(justify: true, leading: 0.65em, spacing: 0.9em)
+#set block(spacing: 0.9em)
+#set par(
+  justify: true, leading: 0.65em, spacing: 0.65em,
+  first-line-indent: (amount: 1.5em, all: false),
+  justification-limits: (tracking: (min: -0.01em, max: 0.01em)),
+)
 #set heading(numbering: none)
+#show heading: set par(justify: false, first-line-indent: 0pt, linebreaks: "optimized")
 #show heading.where(level: 1): set text(size: 15pt, weight: "semibold")
 #show heading.where(level: 2): set text(size: 12pt, weight: "semibold")
 #show link: set text(fill: rgb("275d8c"))
@@ -594,7 +601,8 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 
 #text(size: 9pt, fill: rgb("596477"))[#text({_string(post.blog_title)})]
 #v(5pt)
-#block(above: 0pt, below: 0pt)[#set par(justify: false)
+#block(above: 0pt, below: 0pt)[
+#set par(justify: false, first-line-indent: 0pt, linebreaks: "optimized")
 #text(size: 23pt, weight: "semibold", hyphenate: false)[#text({_string(post.title)})]]
 #v(7pt)
 #text(size: 10pt)[#text({_string(post.author + " · " + _friendly_date(post.published_at))})]

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 import time
-from collections import deque
+from collections import OrderedDict, deque
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
@@ -25,6 +25,7 @@ SITE_URL = f"https://{SITE_HOST}/"
 POSTS_API = f"https://public-api.wordpress.com/rest/v1.1/sites/{SITE_HOST}/posts/"
 METADATA_FIELDS = "ID,URL,title,date,modified,tags,categories"
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
+MAX_CACHED_ASSET_BYTES = 64 * 1024 * 1024
 _POST_PATH = re.compile(
     r"^/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/"
     r"(?P<slug>[^/]+)/?(?:comment-page-(?P<page>[1-9]\d*)/?)?$"
@@ -300,6 +301,10 @@ class BlogClient:
         self._sleep = sleep
         self._monotonic = monotonic
         self._last_request: float | None = None
+        # Reuse avatars/diagrams across posts in one job, while every new
+        # client revalidates remote bytes during the next scheduled refresh.
+        self._asset_cache: OrderedDict[str, bytes] = OrderedDict()
+        self._asset_cache_bytes = 0
         self._owns_client = http_client is None
         self._client = http_client or httpx.Client(
             timeout=httpx.Timeout(timeout),
@@ -511,14 +516,26 @@ class BlogClient:
         At most two source transformations follow permanent 400/404 responses.
         A rate limit, authorization error or oversized response remains a failure.
         All requests retain the normal delay, retries and 20 MiB download cap.
+        Successful bytes are reused only for this client's lifetime.
         """
         parts = urlsplit(url)
         if parts.scheme not in {"http", "https"} or not parts.hostname:
             raise ValueError(f"Asset URL must use HTTP or HTTPS: {url}")
         url = urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
+        cache_key = url
+        if cache_key in self._asset_cache:
+            self._asset_cache.move_to_end(cache_key)
+            return self._asset_cache[cache_key]
         for attempt in range(3):
             try:
-                return self._request(url).content
+                data = self._request(url).content
+                if len(data) <= MAX_CACHED_ASSET_BYTES:
+                    while self._asset_cache_bytes + len(data) > MAX_CACHED_ASSET_BYTES:
+                        _, evicted = self._asset_cache.popitem(last=False)
+                        self._asset_cache_bytes -= len(evicted)
+                    self._asset_cache[cache_key] = data
+                    self._asset_cache_bytes += len(data)
+                return data
             except httpx.HTTPStatusError as error:
                 original = _original_asset(url)
                 if error.response.status_code not in {400, 404} or not original or attempt == 2:

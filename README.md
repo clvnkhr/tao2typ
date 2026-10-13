@@ -50,6 +50,12 @@ while retaining each original equation label, including sublabels such as
 
 ## Run locally
 
+Body text uses a 1.5em indent for consecutive paragraphs, 0.65em paragraph
+spacing, and separate 0.9em block spacing. Justification can adjust tracking by
+up to ±0.01em. Titles and headings use optimized line breaks; comments use
+ragged-right text without paragraph indents. Punctuation overhang, kerning,
+standard ligatures and body hyphenation use Typst's defaults.
+
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and
 [Typst 0.15.1](https://github.com/typst/typst/releases/tag/v0.15.1), then:
 
@@ -87,6 +93,8 @@ PDF attempts per UTC day or ten minutes, with a fifteen-minute job timeout; any 
 resumes on the next run. Use `--max-posts` or `--max-seconds` to adjust a local
 batch. The converter waits one second between requests and
 retries transient errors with backoff. `--interval` adjusts this locally.
+Successful image bytes are reused within a job in a bounded 64 MiB cache;
+the next job fetches them again. Failed downloads are not cached.
 
 The daily quota survives manual reruns and counts failed attempts too. Remaining
 posts stay in `archive/queue.json`; the next day receives a fresh budget. The first

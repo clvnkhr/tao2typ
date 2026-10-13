@@ -373,7 +373,7 @@ def test_retry_after_and_polite_interval() -> None:
     with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
         client = BlogClient(http_client=http_client, interval=1, sleep=sleep, monotonic=lambda: now)
         assert client.fetch_asset("https://uploads.example/image.png") == b"image"
-        assert client.fetch_asset("https://uploads.example/image.png") == b"image"
+        assert client.fetch_asset("https://uploads.example/another-image.png") == b"image"
     assert attempts == 3
     assert waits == [4, 1]
 
@@ -500,3 +500,42 @@ def test_gzip_response_is_decoded_once() -> None:
     ) as http_client:
         client = BlogClient(http_client=http_client, interval=0)
         assert client.fetch_asset("https://uploads.example/image.svg") == b"actual image bytes"
+
+
+def test_asset_cache_reuses_successes_but_retries_failures_and_revalidates_new_clients() -> None:
+    requests: list[str] = []
+    url = "https://uploads.example/avatar.png"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(str(request.url))
+        if len(requests) == 1:
+            return httpx.Response(404)
+        return httpx.Response(200, content=f"image version {len(requests)}".encode())
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        with pytest.raises(httpx.HTTPStatusError):
+            client.fetch_asset(url)
+        assert client.fetch_asset(url) == b"image version 2"
+        assert client.fetch_asset(url + "#avatar") == b"image version 2"
+        assert requests == [url, url]
+        fresh_client = BlogClient(http_client=http_client, interval=0)
+        assert fresh_client.fetch_asset(url) == b"image version 3"
+        assert fresh_client.fetch_asset(url) == b"image version 3"
+    assert requests == [url, url, url]
+
+
+def test_asset_cache_evicts_least_recently_used_bytes(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(source, "MAX_CACHED_ASSET_BYTES", 6)
+    requests: list[str] = []
+    urls = [f"https://uploads.example/{name}.png" for name in ("a", "b", "c")]
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(str(request.url))
+        return httpx.Response(200, content=b"abc")
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0)
+        for index in (0, 1, 0, 2, 0, 1):
+            assert client.fetch_asset(urls[index]) == b"abc"
+    assert requests == [urls[0], urls[1], urls[2], urls[1]]
