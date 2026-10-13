@@ -392,6 +392,13 @@ class _Parser:
                     )
                 )
             return prefix + [Node("table", children=rows)]
+        if name == "p" and any(
+            isinstance(child, Tag) and child.name in _BLOCK_TAGS for child in tag.children
+        ):
+            # Legacy LaTeX2WP sometimes writes <p><blockquote>...</blockquote></p>.
+            # Preserve nested block boundaries rather than flattening the statement
+            # (and any displays/lists inside it) through the inline parser.
+            return prefix + self.blocks(tag.children)
         children = _trim([node for child in tag.children for node in self.inline(child)])
         if name in {"h1", "h2", "h3", "h4", "h5", "h6"}:
             return prefix + [

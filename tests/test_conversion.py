@@ -68,6 +68,39 @@ def test_rich_html_produces_output_independent_ir() -> None:
     assert "{x^2 + y^2}" in [node.text for node in _kinds(post, "math")]
 
 
+def test_legacy_paragraph_wrapper_preserves_blockquote_statement_and_numbered_display() -> None:
+    html = r"""<div class="post-content"><p id="outer">
+    Before.<blockquote><b>Lemma 2 (Locating the core)</b><a name="core"></a>
+    A statement.<p align="center"><img class="latex" alt="x = y"> (3)</p>
+    <ul><li>A condition.</li></ul></blockquote>After.</p></div>"""
+    post = parse_post(html, URL)
+    assert [node.kind for node in post.body] == ["anchor", "paragraph", "quote", "paragraph"]
+    assert post.body[1].children[0].text.strip() == "Before."
+    assert post.body[-1].children[0].text.strip() == "After."
+    quote = post.body[2]
+    assert [node.kind for node in quote.children] == ["paragraph", "paragraph", "list"]
+    assert quote.children[0].children[0].children[0].text == "Lemma 2 (Locating the core)"
+    assert [node.attrs["id"] for node in _kinds(post, "anchor")] == ["outer", "core"]
+    math = _kinds(post, "math")[0]
+    assert math.text == "x = y"
+    assert math.attrs == {"display": "true", "number": "3"}
+    rendered = render_post(post)
+    assert rendered.count('stroke: (left: 1.5pt + rgb("98a4b6"))') == 1
+    assert '#text("(3)")' in rendered
+
+
+def test_paragraph_wrapped_list_retains_order_and_nested_structure() -> None:
+    post = parse_post(
+        '<div class="post-content"><p>Before.<ol start="4"><li>First.</li>'
+        "<li>Second.<ul><li>Nested.</li></ul></li></ol>After.</p></div>",
+        URL,
+    )
+    assert [node.kind for node in post.body] == ["paragraph", "list", "paragraph"]
+    outer = post.body[1]
+    assert outer.attrs == {"ordered": "true", "start": "4"}
+    assert [node.kind for node in outer.children[1].children] == ["paragraph", "list"]
+
+
 def test_ir_json_round_trip_retains_comments_dates_and_tex() -> None:
     original = parse_post(HTML, URL)
     saved = json.loads(json.dumps(original.to_dict(), ensure_ascii=False))

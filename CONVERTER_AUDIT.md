@@ -21,6 +21,10 @@ prime rendering.
 - Centered prose and section titles keep inline maths. Displayed equations retain
   external labels with punctuation, decimal labels, embedded legacy labels,
   `\tag`, `\tag*`, and explicitly tagged alignment rows.
+- Legacy paragraph wrappers around blockquotes, lists and nested paragraphs
+  preserve their block structure. This restores the statement rules in the
+  Shannon entropy and inclusion-exclusion posts, and list/paragraph boundaries
+  in four other recent samples. The statement styling follows source blockquotes.
 - Equation labels use the original source number at the right margin. Theorem,
   lemma, definition and exercise captions retain their original text and numbers;
   repeated source numbers are not silently changed.
