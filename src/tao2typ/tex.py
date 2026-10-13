@@ -69,9 +69,12 @@ class _Scope:
     delimiter: str = ""
     bars: list[_Opening] = field(default_factory=list)
     expects_operand: bool = True
+    explicit: _Token | None = None
+    script_argument: bool = False
+    function_operand: bool = False
 
 
-_TOKEN = re.compile(r"\\[A-Za-z]+\*?|\\[^\n]|%[^\n]*(?:\n|$)|\s+|.", re.DOTALL)
+_TOKEN = re.compile(r"\\[A-Za-z]+|\\[^\n]|%[^\n]*(?:\n|$)|\s+|.", re.DOTALL)
 _TEXT_COMMANDS = frozenset(
     {
         r"\text",
@@ -134,10 +137,97 @@ _OPERATORS = frozenset(
         r"\textstyle",
         r"\scriptstyle",
         r"\scriptscriptstyle",
+        r"\oplus",
+        r"\ominus",
+        r"\otimes",
+        r"\oslash",
+        r"\odot",
+        r"\circ",
+        r"\bullet",
+        r"\ast",
+        r"\star",
+        r"\diamond",
+        r"\div",
+        r"\setminus",
+        r"\backslash",
+        r"\vee",
+        r"\wedge",
+        r"\uplus",
+        r"\sqcup",
+        r"\sqcap",
+        r"\wr",
+        r"\triangleleft",
+        r"\triangleright",
+        r"\bigtriangleup",
+        r"\bigtriangledown",
+        r"\dagger",
+        r"\ddagger",
+        r"\amalg",
+        r"\bmod",
+        r"\mod",
+        r"\prec",
+        r"\preceq",
+        r"\succ",
+        r"\succeq",
+        r"\perp",
+        r"\propto",
+        r"\doteq",
+        r"\leftrightarrow",
+        r"\rightarrow",
+        r"\leftarrow",
     }
 )
-_OPEN = {"{": "}", "(": ")", "[": "]", r"\{": r"\}", r"\lbrace": r"\rbrace", r"\langle": r"\rangle"}
-_CLOSE = frozenset(_OPEN.values())
+_FUNCTIONS = frozenset(
+    "\\" + name
+    for name in (
+        "sin",
+        "cos",
+        "tan",
+        "cot",
+        "sec",
+        "csc",
+        "sinh",
+        "cosh",
+        "tanh",
+        "coth",
+        "arcsin",
+        "arccos",
+        "arctan",
+        "log",
+        "ln",
+        "lg",
+        "exp",
+        "min",
+        "max",
+        "sup",
+        "inf",
+        "lim",
+        "liminf",
+        "limsup",
+        "det",
+        "gcd",
+        "ker",
+        "dim",
+        "arg",
+        "Pr",
+        "hom",
+        "deg",
+    )
+)
+_OPEN = {
+    "{": "}",
+    "(": ")",
+    "[": "]",
+    r"\{": r"\}",
+    r"\lbrace": r"\rbrace",
+    r"\langle": r"\rangle",
+    r"\lfloor": r"\rfloor",
+    r"\lceil": r"\rceil",
+    r"\lbrack": "]",
+    r"\lparen": ")",
+}
+_CLOSE_ALIASES = {r"\rbrack": "]", r"\rparen": ")"}
+_CLOSE = frozenset(_OPEN.values()) | _CLOSE_ALIASES.keys()
 _FAMILY = {
     "|": "abs",
     r"\vert": "abs",
@@ -159,11 +249,18 @@ def _tokens(source: str) -> list[_Token]:
     index = 0
     while index < len(raw):
         token = raw[index]
+        command_end = index + 1
+        # A star is not part of a TeX control-sequence token. Only this known
+        # starred text operator combines it so its name argument stays opaque.
+        if token.text == r"\operatorname" and command_end < len(raw):
+            if raw[command_end].text == "*":
+                token = _Token(token.text + "*", token.start, raw[command_end].end)
+                command_end += 1
         if token.text.startswith("%") or token.text.isspace():
             index += 1
             continue
         if token.text in _TEXT_COMMANDS:
-            end = index + 1
+            end = command_end
             while end < len(raw) and raw[end].text.isspace():
                 end += 1
             if end < len(raw) and raw[end].text == "{":
@@ -209,11 +306,13 @@ def _tokens(source: str) -> list[_Token]:
                 index = end + 1
                 continue
         result.append(token)
-        index += 1
+        index = command_end
     return result
 
 
-def _safe_implicit_open(tokens: list[_Token], index: int, family: str) -> bool:
+def _safe_implicit_open(
+    tokens: list[_Token], index: int, family: str, enclosing_family: str = ""
+) -> bool:
     """Recognize multiplication by a fenced atom without swallowing a|b|c.
 
     A second bar at this syntactic level must be followed by a script, operator,
@@ -222,9 +321,9 @@ def _safe_implicit_open(tokens: list[_Token], index: int, family: str) -> bool:
     depth = 0
     for position in range(index + 1, len(tokens)):
         token = tokens[position]
-        if token.text in _OPEN or token.direction == "left" and token.text not in _FAMILY:
+        if token.direction == "left" or token.text in _OPEN:
             depth += 1
-        elif token.text in _CLOSE or token.direction == "right" and token.text not in _FAMILY:
+        elif token.direction == "right" or token.text in _CLOSE:
             if depth == 0:
                 return False
             depth -= 1
@@ -236,6 +335,10 @@ def _safe_implicit_open(tokens: list[_Token], index: int, family: str) -> bool:
                 following.text in _CLOSE | _OPERATORS
                 or following.text in "^_+-=*/<>,:;&"
                 or following.direction == "right"
+                # Multiplication inside a different enclosing fence is clear:
+                # |a\|u\|| and \|a|x|\| do not form relation chains.
+                or enclosing_family != family
+                and _FAMILY.get(following.text) == enclosing_family
             )
     return False
 
@@ -246,13 +349,62 @@ def normalize_delimiters(source: str) -> str:
     The Typst ``tao-lr`` helper then constructs native ``abs``/``norm`` content.
     Unpaired bars and text-command arguments are retained. Fixed-size fence pairs
     retain their source size. Never replace the source/IR with this render copy.
+
+    Inner pairs can become explicit before an implicit outer opening is clear.
+    Re-scan until stable: each changing pass canonicalizes at least one original
+    pair, and already canonical left/right pairs stay canonical.
     """
+    maximum_passes = 1 + sum(token.text in _FAMILY for token in _tokens(source)) // 2
+    for _ in range(maximum_passes):
+        normalized = _normalize_delimiters_once(source)
+        if normalized == source:
+            return source
+        source = normalized
+    return source
+
+
+def _normalize_delimiters_once(source: str) -> str:
+    """Canonicalize the pairs visible at the current lexical scope boundaries."""
     tokens = _tokens(source)
     scopes = [_Scope()]
     replacements: list[tuple[int, int, str]] = []
     for index, token in enumerate(tokens):
         scope = scopes[-1]
         family = _FAMILY.get(token.text)
+        previous = tokens[index - 1].text if index else ""
+        # TeX pairs \left/\right by nesting, independently of the glyphs.
+        # Keeping their bodies in separate scopes also protects evaluation bars
+        # behind \left. and bars inside floor/ceil or unusual delimiter pairs.
+        if token.direction == "left":
+            scope.function_operand = False
+            scopes.append(_Scope(explicit=token))
+            continue
+        if token.direction == "right":
+            explicit_index = None
+            for position in range(len(scopes) - 1, 0, -1):
+                candidate = scopes[position]
+                if candidate.explicit is not None:
+                    explicit_index = position
+                    break
+                if candidate.delimiter == "}":
+                    break  # Never cross a TeX group; escaped brace glyphs are literal.
+            if explicit_index is not None:
+                opening = scopes[explicit_index].explicit
+                assert opening is not None
+                if family is not None and _FAMILY.get(opening.text) == family:
+                    delimiter = "|" if family == "abs" else r"\|"
+                    replacements.extend(
+                        [
+                            (opening.start, opening.end, r"\left" + delimiter),
+                            (token.start, token.end, r"\right" + delimiter),
+                        ]
+                    )
+                del scopes[explicit_index:]
+                scopes[-1].expects_operand = False
+                scopes[-1].function_operand = False
+            else:
+                scope.expects_operand = False
+            continue
         if family is not None and token.direction != "middle":
             directed_open = token.direction in {"left", "sized-left"} or token.text in {
                 r"\lvert",
@@ -262,12 +414,26 @@ def normalize_delimiters(source: str) -> str:
                 r"\rvert",
                 r"\rVert",
             }
-            previous = tokens[index - 1].text if index else ""
             # Unbraced TeX scripts consume exactly one token, including a bar.
             if previous in {"^", "_"} and not token.direction:
                 scope.expects_operand = False
                 continue
-            if directed_close or (not directed_open and not scope.expects_operand and scope.bars):
+            following = tokens[index + 1] if index + 1 < len(tokens) else None
+            # A function may itself be the fenced object, as in \|\sin\|_p.
+            # A script/operator/end after the bar marks completion; an operand
+            # instead can start its nested argument, as in |\sin |x||.
+            function_finished = scope.function_operand and (
+                following is None
+                or following.text in _CLOSE | _OPERATORS
+                or following.text in "^_+-=*/<>,:;&"
+                or following.direction == "right"
+            )
+            if directed_close or (
+                not directed_open
+                and (not scope.expects_operand or function_finished)
+                and scope.bars
+                and scope.bars[-1].family == family
+            ):
                 if scope.bars and scope.bars[-1].family == family:
                     opening = scope.bars[-1]
                     # Never pair a plain bar with an explicitly directed fence.
@@ -296,8 +462,13 @@ def normalize_delimiters(source: str) -> str:
                             ]
                         )
                 scope.expects_operand = False
+                scope.function_operand = False
             elif (
-                directed_open or scope.expects_operand or _safe_implicit_open(tokens, index, family)
+                directed_open
+                or scope.expects_operand
+                or _safe_implicit_open(
+                    tokens, index, family, scope.bars[-1].family if scope.bars else ""
+                )
             ):
                 direction = (
                     "left"
@@ -310,34 +481,46 @@ def normalize_delimiters(source: str) -> str:
                 )
                 scope.bars.append(_Opening(token, family, direction, token.size))
                 scope.expects_operand = True
+                scope.function_operand = False
             else:
                 # A conditional/divisibility separator expects its right operand.
                 scope.expects_operand = True
             continue
         if token.text in _OPEN:
-            scopes.append(_Scope(_OPEN[token.text]))
+            scopes.append(_Scope(_OPEN[token.text], script_argument=previous in {"^", "_"}))
         elif (
             token.text in _CLOSE
             and len(scopes) > 1
             and (
-                scope.delimiter == token.text
+                scope.delimiter == _CLOSE_ALIASES.get(token.text, token.text)
                 # Half-open intervals are valid math; braces remain strict TeX groups.
                 or scope.delimiter in {")", "]"}
-                and token.text in {")", "]"}
+                and _CLOSE_ALIASES.get(token.text, token.text) in {")", "]"}
             )
         ):
             scopes.pop()
-            scopes[-1].expects_operand = False
+            parent = scopes[-1]
+            parent.expects_operand = parent.function_operand if scope.script_argument else False
+            if not scope.script_argument:
+                parent.function_operand = False
         elif token.text in _SPACE_COMMANDS:
             continue
-        elif index and tokens[index - 1].text in {"^", "_"}:
+        elif previous in {"^", "_"}:
             # A bare +, -, * etc. in a script is its one-token argument,
             # not a binary operator in the enclosing absolute value.
+            scope.expects_operand = scope.function_operand
+        elif token.text in _FUNCTIONS or re.match(r"\\operatorname\*?\s*\{", token.text):
+            scope.expects_operand = True
+            scope.function_operand = True
+        elif token.text in {"^", "_"}:
+            # A function's own script does not supply its following argument.
             scope.expects_operand = False
         elif token.direction == "middle" or token.text in _OPERATORS or token.text in "+-=*/<>,:;&":
             scope.expects_operand = True
+            scope.function_operand = False
         else:
             scope.expects_operand = False
+            scope.function_operand = False
     for start, end, replacement in sorted(replacements, reverse=True):
         source = source[:start] + replacement + source[end:]
     return source

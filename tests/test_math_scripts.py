@@ -76,7 +76,9 @@ def flattened_text(tree: Any) -> str:
     if isinstance(tree, list):
         return "".join(flattened_text(child) for child in tree)
     if isinstance(tree, dict):
-        return "".join(flattened_text(value) for key, value in tree.items() if key != "kind")
+        return "".join(
+            flattened_text(value) for key, value in tree.items() if key not in {"kind", "func"}
+        )
     return ""
 
 
@@ -144,6 +146,33 @@ def attachments(tree: Any) -> list[dict[str, Any]]:
         for value in tree.values():
             result.extend(attachments(value))
     return result
+
+
+@pytest.mark.parametrize(
+    ("source", "base", "top", "bottom"),
+    [
+        (r"|\lfloor |x| \rfloor|^2", "|⌊|x|⌋|", "2", ""),
+        (r"|\sin |x||^2", "|sin|x||", "2", ""),
+        (r"|\sin|^2", "|sin|", "2", ""),
+        (r"\|\sin\|_p", "‖sin‖", "", "p"),
+        (r"|a\|u\||_p", "|a‖u‖|", "", "p"),
+        (r"\|a|x|\|_p", "‖a|x|‖", "", "p"),
+        (r"|x\oplus |y||^2", "|x⊕|y||", "2", ""),
+        (r"\|f(|x|,[0,T))\|_p", "‖f(|x|,[0,T))‖", "", "p"),
+        (r"\|\left|x\right)\|_p", "‖|x)‖", "", "p"),
+    ],
+)
+def test_nested_fences_keep_scripts_on_the_complete_outer_expression(
+    tmp_path: Path, source: str, base: str, top: str, bottom: str
+) -> None:
+    tree = compiled_tree(tmp_path, source)
+    if isinstance(tree, list) and len(tree) == 1:
+        tree = tree[0]
+    assert isinstance(tree, dict)
+    assert tree["kind"] == "attach"
+    assert flattened_text(tree["base"]) == base
+    assert flattened_text(tree["top"]) == top
+    assert flattened_text(tree["bottom"]) == bottom
 
 
 def test_navier_stokes_mixed_norm_has_independent_time_and_space_scripts(tmp_path: Path) -> None:

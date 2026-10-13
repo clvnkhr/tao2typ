@@ -33,6 +33,9 @@ prime rendering.
 - Prime shorthand keeps primes and indices on their original base. Compiled
   regressions check TeX script boundaries before domains, mixed norm indices,
   Lorentz/Besov exponents, fractions, limits and nested scripts.
+- Nested fence scopes include half-open intervals, floor/ceiling delimiters and
+  arbitrary explicit left/right glyph pairs. Standard functions and binary
+  operators keep inner absolute-value and norm pairs nested correctly.
 - Failed WordPress image proxies and obsolete Wikimedia thumbnails can recover
   their explicitly encoded original image. Download limits and delays still apply.
 - HTML error responses are rejected even when their URL ends in `.png`.
@@ -56,3 +59,5 @@ Genuinely unavailable source images and malformed source TeX remain explicit
 failures with diagnostics. An abrupt process kill between three file replacements
 is not a fully atomic transaction; a later retry repairs the output set. No audit
 can establish that every future WordPress markup or TeX construct is supported.
+Plain bar pairing is heuristic; ambiguous notation and arbitrary macro argument
+syntax remain limits. Explicit directional fences avoid that ambiguity.

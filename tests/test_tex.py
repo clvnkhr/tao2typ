@@ -9,7 +9,9 @@ from pathlib import Path
 
 import pytest
 
+from tao2typ.ir import Node, Post
 from tao2typ.tex import DELIMITER_HELPERS, normalize_delimiters
+from tao2typ.typst import render_post
 
 
 @pytest.mark.parametrize(
@@ -27,11 +29,52 @@ from tao2typ.tex import DELIMITER_HELPERS, normalize_delimiters
         (r"\big|x\big|", r"\big{\left|x\right|}"),
         ("|x + |y||", r"\left|x + \left|y\right|\right|"),
         (r"\| |x|+y\|", r"\left\| \left|x\right|+y\right\|"),
+        (r"|\lfloor |x| \rfloor|", r"\left|\lfloor \left|x\right| \rfloor\right|"),
+        (r"|\lceil|x|\rceil|", r"\left|\lceil\left|x\right|\rceil\right|"),
+        (
+            r"|\left\lfloor |x| \right\rfloor|",
+            r"\left|\left\lfloor \left|x\right| \right\rfloor\right|",
+        ),
+        (r"|\sin |x||", r"\left|\sin \left|x\right|\right|"),
+        (r"|\sin|", r"\left|\sin\right|"),
+        (r"\|\sin\|_p", r"\left\|\sin\right\|_p"),
+        (r"|\sin^2 |x||", r"\left|\sin^2 \left|x\right|\right|"),
+        (
+            r"|\lim_{n\to\infty} |x_n||",
+            r"\left|\lim_{n\to\infty} \left|x_n\right|\right|",
+        ),
+        (r"|\operatorname{sgn}|x||", r"\left|\operatorname{sgn}\left|x\right|\right|"),
+        (
+            r"|\operatorname* {sgn}|x||",
+            r"\left|\operatorname* {sgn}\left|x\right|\right|",
+        ),
+        (r"|a\|u\||", r"\left|a\left\|u\right\|\right|"),
+        (r"\|a|x|\|", r"\left\|a\left|x\right|\right\|"),
+        (r"|x\oplus |y||", r"\left|x\oplus \left|y\right|\right|"),
+        (r"|x\cdot*|y||", r"\left|x\cdot*\left|y\right|\right|"),
+        (r"a|\left|x\right||", r"a\left|\left|x\right|\right|"),
+        (r"c ||u||_{H^2_0}", r"c \left|\left|u\right|\right|_{H^2_0}"),
+        (r"a|x+|y||", r"a\left|x+\left|y\right|\right|"),
+        (r"\|\left|x\right)\|", r"\left\|\left|x\right)\right\|"),
+        (
+            r"|\left.x\right|_0^1|",
+            r"\left|\left.x\right|_0^1\right|",
+        ),
+        (
+            r"|\left.\{ |x| \right)|",
+            r"\left|\left.\{ \left|x\right| \right)\right|",
+        ),
         (r"|x|_a^b", r"\left|x\right|_a^b"),
         (r"|x_*|/2", r"\left|x_*\right|/2"),
         (r"|x^+|", r"\left|x^+\right|"),
         ("|[0,1)|", r"\left|[0,1)\right|"),
         ("|(0,1]|", r"\left|(0,1]\right|"),
+        (r"|\lbrack0,1\rparen|", r"\left|\lbrack0,1\rparen\right|"),
+        (r"|\lparen0,1\rbrack|", r"\left|\lparen0,1\rbrack\right|"),
+        (
+            r"\|\left[|x|,|y|\right)\|",
+            r"\left\|\left[\left|x\right|,\left|y\right|\right)\right\|",
+        ),
         (r"\|f_{L^p([0,T))}\|", r"\left\|f_{L^p([0,T))}\right\|"),
         (r"\bigl|\left[0,1\right)\bigr|", r"\big{\left|\left[0,1\right)\right|}"),
         (r"x^{|y|}", r"x^{\left|y\right|}"),
@@ -60,6 +103,8 @@ def test_paired_fences_form_one_math_atom(source: str, expected: str) -> None:
         "a|b + c|d",
         "P(A|B)",
         "P(A|B|C)",
+        r"P(A|\sin B)",
+        r"P(A|\sin B|C)",
         r"f|_0^1",
         r"\left.f\right|_0^1",
         "|x",
@@ -84,6 +129,7 @@ def test_paired_fences_form_one_math_atom(source: str, expected: str) -> None:
         r"{|x} |",
         r"|[0,1}|",
         r"|{x)|",
+        r"\left|{x\right|}",
     ],
 )
 def test_relations_text_unpaired_and_single_token_scripts_stay_untouched(source: str) -> None:
@@ -142,6 +188,71 @@ def test_mitex_fence_helper_wraps_the_entire_native_script_base(tmp_path: Path) 
         assert isinstance(base, dict)
         assert base["func"] == "lr"
     assert any(item.get("func") == "lr" for item in _contents(results[2]))
+
+
+@pytest.mark.parametrize(
+    ("source", "fences"),
+    [
+        (r"|\lfloor |x| \rfloor|", ["|", "|"]),
+        (r"|\left\lfloor |x| \right\rfloor|", ["|", "|"]),
+        (r"|\sin |x||", ["|", "|"]),
+        (r"|\sin^2 |x||", ["|", "|"]),
+        (r"|\lim_{n\to\infty} |x_n||", ["|", "|"]),
+        (r"|\operatorname{sgn}|x||", ["|", "|"]),
+        (r"|a\|u\||", ["|", "‖"]),
+        (r"a|x+|y||", ["|", "|"]),
+        (r"\|a|x|\|", ["‖", "|"]),
+        (r"|x\oplus |y||", ["|", "|"]),
+        (r"\|\left[|x|,|y|\right)\|", ["‖", "|", "|"]),
+        (r"\|\left|x\right)\|", ["‖"]),
+        (r"|\left.x\right|_0^1|", ["|"]),
+    ],
+)
+def test_renderer_keeps_nested_fences_as_complete_atoms(
+    tmp_path: Path, source: str, fences: list[str]
+) -> None:
+    compiler = shutil.which("typst")
+    if compiler is None:
+        pytest.skip("Typst is required for native nested fence verification")
+    node = Node("math", source + "_p")
+    post = Post("Fence regression", "https://example.org/fences/", body=[node])
+    document = render_post(post)
+    marker = "#set math.equation(numbering: none)"
+    document = document.replace(
+        marker,
+        marker + "\n#show math.equation: it => [#metadata(it.body) <fence-probe> #it]",
+    )
+    path = tmp_path / "nested-fences.typ"
+    path.write_text(document, encoding="utf-8")
+    query = subprocess.run(
+        [compiler, "query", str(path), "<fence-probe>", "--field", "value"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+    assert query.returncode == 0, query.stderr
+    compiled = json.loads(query.stdout)[-1]
+    attachments = [item for item in _contents(compiled) if item.get("func") == "attach"]
+    base = attachments[0]["base"]
+    assert isinstance(base, dict)
+    assert base["func"] == "lr"  # The complete outer expression receives _p.
+    actual = []
+    for item in _contents(base):
+        if item.get("func") != "lr":
+            continue
+        body = item.get("body")
+        if not isinstance(body, dict):
+            continue
+        children = body.get("children")
+        if not isinstance(children, list) or len(children) < 2:
+            continue
+        first, last = children[0], children[-1]
+        if isinstance(first, dict) and isinstance(last, dict):
+            if first.get("text") in {"|", "‖"} and first.get("text") == last.get("text"):
+                actual.append(first["text"])
+    assert actual == fences
+    assert node.text == source + "_p"  # Original LaTeX is never rewritten in the IR.
 
 
 @pytest.mark.parametrize(

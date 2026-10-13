@@ -32,6 +32,11 @@ boundaries before following parentheses, and prime shorthand retains its
 superscript attachment. These conversions affect the rendering copy only;
 the IR and captured HTML preserve the original source.
 
+Fence recognition tracks nested delimiters, including half-open intervals.
+Plain bars still require a heuristic: ambiguous sequences and arbitrary TeX
+macro argument syntax cannot be resolved universally by this lexer. Explicit
+`\left`/`\right` or `\lvert`/`\rvert` directions make the intended pairing clear.
+
 ## Run locally
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and
