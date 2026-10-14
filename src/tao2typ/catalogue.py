@@ -379,6 +379,7 @@ def generate_site(
     repo_url: str = _DEFAULT_REPO,
     branch: str = "main",
     download_base_url: str | None = None,
+    copy_downloads: bool = True,
 ) -> dict[str, int]:
     """Build metadata; a download base URL also exports existing public downloads.
 
@@ -421,7 +422,7 @@ def generate_site(
         "tags": len(tags),
         "categories": len(categories),
     }
-    if download_base_url is not None:
+    if download_base_url is not None and copy_downloads:
         counts["exported_files"] = _export_downloads(archive, output, posts)
     replacements = {
         "REPO_URL": _escape(repo_url),

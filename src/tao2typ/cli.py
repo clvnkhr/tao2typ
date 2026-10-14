@@ -75,7 +75,15 @@ def main() -> int:
     site.add_argument(
         "--download-base-url", help="Export public documents/assets and use this hosting URL"
     )
+    preview = commands.add_parser("serve", help="Preview local PDFs and live batch progress")
+    preview.add_argument("--archive", type=Path, default=Path("archive"))
+    preview.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
+    if args.command == "serve":
+        from tao2typ.preview import serve_preview
+
+        serve_preview(args.archive, args.port)
+        return 0
     if args.command == "compress":
         from tao2typ.compression import compress_archive
 

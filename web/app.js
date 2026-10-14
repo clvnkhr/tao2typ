@@ -27,6 +27,19 @@
   let selectedOrder = sort.value;
   const links = Array.from(document.querySelectorAll(".taxonomy a[data-route]"));
   const terms = new Map(links.map(link => [link.dataset.route, link.dataset.name]));
+  const localPreview = ["localhost", "127.0.0.1", "[::1]", "::1"].includes(window.location.hostname);
+  const previewStateKey = `tao2typ:preview-controls:${window.location.pathname}`;
+  if (localPreview) {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(previewStateKey));
+      sessionStorage.removeItem(previewStateKey);
+      if (saved && typeof saved.search === "string") search.value = saved.search;
+      if (saved && typeof saved.ready === "boolean") ready.checked = saved.ready;
+      if (saved && Array.from(sort.options).some(option => option.value === saved.order && option.value !== "queue")) {
+        selectedOrder = saved.order;
+      }
+    } catch { /* Storage may be disabled in the browser. */ }
+  }
 
   function render() {
     const route = window.location.hash.slice(1);
@@ -83,4 +96,45 @@
   });
   window.addEventListener("hashchange", render);
   render();
+  if (localPreview) {
+    const batchProgress = document.createElement("p");
+    batchProgress.id = "batch-progress";
+    batchProgress.className = "queue-updated";
+    batchProgress.setAttribute("aria-live", "polite");
+    batchProgress.hidden = true;
+    queueUpdated.after(batchProgress);
+    let revision = document.body.dataset.previewRevision || null;
+    let polling = false;
+    async function refreshPreview() {
+      if (polling) return;
+      polling = true;
+      try {
+        const response = await fetch("/__tao2typ_progress", { cache: "no-store" });
+        if (!response.ok) return;
+        const progress = await response.json();
+        if (typeof progress?.revision !== "string") return;
+        if (["converted", "failed", "remaining"].every(key => Number.isInteger(progress[key]) && progress[key] >= 0)) {
+          const status = `${progress.running === false ? "Finished" : "Batch"}: ${progress.converted.toLocaleString()} converted · ${progress.failed.toLocaleString()} failed · ${progress.remaining.toLocaleString()} remaining`;
+          if (batchProgress.textContent !== status) batchProgress.textContent = status;
+          batchProgress.hidden = false;
+        }
+        if (revision === null) {
+          revision = progress.revision;
+          return;
+        }
+        if (revision === progress.revision) return;
+        try {
+          sessionStorage.setItem(previewStateKey, JSON.stringify({
+            search: search.value,
+            ready: ready.checked,
+            order: selectedOrder,
+          }));
+        } catch { /* Refresh still works when storage is unavailable. */ }
+        window.location.reload();
+      } catch { /* A stopped preview server should not interrupt browsing. */ }
+      finally { polling = false; }
+    }
+    void refreshPreview();
+    window.setInterval(refreshPreview, 15000);
+  }
 })();

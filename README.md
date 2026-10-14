@@ -214,6 +214,12 @@ uv run tao2typ site --output docs
 bash scripts/publish-catalogue.sh /path/to/clvnkhr.github.io
 ```
 
+Watch a running local batch with `uv run tao2typ serve`, then open
+[the local queue](http://127.0.0.1:8765/#queue). It refreshes every 15 seconds
+when the checkpoint changes, preserving search and filters. PDF and source links
+open the local files immediately. The preview reads checkpoints without changing
+batch state or generating PDFs; public Pages remains a published snapshot.
+
 Only four allowlisted files are published under the personal site's
 `public/tao2typ/` directory: HTML, CSS, JavaScript and `.nojekyll`. The existing
 website's build copies that directory to GitHub Pages.
