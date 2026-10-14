@@ -2,8 +2,8 @@
 
 Default builds contain public metadata and repository download links. An explicit
 download base URL exports referenced documents and their image assets. Operational
-state, job reports and failure diagnostics are never exported. The page includes
-the ordered queue's post IDs and readable reasons, without error diagnostics.
+state, job reports and failure files are never exported. The page includes
+the ordered queue and brief failure reasons. Local previews can expose diagnostics.
 """
 
 import html
@@ -17,6 +17,7 @@ from typing import Any
 from unicodedata import normalize
 from urllib.parse import quote, urlsplit
 
+from tao2typ.diagnostics import failure_artifacts, failure_stems
 from tao2typ.storage import read_bytes, read_json, read_text
 
 _DEFAULT_REPO = "https://github.com/clvnkhr/tao2typ"
@@ -46,6 +47,77 @@ def _conversion_date(value: object) -> str:
         return converted.date().isoformat()
     except ValueError:
         return ""
+
+
+def _attempt_date(value: object) -> str:
+    """Normalize timestamps for chronological browser sorting and display."""
+    if not isinstance(value, str):
+        return ""
+    try:
+        attempted = datetime.fromisoformat(value)
+        if attempted.tzinfo is None:
+            attempted = attempted.replace(tzinfo=UTC)
+        return attempted.astimezone(UTC).isoformat()
+    except ValueError:
+        return ""
+
+
+def _failure_summary(error: str) -> str:
+    """Summarize known failure categories without publishing local stack traces."""
+    if status := re.search(r"(?:Client|Server) error '(\d{3})\b", error):
+        code = status[1]
+        return "Rate limited (HTTP 429)" if code == "429" else f"Download failed (HTTP {code})"
+    if any(
+        marker in error.lower()
+        for marker in ("nodename nor servname", "name resolution", "getaddrinfo")
+    ):
+        return "DNS lookup failed"
+    if "timeout" in error.lower() or "timed out" in error.lower():
+        return "Download timed out"
+    if command := re.search(r"unknown command: (\\(?:[a-zA-Z]{1,64}|[^\w\s]))", error):
+        return f"Unrecognized TeX command: {command[1]}"
+    if "Typst compilation failed" in error:
+        for marker, reason in (
+            ("unclosed delimiter", "Unclosed math delimiter"),
+            ("unknown alignment", "Unsupported TeX alignment"),
+            ("failed to decode image", "Image could not be decoded"),
+        ):
+            if marker in error:
+                return reason
+        return "PDF compilation failed"
+    return "Conversion failed"
+
+
+def _failure_markup(
+    archive: Path, post: dict[str, Any], stem: str, diagnostics_base_url: str | None
+) -> str:
+    error = post.get("last_error")
+    if not isinstance(error, str) or not error:
+        return ""
+    attempted = _attempt_date(post.get("last_attempted_at"))
+    timestamp = (
+        f'<p>Last attempt <time datetime="{attempted}">'
+        f'{attempted[:16].replace("T", " ")}</time> UTC</p>'
+        if attempted
+        else ""
+    )
+    extra = ""
+    if diagnostics_base_url is not None:
+        links = []
+        for key in failure_artifacts(archive, post, stem):
+            label = {"typst": "Failed .typ", "ir": "Failed JSON", "capture": "Capture"}.get(key)
+            if key.startswith("html/"):
+                label = f"HTML {int(key.split('/')[1]) + 1}"
+            url = (
+                f"{diagnostics_base_url}/__tao2typ_failure/{quote(str(post['id']), safe='')}/{key}"
+            )
+            links.append(f'<a href="{_escape(url)}">{_escape(label)}</a>')
+        extra = f'<pre>{_escape(error)}</pre><div class="failure-actions">{"".join(links)}</div>'
+    return (
+        '<details class="failure-details">'
+        f"<summary>Failed · {_escape(_failure_summary(error))}</summary>"
+        f"{timestamp}{extra}</details>"
+    )
 
 
 def _terms(post: dict[str, Any], kind: str) -> list[dict[str, Any]]:
@@ -264,6 +336,9 @@ def _post_markup(
     queue_position: int | None = None,
     queue_status: str = "",
     queue_reasons: str = "",
+    *,
+    stem: str = "",
+    diagnostics_base_url: str | None = None,
 ) -> tuple[str, bool]:
     tags = _terms(post, "tags")
     categories = _terms(post, "categories")
@@ -277,10 +352,13 @@ def _post_markup(
     original = _escape(_public_url(post.get("url")))
     search = " ".join([title, *(str(term["name"]) for term in [*tags, *categories])])
     attributes = {
+        "id": post.get("id", ""),
         "title": title,
         "date": published,
         "search": normalize("NFKC", search).lower(),
         "ready": str(ready).lower(),
+        "failed": str(bool(post.get("last_error"))).lower(),
+        "attempted": _attempt_date(post.get("last_attempted_at")),
         "tags": json.dumps([str(term["slug"]) for term in tags], ensure_ascii=False),
         "categories": json.dumps(_category_slugs(categories, category_index), ensure_ascii=False),
         "queue-position": "" if queue_position is None else str(queue_position),
@@ -312,7 +390,8 @@ def _post_markup(
         f'<span class="queue-status">{_escape(queue_label) if queue_status else ""}</span></div>'
         f'<h3><a href="{original}">{_escape(title)}</a></h3>'
         f'<div class="post-taxonomy">{chips}</div><div class="post-actions">{buttons}'
-        f'<a class="original" href="{original}">Original</a></div></li>',
+        f'<a class="original" href="{original}">Original</a></div>'
+        f"{_failure_markup(archive, post, stem, diagnostics_base_url)}</li>",
         ready,
     )
 
@@ -380,6 +459,7 @@ def generate_site(
     branch: str = "main",
     download_base_url: str | None = None,
     copy_downloads: bool = True,
+    diagnostics_base_url: str | None = None,
 ) -> dict[str, int]:
     """Build metadata; a download base URL also exports existing public downloads.
 
@@ -393,6 +473,10 @@ def generate_site(
         download_base_url = _public_url(download_base_url.rstrip("/"))
         if download_base_url == "#":
             raise ValueError("Download base URL must be an HTTP or HTTPS URL")
+    if diagnostics_base_url is not None:
+        diagnostics_base_url = _public_url(diagnostics_base_url.rstrip("/"))
+        if diagnostics_base_url == "#":
+            raise ValueError("Diagnostics base URL must be an HTTP or HTTPS URL")
     raw = json.loads((archive / "state.json").read_text(encoding="utf-8"))
     posts = sorted(
         ({**post, "id": post.get("id", key)} for key, post in raw.get("posts", {}).items()),
@@ -402,6 +486,7 @@ def generate_site(
     tags, tag_counts = _term_index(posts, "tags")
     categories, category_counts = _term_index(posts, "categories")
     queue, queue_updated = _queue_entries(archive, posts)
+    stems = failure_stems(posts) if diagnostics_base_url is not None else {}
     rendered = [
         _post_markup(
             archive,
@@ -411,6 +496,8 @@ def generate_site(
             categories,
             download_base_url,
             *queue.get(str(post["id"]), (None, "", "")),
+            stem=stems.get(str(post["id"]), ""),
+            diagnostics_base_url=diagnostics_base_url,
         )
         for post in posts
     ]
@@ -419,6 +506,7 @@ def generate_site(
         "total": len(posts),
         "converted": converted,
         "queued": len(queue),
+        "failed": sum(bool(post.get("last_error")) for post in posts),
         "tags": len(tags),
         "categories": len(categories),
     }
@@ -429,6 +517,7 @@ def generate_site(
         "TOTAL": f"{counts['total']:,}",
         "CONVERTED": f"{counts['converted']:,}",
         "QUEUED": f"{counts['queued']:,}",
+        "FAILED": f"{counts['failed']:,}",
         "QUEUE_UPDATED": _escape(queue_updated),
         "TAG_COUNT": str(counts["tags"]),
         "CATEGORY_COUNT": str(counts["categories"]),

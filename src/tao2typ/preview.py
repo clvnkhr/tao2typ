@@ -11,6 +11,7 @@ from typing import Any
 from urllib.parse import unquote, urlsplit
 
 from tao2typ.catalogue import generate_site
+from tao2typ.diagnostics import failure_stems, read_failure_artifact
 from tao2typ.storage import read_bytes, read_json
 
 
@@ -58,6 +59,7 @@ class Preview:
                     self.output,
                     download_base_url=self.base_url,
                     copy_downloads=False,
+                    diagnostics_base_url=self.base_url,
                 )
                 self.page = (
                     (self.output / "index.html")
@@ -66,6 +68,24 @@ class Preview:
                 )
                 self.revision = revision
             return self.page
+
+    def diagnostic(self, url_path: str) -> tuple[bytes, str] | None:
+        parts = unquote(url_path).split("/")
+        if (
+            len(parts) not in {4, 5}
+            or parts[:2] != ["", "__tao2typ_failure"]
+            or not parts[2].isascii()
+            or not parts[2].isdigit()
+            or (len(parts) == 5 and (parts[3] != "html" or not parts[4].isdigit()))
+        ):
+            return None
+        raw = read_json(self.archive / "state.json")
+        posts = [{**post, "id": post.get("id", key)} for key, post in raw.get("posts", {}).items()]
+        post = next((post for post in posts if str(post["id"]) == parts[2]), None)
+        if post is None or not post.get("last_error"):
+            return None
+        stem = failure_stems(posts).get(parts[2], "")
+        return read_failure_artifact(self.archive, post, stem, "/".join(parts[3:]))
 
     def artifact(self, url_path: str) -> tuple[bytes, str] | None:
         path = PurePosixPath(unquote(url_path))
@@ -120,6 +140,8 @@ def serve_preview(archive: Path, port: int = 8765) -> None:
                         media_type = "text/javascript" if path.endswith(".js") else "text/css"
                     elif (artifact := preview.artifact(path)) is not None:
                         data, media_type = artifact
+                    elif (diagnostic := preview.diagnostic(path)) is not None:
+                        data, media_type = diagnostic
                     else:
                         self.send_error(404)
                         return

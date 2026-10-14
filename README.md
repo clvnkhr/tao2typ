@@ -202,8 +202,8 @@ private during development; the intended release provides public downloads.
 Default builds contain metadata and GitHub file links. Public release builds use
 `--download-base-url` to export existing PDFs, `.typ` sources, IR JSON and only
 their referenced image assets beside the page. Relative Typst image paths are
-preserved. Queue membership and readable refresh reasons appear in the page;
-full state, job reports, failure diagnostics and caches are excluded. Public
+preserved. Queue membership, readable refresh reasons and brief failure reasons
+appear in the page; full state, job reports, diagnostic files and caches are excluded. Public
 release exports decompress Typst and IR to ordinary `.typ` and `.json` files.
 
 Build or refresh the site without generating PDFs:
@@ -219,6 +219,12 @@ Watch a running local batch with `uv run tao2typ serve`, then open
 when the checkpoint changes, preserving search and filters. PDF and source links
 open the local files immediately. The preview reads checkpoints without changing
 batch state or generating PDFs; public Pages remains a published snapshot.
+Use the **Failures only** checkbox in [the queue](http://127.0.0.1:8765/#queue)
+to filter posts with an unresolved error, including failed refreshes with an older
+PDF. Expand a failure for its reason and last attempt. The local preview also
+shows the complete error and links to available failed Typst, IR and captured
+HTML. Open errors survive automatic refreshes. Captured HTML is served as plain
+text; these diagnostic files are never included in public exports.
 
 Only four allowlisted files are published under the personal site's
 `public/tao2typ/` directory: HTML, CSS, JavaScript and `.nojekyll`. The existing

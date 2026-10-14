@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from bs4 import BeautifulSoup, Tag
 
-from tao2typ.catalogue import generate_site
+from tao2typ.catalogue import _failure_summary, generate_site
 from tao2typ.storage import write_bytes
 
 
@@ -74,7 +74,14 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     archive = fixture_archive(tmp_path)
     output = tmp_path / "site"
     counts = generate_site(archive, output)
-    assert counts == {"total": 2, "converted": 1, "queued": 1, "tags": 1, "categories": 2}
+    assert counts == {
+        "total": 2,
+        "converted": 1,
+        "queued": 1,
+        "failed": 1,
+        "tags": 1,
+        "categories": 2,
+    }
     assert {file.name for file in output.iterdir()} == {
         "index.html",
         "style.css",
@@ -111,6 +118,58 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert attribute(selected(soup.select(".post")[1], ".availability time"), "datetime") == (
         "2026-10-13"
     )
+    ready = soup.select(".post")[1]
+    assert ready["data-id"] == "1"
+    assert ready["data-failed"] == "true"  # A failed refresh can retain an older PDF.
+    assert selected(ready, ".failure-details summary").text == "Failed · Conversion failed"
+    assert selected(soup, "#failed")["type"] == "checkbox"
+    assert not soup.select('a[data-route="failures"]')
+
+
+@pytest.mark.parametrize(
+    ("error", "reason"),
+    [
+        (
+            "Client error '404 Not Found' for url 'https://example.com/image.png'",
+            "Download failed (HTTP 404)",
+        ),
+        ("Client error '429 Too Many Requests'", "Rate limited (HTTP 429)"),
+        ("Server error '503 Service Unavailable'", "Download failed (HTTP 503)"),
+        ("[Errno 8] nodename nor servname provided, or not known", "DNS lookup failed"),
+        ("The read operation timed out", "Download timed out"),
+        (
+            r"Typst compilation failed: unknown command: \rightarow",
+            r"Unrecognized TeX command: \rightarow",
+        ),
+        (r"Typst compilation failed: unknown command: \/", r"Unrecognized TeX command: \/"),
+        ("Typst compilation failed: error: unclosed delimiter", "Unclosed math delimiter"),
+        ("Typst compilation failed: error: unknown alignment", "Unsupported TeX alignment"),
+        ("Typst compilation failed: unknown function", "PDF compilation failed"),
+    ],
+)
+def test_failure_reasons(error: str, reason: str) -> None:
+    assert _failure_summary(error) == reason
+
+
+def test_local_error_details_are_escaped_and_timestamp_is_utc(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    error = 'Typst compilation failed: unclosed delimiter\n<script>alert("PRIVATE")</script>'
+    state["posts"]["1"]["last_error"] = error
+    state["posts"]["1"]["last_attempted_at"] = "2026-10-14T12:35:10+02:00"
+    (archive / "state.json").write_text(json.dumps(state))
+    output = tmp_path / "site"
+    generate_site(archive, output, diagnostics_base_url="http://127.0.0.1:8765")
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    row = selected(soup, '.post[data-id="1"]')
+    assert row["data-attempted"] == "2026-10-14T10:35:10+00:00"
+    assert selected(row, ".failure-details pre").text == error
+    assert selected(row, ".failure-details time").text == "2026-10-14 10:35"
+    assert len(soup.select("script")) == 1
+    generate_site(archive, output)
+    public_page = (output / "index.html").read_text()
+    assert "Unclosed math delimiter" in public_page
+    assert "PRIVATE" not in public_page and "__tao2typ_failure" not in public_page
 
 
 def test_queue_includes_refreshes_in_processing_order_without_diagnostics(tmp_path: Path) -> None:

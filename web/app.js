@@ -7,6 +7,8 @@
     date: element.dataset.date,
     search: element.dataset.search,
     ready: element.dataset.ready === "true",
+    failed: element.dataset.failed === "true",
+    id: element.dataset.id,
     queuePosition: element.dataset.queuePosition !== undefined && element.dataset.queuePosition !== ""
       && Number.isFinite(Number(element.dataset.queuePosition)) ? Number(element.dataset.queuePosition) : null,
     tags: JSON.parse(element.dataset.tags),
@@ -14,6 +16,7 @@
   }));
   const search = document.getElementById("search");
   const ready = document.getElementById("ready");
+  const failed = document.getElementById("failed");
   const sort = document.getElementById("sort");
   const title = document.getElementById("collection-title");
   const queueUpdated = document.getElementById("queue-updated");
@@ -35,8 +38,16 @@
       sessionStorage.removeItem(previewStateKey);
       if (saved && typeof saved.search === "string") search.value = saved.search;
       if (saved && typeof saved.ready === "boolean") ready.checked = saved.ready;
+      if (saved && typeof saved.failed === "boolean") failed.checked = saved.failed;
       if (saved && Array.from(sort.options).some(option => option.value === saved.order && option.value !== "queue")) {
         selectedOrder = saved.order;
+      }
+      if (Array.isArray(saved?.openFailures)) {
+        const openFailures = new Set(saved.openFailures);
+        for (const post of posts) {
+          const details = post.element.querySelector(".failure-details");
+          if (details && openFailures.has(post.id)) details.open = true;
+        }
       }
     } catch { /* Storage may be disabled in the browser. */ }
   }
@@ -69,6 +80,7 @@
     for (const post of posts) {
       const matches = (!query || post.search.includes(query))
         && (!ready.checked || post.ready)
+        && (!failed.checked || post.failed)
         && (!isQueue || post.queuePosition !== null)
         && (!filtering || (kind === "tag" ? post.tags : post.categories).includes(slug));
       post.element.hidden = !matches;
@@ -90,6 +102,7 @@
   search.addEventListener("input", render);
   document.querySelector("form.controls").addEventListener("submit", event => event.preventDefault());
   ready.addEventListener("change", render);
+  failed.addEventListener("change", render);
   sort.addEventListener("change", () => {
     if (!sort.disabled) selectedOrder = sort.value;
     render();
@@ -127,7 +140,9 @@
           sessionStorage.setItem(previewStateKey, JSON.stringify({
             search: search.value,
             ready: ready.checked,
+            failed: failed.checked,
             order: selectedOrder,
+            openFailures: posts.filter(post => post.element.querySelector(".failure-details")?.open).map(post => post.id),
           }));
         } catch { /* Refresh still works when storage is unavailable. */ }
         window.location.reload();
