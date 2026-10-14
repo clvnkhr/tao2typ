@@ -653,10 +653,9 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
 #import "@preview/mitex:{MITEX_VERSION}": mi, mitex
 #set document(title: {_string(post.title)}, author: {_string(post.author)})
 #set page(paper: "a4", margin: (x: 24mm, y: 23mm), numbering: "1", number-align: center)
-#set text(font: ("Libertinus Serif", "New Computer Modern"), size: 11pt, lang: "en")
-#set block(spacing: 0.9em)
+#set text(font: ("Libertinus Serif", "New Computer Modern"), size: 12pt, lang: "en")
 #set par(
-  justify: true, leading: 0.65em, spacing: 0.65em,
+  justify: true,
   first-line-indent: (amount: 1.5em, all: false),
   justification-limits: (tracking: (min: -0.01em, max: 0.01em)),
 )

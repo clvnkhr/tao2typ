@@ -17,7 +17,7 @@ endobj
 <</Type/StructTreeRoot/RoleMap<</Datetime/Span/Terms/Part/Title/P/Strong/Span/Em/Span>>/K[69 0 R]/ParentTree<</Nums[0 10 0 R 1 12 0 R 2 14 0 R 3 15 0 R 4 16 0 R 5 16 0 R 6 17 0 R 7 18 0 R 8 19 0 R 9 25 0 R 10 35 0 R 11 43 0 R 12 51 0 R 13 57 0 R 14 57 0 R 15 57 0 R 16 63 0 R 17 67 0 R 18 6 0 R]>>/ParentTreeNextKey 19>>
 endobj
 6 0 obj
-[7 0 R 8 0 R 9 0 R 10 0 R 12 0 R 13 0 R 20 0 R 14 0 R 20 0 R 15 0 R 20 0 R 16 0 R 16 0 R 20 0 R 17 0 R 20 0 R 18 0 R 20 0 R 20 0 R 19 0 R 20 0 R 21 0 R 22 0 R 24 0 R 26 0 R 29 0 R 29 0 R 30 0 R 32 0 R 34 0 R 36 0 R 39 0 R 39 0 R 40 0 R 42 0 R 44 0 R 47 0 R 47 0 R 48 0 R 50 0 R 52 0 R 55 0 R 55 0 R 56 0 R 56 0 R 56 0 R 56 0 R 56 0 R 56 0 R 58 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 60 0 R 62 0 R 64 0 R 68 0 R 67 0 R 68 0 R]
+[7 0 R 8 0 R 9 0 R 10 0 R 12 0 R 13 0 R 20 0 R 14 0 R 20 0 R 15 0 R 20 0 R 16 0 R 16 0 R 20 0 R 17 0 R 20 0 R 18 0 R 20 0 R 20 0 R 19 0 R 20 0 R 21 0 R 22 0 R 24 0 R 26 0 R 29 0 R 29 0 R 30 0 R 32 0 R 34 0 R 36 0 R 39 0 R 39 0 R 40 0 R 42 0 R 44 0 R 47 0 R 47 0 R 47 0 R 48 0 R 50 0 R 52 0 R 52 0 R 55 0 R 55 0 R 55 0 R 56 0 R 56 0 R 56 0 R 56 0 R 56 0 R 56 0 R 58 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 59 0 R 60 0 R 62 0 R 64 0 R 68 0 R 67 0 R 68 0 R]
 endobj
 7 0 obj
 <</Type/StructElem/S/P/P 69 0 R/K[0]/Pg 108 0 R>>
@@ -140,22 +140,22 @@ endobj
 <</Type/StructElem/S/Div/P 69 0 R/K[41 0 R 45 0 R]>>
 endobj
 47 0 obj
-<</Type/StructElem/S/P/P 69 0 R/K[36 37]/Pg 108 0 R>>
+<</Type/StructElem/S/P/P 69 0 R/K[36 37 38]/Pg 108 0 R>>
 endobj
 48 0 obj
-<</Type/StructElem/S/Figure/P 49 0 R/Alt<FEFF0041007600610074006100720020006F00660020004F006E002000540061006F20190073002000740061006C006B00200061006E0064002000740068006500200033002D00640069006D0065006E00730069006F006E0061006C002000480069006C0062006500720074002D0053006D00690074006800200063006F006E006A006500630074007500720065002000AB002000410072006500610020003700370037>/A[<</O/Layout/Placement/Block>>]/K[38]/Pg 108 0 R>>
+<</Type/StructElem/S/Figure/P 49 0 R/Alt<FEFF0041007600610074006100720020006F00660020004F006E002000540061006F20190073002000740061006C006B00200061006E0064002000740068006500200033002D00640069006D0065006E00730069006F006E0061006C002000480069006C0062006500720074002D0053006D00690074006800200063006F006E006A006500630074007500720065002000AB002000410072006500610020003700370037>/A[<</O/Layout/Placement/Block>>]/K[39]/Pg 108 0 R>>
 endobj
 49 0 obj
 <</Type/StructElem/S/Div/P 54 0 R/K[48 0 R]>>
 endobj
 50 0 obj
-<</Type/StructElem/S/Strong/P 51 0 R/K[39]/Pg 108 0 R>>
+<</Type/StructElem/S/Strong/P 51 0 R/K[40]/Pg 108 0 R>>
 endobj
 51 0 obj
 <</Type/StructElem/S/Link/P 53 0 R/A[<</O/Layout/Placement/Block>>]/K[<</Type/OBJR/Pg 108 0 R/Obj 83 0 R>>50 0 R]>>
 endobj
 52 0 obj
-<</Type/StructElem/S/Span/P 53 0 R/A[<</O/Layout/Placement/Block>>]/K[40]/Pg 108 0 R>>
+<</Type/StructElem/S/Span/P 53 0 R/A[<</O/Layout/Placement/Block>>]/K[41 42]/Pg 108 0 R>>
 endobj
 53 0 obj
 <</Type/StructElem/S/Div/P 54 0 R/K[51 0 R 52 0 R]>>
@@ -164,34 +164,34 @@ endobj
 <</Type/StructElem/S/Div/P 69 0 R/K[49 0 R 53 0 R]>>
 endobj
 55 0 obj
-<</Type/StructElem/S/P/P 69 0 R/K[41 42]/Pg 108 0 R>>
+<</Type/StructElem/S/P/P 69 0 R/K[43 44 45]/Pg 108 0 R>>
 endobj
 56 0 obj
-<</Type/StructElem/S/Strong/P 57 0 R/K[43 44 45 46 47 48]/Pg 108 0 R>>
+<</Type/StructElem/S/Strong/P 57 0 R/K[46 47 48 49 50 51]/Pg 108 0 R>>
 endobj
 57 0 obj
 <</Type/StructElem/S/Link/P 69 0 R/A[<</O/Layout/Placement/Block>>]/K[<</Type/OBJR/Pg 108 0 R/Obj 84 0 R>><</Type/OBJR/Pg 108 0 R/Obj 85 0 R>><</Type/OBJR/Pg 108 0 R/Obj 86 0 R>>56 0 R]>>
 endobj
 58 0 obj
-<</Type/StructElem/S/Span/P 69 0 R/A[<</O/Layout/Placement/Block>>]/K[49]/Pg 108 0 R>>
+<</Type/StructElem/S/Span/P 69 0 R/A[<</O/Layout/Placement/Block>>]/K[52]/Pg 108 0 R>>
 endobj
 59 0 obj
-<</Type/StructElem/S/P/P 69 0 R/K[50 51 52 53 54 55 56 57 58 59 60 61]/Pg 108 0 R>>
+<</Type/StructElem/S/P/P 69 0 R/K[53 54 55 56 57 58 59 60 61 62 63 64 65]/Pg 108 0 R>>
 endobj
 60 0 obj
-<</Type/StructElem/S/Figure/P 61 0 R/Alt(Avatar of Terence Tao)/A[<</O/Layout/Placement/Block>>]/K[62]/Pg 108 0 R>>
+<</Type/StructElem/S/Figure/P 61 0 R/Alt(Avatar of Terence Tao)/A[<</O/Layout/Placement/Block>>]/K[66]/Pg 108 0 R>>
 endobj
 61 0 obj
 <</Type/StructElem/S/Div/P 66 0 R/K[60 0 R]>>
 endobj
 62 0 obj
-<</Type/StructElem/S/Strong/P 63 0 R/K[63]/Pg 108 0 R>>
+<</Type/StructElem/S/Strong/P 63 0 R/K[67]/Pg 108 0 R>>
 endobj
 63 0 obj
 <</Type/StructElem/S/Link/P 65 0 R/A[<</O/Layout/Placement/Block>>]/K[<</Type/OBJR/Pg 108 0 R/Obj 87 0 R>>62 0 R]>>
 endobj
 64 0 obj
-<</Type/StructElem/S/Span/P 65 0 R/A[<</O/Layout/Placement/Block>>]/K[64]/Pg 108 0 R>>
+<</Type/StructElem/S/Span/P 65 0 R/A[<</O/Layout/Placement/Block>>]/K[68]/Pg 108 0 R>>
 endobj
 65 0 obj
 <</Type/StructElem/S/Div/P 66 0 R/K[63 0 R 64 0 R]>>
@@ -200,10 +200,10 @@ endobj
 <</Type/StructElem/S/Div/P 69 0 R/K[61 0 R 65 0 R]>>
 endobj
 67 0 obj
-<</Type/StructElem/S/Link/P 68 0 R/K[66<</Type/OBJR/Pg 108 0 R/Obj 88 0 R>>]/Pg 108 0 R>>
+<</Type/StructElem/S/Link/P 68 0 R/K[70<</Type/OBJR/Pg 108 0 R/Obj 88 0 R>>]/Pg 108 0 R>>
 endobj
 68 0 obj
-<</Type/StructElem/S/P/P 69 0 R/K[65 67 0 R 67]/Pg 108 0 R>>
+<</Type/StructElem/S/P/P 69 0 R/K[69 67 0 R 71]/Pg 108 0 R>>
 endobj
 69 0 obj
 <</Type/StructElem/S/Document/P 5 0 R/K[7 0 R 8 0 R 9 0 R 11 0 R 13 0 R 20 0 R 21 0 R 28 0 R 29 0 R 31 0 R 38 0 R 39 0 R 46 0 R 47 0 R 54 0 R 55 0 R 57 0 R 58 0 R 59 0 R 66 0 R 68 0 R]>>
@@ -212,58 +212,58 @@ endobj
 <</Type/PageLabel/S/D/St 1>>
 endobj
 71 0 obj
-<</Type/Annot/Subtype/Link/Rect[80.031494 719.99194 356.7675 730.45593]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/)>>/F 4/StructParent 0/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/)>>
+<</Type/Annot/Subtype/Link/Rect[80.031494 714.49194 356.7675 724.95593]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/)>>/F 4/StructParent 0/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/)>>
 endobj
 72 0 obj
-<</Type/Annot/Subtype/Link/Rect[77.781494 708.00244 97.87949 716.5044]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://clvnkhr.github.io/tao2typ/)>>/F 4/StructParent 1/Contents(https://clvnkhr.github.io/tao2typ/)>>
+<</Type/Annot/Subtype/Link/Rect[77.781494 698.1024 97.87949 706.60443]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://clvnkhr.github.io/tao2typ/)>>/F 4/StructParent 1/Contents(https://clvnkhr.github.io/tao2typ/)>>
 endobj
 73 0 obj
-<</Type/Annot/Subtype/Link/Rect[167.24564 660.50195 208.68083 674.8899]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>/F 4/StructParent 2/Contents(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>
+<</Type/Annot/Subtype/Link/Rect[180.00865 640.6189 226.34003 656.31494]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>/F 4/StructParent 2/Contents(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>
 endobj
 74 0 obj
-<</Type/Annot/Subtype/Link/Rect[287.41156 660.50195 330.59586 674.8899]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/books/)>>/F 4/StructParent 3/Contents(https://terrytao.wordpress.com/books/)>>
+<</Type/Annot/Subtype/Link/Rect[316.98026 640.6189 365.16022 656.31494]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/books/)>>/F 4/StructParent 3/Contents(https://terrytao.wordpress.com/books/)>>
 endobj
 75 0 obj
-<</Type/Annot/Subtype/Link/Rect[375.9679 660.50195 527.2441 674.8899]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>/F 4/StructParent 4/Contents(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>
+<</Type/Annot/Subtype/Link/Rect[416.5585 640.6189 527.2441 656.31494]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>/F 4/StructParent 4/Contents(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>
 endobj
 76 0 obj
-<</Type/Annot/Subtype/Link/Rect[68.031494 646.1139 94.88436 660.50195]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>/F 4/StructParent 5/Contents(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>
+<</Type/Annot/Subtype/Link/Rect[68.031494 624.9229 155.53474 640.6189]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>/F 4/StructParent 5/Contents(https://terrytao.wordpress.com/books/hilberts-fifth-problem-and-related-topics/)>>
 endobj
 77 0 obj
-<</Type/Annot/Subtype/Link/Rect[147.14151 646.1139 222.99957 660.50195]/Border[0 0 0]/A<</Type/Action/S/URI/URI(http://en.wordpress.com/tag/254a-hilberts-fifth-problem)>>/F 4/StructParent 6/Contents(http://en.wordpress.com/tag/254a-hilberts-fifth-problem)>>
+<</Type/Annot/Subtype/Link/Rect[211.9424 624.9229 294.18744 640.6189]/Border[0 0 0]/A<</Type/Action/S/URI/URI(http://en.wordpress.com/tag/254a-hilberts-fifth-problem)>>/F 4/StructParent 6/Contents(http://en.wordpress.com/tag/254a-hilberts-fifth-problem)>>
 endobj
 78 0 obj
-<</Type/Annot/Subtype/Link/Rect[242.26991 646.1139 415.4038 660.50195]/Border[0 0 0]/A<</Type/Action/S/URI/URI(http://www.math.ucla.edu/~tao/254a.1.11f/)>>/F 4/StructParent 7/Contents(http://www.math.ucla.edu/~tao/254a.1.11f/)>>
+<</Type/Annot/Subtype/Link/Rect[314.8459 624.9229 502.38556 640.6189]/Border[0 0 0]/A<</Type/Action/S/URI/URI(http://www.math.ucla.edu/~tao/254a.1.11f/)>>/F 4/StructParent 7/Contents(http://www.math.ucla.edu/~tao/254a.1.11f/)>>
 endobj
 79 0 obj
-<</Type/Annot/Subtype/Link/Rect[110.458496 631.72595 130.2145 646.1139]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>/F 4/StructParent 8/Contents(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>
+<</Type/Annot/Subtype/Link/Rect[209.09149 609.2269 230.6435 624.9229]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>/F 4/StructParent 8/Contents(https://terrytao.wordpress.com/wp-content/uploads/2012/03/hilbert-book.pdf)>>
 endobj
 80 0 obj
-<</Type/Annot/Subtype/Link/Rect[97.031494 578.2177 254.3755 592.4627]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135476)>>/F 4/StructParent 9/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135476)>>
+<</Type/Annot/Subtype/Link/Rect[97.031494 555.39624 268.6795 570.9362]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135476)>>/F 4/StructParent 9/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135476)>>
 endobj
 81 0 obj
-<</Type/Annot/Subtype/Link/Rect[97.031494 506.3467 122.584496 520.5917]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135552)>>/F 4/StructParent 10/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135552)>>
+<</Type/Annot/Subtype/Link/Rect[97.031494 473.6642 124.90749 489.2042]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135552)>>/F 4/StructParent 10/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-135552)>>
 endobj
 82 0 obj
-<</Type/Annot/Subtype/Link/Rect[97.031494 448.7207 283.00848 462.9657]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-137027)>>/F 4/StructParent 11/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-137027)>>
+<</Type/Annot/Subtype/Link/Rect[97.031494 414.0722 299.9155 429.6122]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-137027)>>/F 4/StructParent 11/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-137027)>>
 endobj
 83 0 obj
-<</Type/Annot/Subtype/Link/Rect[97.031494 391.0947 459.8775 405.3397]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141871)>>/F 4/StructParent 12/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141871)>>
+<</Type/Annot/Subtype/Link/Rect[97.031494 345.6452 492.8635 361.1852]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141871)>>/F 4/StructParent 12/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141871)>>
 endobj
 84 0 obj
-<</Type/Annot/Subtype/Link/Rect[68.031494 340.4537 144.9875 355.1662]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>/F 4/StructParent 13/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>
+<</Type/Annot/Subtype/Link/Rect[68.031494 270.1162 151.98349 286.1662]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>/F 4/StructParent 13/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>
 endobj
 85 0 obj
-<</Type/Annot/Subtype/Link/Rect[144.9875 340.4537 313.3425 355.1662]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>/F 4/StructParent 14/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>
+<</Type/Annot/Subtype/Link/Rect[151.98349 270.1162 335.6435 286.1662]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>/F 4/StructParent 14/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>
 endobj
 86 0 obj
-<</Type/Annot/Subtype/Link/Rect[313.3425 340.4537 405.9515 354.6987]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>/F 4/StructParent 15/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>
+<</Type/Annot/Subtype/Link/Rect[335.6435 270.1162 436.6715 285.6562]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>/F 4/StructParent 15/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-141931)>>
 endobj
 87 0 obj
-<</Type/Annot/Subtype/Link/Rect[97.031494 289.63123 157.06949 303.87622]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-416359)>>/F 4/StructParent 16/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-416359)>>
+<</Type/Annot/Subtype/Link/Rect[97.031494 200.89618 162.5275 216.43622]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-416359)>>/F 4/StructParent 16/Contents(https://terrytao.wordpress.com/2012/03/27/hilberts-fifth-problem-and-related-topics/#comment-416359)>>
 endobj
 88 0 obj
-<</Type/Annot/Subtype/Link/Rect[177.80049 270.94073 277.2845 285.32874]/Border[0 0 0]/A<</Type/Action/S/URI/URI(http://www.ams.org/bookstore-getitem/item=gsm-153)>>/F 4/StructParent 17/Contents(http://www.ams.org/bookstore-getitem/item=gsm-153)>>
+<</Type/Annot/Subtype/Link/Rect[187.7795 181.87018 296.3075 197.56622]/Border[0 0 0]/A<</Type/Action/S/URI/URI(http://www.ams.org/bookstore-getitem/item=gsm-153)>>/F 4/StructParent 17/Contents(http://www.ams.org/bookstore-getitem/item=gsm-153)>>
 endobj
 89 0 obj
 [/ICCBased 125 0 R]
@@ -272,7 +272,7 @@ endobj
 [/ICCBased 126 0 R]
 endobj
 91 0 obj
-[108 0 R/XYZ 68.031494 626.0152 0]
+[108 0 R/XYZ 68.031494 603.8412 0]
 endobj
 92 0 obj
 <</ProcSet[/PDF/Text/ImageC/ImageB]/ColorSpace<</c0 89 0 R/c1 90 0 R>>/XObject<</x0 128 0 R/x1 130 0 R/x2 131 0 R/x3 132 0 R/x4 133 0 R>>/Font<</f0 93 0 R/f1 96 0 R/f2 99 0 R/f3 102 0 R/f4 105 0 R>>>>
@@ -550,29 +550,30 @@ OÂUxŞÏuóOÀ#ğV˜ÀËàØ…³0‹p-\pöà\€ƒnöfx„	<OÀ›àqx[÷­çà*¼®Âsğv¸
 endstream
 endobj
 124 0 obj
-<</Length 4058/Filter/FlateDecode>>
+<</Length 4121/Filter/FlateDecode>>
 stream
-xœİ\m“Û¶ş~¿‚qbÇŠ-hñ¤®ÛóÛL;q¦ßL?$ùp§œb·¾»DVZçßwH ^– O'¹zÆÒiI»‹ÅâÁî‚«7¿œ_?y²zıü//xúôÙ‹ç'¿6´š%m”!À©°¢ÑˆÖ`E³¾Z­¡Yh€paZÅÚ?-£Rİ ªû§›ëë“gg4gÛÕÛœm†¦Û¯³«ïş  ? P÷ÍÜ7wßÂ}K÷­Ü·î¾/ºÏİB÷Í\/~<ûëÉË³“ïN^¾~¾Še£5Ù$Ë¥íD£h)ï´a|/æKùp =÷ıÚ?½é>·Éÿ¬Zøf©ÎôÄÓîÄ0Ç(sŒ2_šÜòôAÇ5€$s é=µÀµï´o{7>V¬6V\.+c…ÊXQ¾Püa¤õÍÂÄ?/"µï2øBX¯ 	—	í;ı
-ô#àÚ	Ll3KÊ›ÉtÍ`\‹¼Ğ¢ EÆˆ´ÔÆ“™Jf¥¦ÌJh¶"ûÎs›ÚtğÌ{ƒğÌfS€ùo/djËnxœ~–ÔÛÜä©ZPğ÷ôê¾öjõãô<µÆÌ
-†iª’·é¨s?“Ã”İç®s}ÄZ‚F³ÜiûşõbI  ppú‰Õ6è¨{ i?>k?îÅí6¸&)uÒë.–½IÆà"Ömƒ*Ö³9øİbé|xòtÀóâmÈiÂO—`IãÓAÓAk¢M?(JÅşÓAY›…¥¦Ãí¯{Ëfr\Yˆa51Ú
-‹Jq»zBÜÇ¥s¢3ÏÓAßÔ‡:ZV²ÑÆ<ï ¤l¦fËO1»ß_Äïg/ˆ÷ã¶,–”u½¹XrÏ;ånµì>éˆnwï6çëİ“'«³ß¹\}sşûÍo»Ê²¦,%l»ço F‚5 Ú¿´hÿn€Ø–Ämóæù·İü»Íë®¹«FHKeªæıÉÄvT%hU]Wé¨q|µàÀ
-"Ë‚ÆP«zÒfAi“³Å’kA:n]~uN^”=ˆ‚ÄUúp˜fì³ü–²+.³vA•í²œ”œåÍJÂ¤ÂZ.Úuºtª4aBªlĞ÷ñ{“(Ôº)C´ˆˆ_*)W$Ò4ÏH÷Æ5d
-10D0üÓe¦Fúèx6qœv9°ÓºE[¢ÑDP*ÕQí¼EB¥Ã˜áwzø¦:Ác8¯Á-ÇµòÓ÷øÆ·ÜÕsDZiÔÍ{9CÈ½Üxán§]ıÎ–T”V†¸–Ä*mjL«i]”k\iE™Ò‘	š+fÍá)Wp¯ÿÍ­÷/ØD`²ô))XÈç@'v]1¹#C¦)æ#ù80½—`gbË~«GŒ|Ú1ÒZ8E	K”1GòŒm Œj…>èÒ9¸œÆdIã%m[ŞUõ|eÄ
-bŒà*•ûÖ,„"$È~`–1¢ Kf‰âÔøy7S8*TNÛ-–ÖQ#,D:Eô}>9®ÇrëL…&TPIÿ¥à»yªà3ôŠÙXÁ-nÚ,do~8¥‹yóQÃî–s¡Œ0ÆˆµVê;NL°G³äÚÜÒËı+Œ0eí±í#³”Ãœ!f³¤ÆšgÓV‡{yÆRãvÎ a¦?Óíç­Í{ğ° ¤’¶÷ÄŸİşø)÷ú‚J"€›;ÏqNç­q”nŠ¦Š1–ÿV…Ü†°UiOqofó(k3¼­©ÁF.	ØÅèB®ŸÇ?ÊìF £ù‡*ïe0€R BaUÊüá!C“‹•lg¹A§Úh°¼³]ÚÊ²ÕÂÅ±‹4ô k•d„=Õ'*º«ËäÑ‘”˜û“ªY6ªè<É´¿ÉÕês	Û,•"Ë¬ÄhÇEòO§ÙÃ4u…¼‹“•Á®Õ!(P„`•:ZKĞø„*ÍS ¤Nª|ÊÑy&ÌÉ¯¿ÒÈß«˜h)Tò6ÉL¬T\5Ò:¹´îò¢bÄ÷‘„‚R| Y({ˆh•5F|µ%LIu¡EÁ'­1âûH4O‹à;@µ>y{ò÷“ëÔ$Øêôıîáé¿ÎwçÛæfÓœşt~Õ¼|ûşrû¡ùö÷·7ï¯š³·7W.¯Şxë†¥ız¯V¡yqãFì»´7¾úæüúç‡Qcq&10L‰¶Lïé"Ù„‹¤‘#Ú«à©—ñOÄu3C1uYyÑFH?útdìËª5¬Ü*3)×R¢:=`Uµ EòêVn8#SUœP`lÏdcÌİãx`©
-•`™£x!E¾ ŒÑıïd*RÎıÕGY“£5Cq‰>1t(yHeÈŠ“ÚZHM§í&VŸ.Ş[Q\0'GÀBh$p¨®¿šûå®oÚ,4Mä§H÷CåLÄêãyEú›#™N30ëzaÓƒYÔ9Ì5İBœÊ¤­UHaˆ¦‚ñ½Aÿ~
-ÌŒmÂgõj
-P<,³q+‰‰`nn×aŒú‹µÊ[ÊÈtbkJ†òQV}ªØR€]–¥McX½l‚¡©QplâfïÍ€µzUDÄÊ21jA|
-8Ü4x=%¸Á/m°Â_.Å©ß/uŞq(óô^,û=TŸ.+›r§±bSK¤<‚¡Ìk6‚«¶F©1ÈÄ'ûNb’çfR˜šp+@G½ ënŒ¹ñ¤5FŒq¶§EZ=`úB‘¶Éöëwÿ¼¬cêÀßÕê#ÅÔv¦K,£GÂÔ#¥İ•¸GâmY°mãöÿ­òÚ¶\´µyœî‰V±’óÒÇ¦uç~ÑÊÁ,4ºÑÛ„5œ3J
-š‹E"‰ÈŒ®“İ÷×SKÎu,n€)e‘wzh%[ú¶s8ÌÁR
-¨4¾j¼(ŒÛL/·uMj”ß®Ùt)ÉÇp^]ô­G|Vh˜×*
-„VÄ¾çlYİ©ĞİRb1eÁ{´÷¨y/0÷ÅÄÆáÚPcj[I •OYg²ËaØ±ŒÔµøTYáöEËæŠ *ªï.¬µå”ÛÇè-H5½#DÒÅÛàM¹ÑZÈSHÙ[wŒÇ„¢ÄRÃ#@&”›¬	¤5FŒĞX hjè!¢yVÖ1ÆbBX¢•‰±˜¢àÏ“Ö1Âbi ô€¨
-ƒbœ·PìÉ«—¯^
- €j¿…ûf ¬ÍY¼Pªÿ[j e ´u¿€’ııJô´îyÓÓÛßÂıİ¶×µÕşÍø«şúé3×VÛ—P/”£‰ö·Ğ¾ö}ZŒƒ¯VÙ`äb`’f¥fGBŒidb›ídb·3ø'–İ•ºº]v5É/D>vğéä~Lf“< 7ƒzá¾ì|UXğ“³ ]Ru|‘C*fL[g„Á‡æØğø‹$——.`ø²y'H\‹	Î‰¹ç"ÿ‡yrû–aqïSÈeìp4†‚F<ÓKe`6ƒgåIÑbFBÁI!……©Œª‚—`š6'ªğo$‹Æ›·¨Aaø«¢q<quoj`¬‹¹xÛıNQqv1pÏ6*_š%Ã5è¬k³Š¶¸ôŞÍbšóà6²¤ßTäxM%Wÿ˜é€f“ ­§‰)f›¹	&úüSûñçöƒâa¾‘äşŒj‚#l/C·üN{ŒjqÄ¾§ko½‘LA»§#?>˜¹5½Q'ˆa–%ˆœñGàÓ“Ö1FÌaŞĞÃ@¬¬1bŒ˜¹e„
-jèƒóHkŒ!æ@‹Õâ{@T…"f³bíß/Âu÷©W¨íQp@Ì-ıù€|ÚAÕ¼}öE½CÍíß-J~Ù·ÛÑ\ß¾í€Æ­ëË¡÷–ï¶ı¶=É][vè³ã‡Gíº¾xöè^¦ˆ¾ÓQ´CèøÖşÅ{µúÈGQü¬°/·‚(eöõ>/ñ¡CR°ä>ô‰×Éñu£o±-^B½$}cD(´HyôwÇçÓ[ºùğOuWïµnş!Rô¤S¾&Ñ#dÏaBe„ÈS†î§.÷‹´çWóÚ²±[‹Û“y0|TŞP†ûÛãFk‰Úè'İÍAşPï³…µ¨~wO[vØ=ÌS¢/“A7%Q%„›©(äÀ·ók@fEô²F==âÏyU»v)ãæp5h"C‹»ƒE>+©ŒÓöƒV¹œªÈ6c£"yÑÔŒ]Œ¨% ¸¢í»…öXûU¿Œlªe_Ë¢$²mÚ{HòJ¦Ñ÷Õ2 Ã{ÍöçªRö[nâÒ¢‡|ï‹ç—B+;œá‘ˆA¦íÑíÿƒ¨®t^íÚØği‹:´4+f”ömÔé}QØáØ*•"Şh"
-A€™ãÄ¿Ìæg^“ElÚ¼§Š¬•X9e†pÎåE¸¨C½òÙ?F¸“î¸=w¬Â]3Îšª°&±FMqß/™„CWx{÷”D&håĞ«¨T¥q Dóh`ªÖ½ ö~M…_Ê	ìÈüúØ¯—ù;µT,ÔbÎ)ò©­AÎ§o+Ê)Ït	ÄJ:¢“OP­D¿‡‘µ—²rŞ–§©îa*Œ”›)£ˆ‘LØ|Œù	bráÕlQÍ$fØé¥dÊVû|n¥‡0qçq‡¢’Š¶J„Ì• 
-Ú|·Q{–	Å7:Ö’â,qzXWa¾|q†`´=\$ÌÆ:^ú*í¸"_Æ7`¯ÖKµÉA5Ñ’ë=ò« gF¢BÏaggùÜ¯°Y¦’©öå“r—Gª—ª°‹¼g²¶ö»“£Ï*=—Ù1ÆÚĞ¾¸ƒ¢ºNŸÂ$‰¼şÂ™=ˆ´İ,¤±_é>joøDŞdÖ¾·fCG¬®kâ Wvf{Øi¦7‘IEŒƒhº&Á¸&,r_‡5Ï-w¼Æl¹Ü	ÍŸÇluæ:è½SnÌ*Ç_œsãÀˆaÆ¨(/^(hk”¥İb”9½´Ÿ5J3oÌQÚD‰7fdÁä@[£Ô(÷6c¹N0aÉ7•ŸÑ=»Ü^^¯/›³ó›ê‚ˆÑ«ÕG1–JR³Nå2Ë	EÍq¶*TguêyÖ!z…n·É7O/äRRPí‹ŒQ9?œ/_ıû4kO8éD«»€
-|Pµ£´L"©ÔûNH`d^w‹5}.<Äâ¦íÖ‹²
-åŠúJ8Cµ&¦­ïLÕwğwôãW´Ü¹8…0'ÏóÜ’ƒhO+ZB —Ö„!÷¶±Pª€¯èİØ§»İùúíåOß¯İìv7W?®Şüv±k_˜ıêæfw¹í_ı·óŸß]ŸïŞİ\#ÀH0ĞVgn­î=ÆíYd"fñ?$@ÿ¬
+xœİ]ësÜ¶ÿ®¿‚qâÄûp‹7‘ºjeYši'Î4cÍôC’ÒEŠİê‘È—Öùï;$Hîü¡™ñQ·G‹ÅbñÛ˜ÕÛ_Ïo_¾\½9şÛë_½>>ø­¡4Ğ,i£Zœ
+#­hF4ë›Õšõ‡¨Q¬ûÓ0*U« BõÿéæÃúöàÕYÍÙıê
+Óœ]Mw—³›ı ?P{eöÊíUØ«´We¯º¿^ôŸ›…š¹]ütö÷ƒ“³ƒïNŞ¯Â±ÑÚØ$Ã¥é‡Fû¡Å¼Ó†ñ­˜_,å³9¸~¡ÃÓWıç}ô‹{V-\³T'râqwÂ˜e”YFšõÜòøAË5€Gf&â{kk×éĞö¦<W¬6W\.+s…Ê\Q¾PüY õ«E~½Ä¾IÄÂ8ñdpÉ İw+ÿL€nl;‰ûD“ÒfY3(K‘gRlÁK‘j†šp1SÉŒ ´í³¤i€Èa…óTÆmm98æB8f“%ÀÜÕ2Öe;=V>Kêô®òT-(¸{qß:±ºyòrkc¢ã2UQƒ÷ñ¬s7“Ó”Ügçî÷‚¶x‰Xf¹• wıëÅ’ à`åŠm”Qÿ@Ó}|Ö}<	ÛmpIŒ£ÔQ¯›pìM4¡lT°õÄÀoKkÃ£§ı /N‡¬$ÜrñšT^"[ZİË€0*¶_ŠÈÚ‚È45n÷»Ól&ËÃÙ0Œ&­6Â £xØ=1ÜÆÅk¢WÏãI¿ªOu°­$³YŞQHÉJM¶Ÿl-öß¿Ş­>Ÿ†m}¹XRÖ÷şÕbÉï”Ûİ²ÿXÄ3vt¿yu¾Ş¼|¹:ûã×ËÕ·çÜı¾©lkJ+2èâ0yÇo ­Ó‚èşÒ¢û»b:7ÍÛãï ºùo#š7}{7†0ÊTÍõÁ[DyT!ˆ¤muceEíøz±¤ÄH
+-Øİ@/–LÎÛp¯Š€h5Vˆ›Å²²»_ÖÊ&£\X
+õOõ8+í«ü>È³)—Ÿe÷ =r‰´¤°ì¾tÌÀó{Ù¡ƒÄ›G&¢hNt¦´C	Ğ*kÄ6V±¢/¹”¯Æ1‰bbÈ¥…ë€§´'eQµ™¨X×© à\<èh¦ÀÏgüQz²ÇÆö=ãsåUœ_“Í/§Š˜˜ÚëRè ”ãT˜Ù*‹ ‡g½K¨œ…	)q[/òAUœç<2À•$TcÔıåœÉİ~[ïÛÙiRb‚T)ÛıšÚ¢\ˆXĞ3Ó®|&°UœIf.õI£ñQÜyû'ËÇœád¥X!ÌÒ—ì.>muh-Ø¡XKZÆâ ÛîìÎ°ıÑV(ˆ°m…Ôã(XvW/_*‰1@ŒÂl©äÆòHZR9áÁêODëWcÿäÃ¸ÂÚ²³ÓõHøÍi÷H¯5Ã™a¨”Dr¡ÓÙ}°å$¡;‰‹ÑN‹cPæS v7ˆ¸5«.’Üyg]lÿkÑŸÁâDì#ÚŠ?_©X1Ëx Y33–Â2ØâÀdÖ~m!äqf¡­^ØÈÏØªÀåAäş3§‚´Bš}«á ;V9õæ	æÌq®«Ø¨/oúó=CÕÏ'Sı™ækÎ
+Í;DTiîF³½¡@€OR®[¯üÙí—HNÀo¥T_åœÎÜo826d&f,ø¶Î('”)#·Oû`£dFù²ç1ÑG7“L@’NtUqåa°_×nş<ü’g<Í	Te™û×L—…&‘åî7q†&ü*ÈÜáeˆ\>vŞ}.É
+^-lp¹4#^È·	Õeú_—Ñ£…<•½†™Î$E”u¥t
+í»İhi–‰»pÊ¦
+Šg9§ôâ|>àM˜¬Ìv­8@¶‚P¥X¥8€Ö²&.ËIÓ¼$™úXÂQI€Ëº)Osğ[È¯â¿7Ñ&(çfÄHÅU#µ—6ş.GZcÄë¦•„‚R|¤È{i–•5F¼‰²ÏGƒ
+ú,ãÏ‘Öñ:›£ğ= ¢Z¼;øçÁm¬lut½yvôŸóÍù}swÕı|~Óœ¼»¾¼ÿĞ|÷Ç»»ë›æìİİÍ‡ËÛ…SÆúÉgqÇé›ÕGh^ßÙ9û>î¯¾=¿ıåYĞX˜àómÂºlŞvV’MXI˜¢­êp2÷DXÎ’lu™%’x-…Ï
+º,ahÍª¥ñUK”6•éëšªu!ú“…°ÜTU aØ–)À»áÄRå´¶D5%È¢}(Ë£€ª\:1Ö|8ì¢‡œ‡xIÍPVƒ‹Q»‘ÖÇÛ·…W_“¸à‰1Ü*«İïçnÃšnšFã§H÷cAKÀê‹yµò/­‘D¦	µ½øWYPµœºd‚H-¶\P¸ödõs×Ênå—èÚ„É˜ËB.3a+‘	pnªÖ~ŠKEŒ1F™1ÓhN¨L‘é|Ô„ùÚ²açÅb²Ì «›`hj*^]×ê2¨”¼¢¤|
+6<281E¨Ámû>F‰-1F±ÕÏuÚ±¯½teW,ù>–„ú-Ë[´tXˆ°E«‰ÃÅˆB…±‚Áª'­1b€°=mÄÈc!Í²²Æˆ!ÂZ.è ´ÆˆÂö´@¾DT(Ân„ıæı¿/«Xzdïfõ‘±´™ƒ¥…ÖD*±',]¨´®„xr LZ”Ùÿ_Êkş¸-‘¼İzOÍÀsÛW»Í*Åh°ĞèöCÏ°V(*/Î6‡(SÜûë7S[Ím8\ò’ëø~ßJ²åİÏá0…,1^Ì Ky·ô0Pôv5½ÍÖ%©Q~ûfã=$ÃyUÊsf¼²*j•B0Ò
+¶õªÀ}ŠÕ£ÊÎk2/?¥-*Ğ3ä{1wg¯·-ÆºEPù”vFÎÃIÄ¦ÅgJÊ¨/*6¤GNAµu¦¨.ÇÜ¾@oA¢«ñ>øo˜_7eFk±NÁè õcšªÃX§àvu Æ‘Ö1Db`)ßCH³¬¬1b„Ä¨$Zé0Ö)(dü9Ò#†HÌÑ	øQaHŒó‰½<=9=@+ Õ]…½2 Ö%+N”ş–@µ ÚØï@Éá~%Zÿ|;Ğ»ïÂşİµ×·ÕıÍøéğûÑ+ÛV×—P' ÊÒD÷]h×G÷=¬âE/Ä›ÕGVÂ‹\ÌÂ‹T£Ù¾ğb¸O<˜ĞêŒæ‰%wÅ–n“üå;šŠxíz3&“5‡ÅFˆ› =_rØÉï÷ÑÁŒ>ı\Şû°òC•˜}cã/¢^¼{á{æ£ğp-ÆÄMKŒP[îüòQ˜—?ìèwö!sœÇ‹4Ì$Êƒ±	6ËmfÛ/ş1&ŒÇ¨*`yD¥qs¢Šı
+±[4Æ|*¾*ÇSßWO¦|€`]ÌÛö{‰“Ó€ë1FT^º¶ZN˜Ü6…á&Ğ8_B¥eÎ½ÙHÜHçQ¤f¸ ¥¢_ÿœ°ÄGµ‰PÖa¤Š‰'—ÀÀhxé>şÚ}P<¸WHéÏ¨!Øƒo©êcğG9Õ’ˆmº>Ø‹ŒO$×—J­~‰+M¤ß8Êøœ‹î|C)å’ÅLˆÏ¹´¬ŒP×“Ö1Àç6"ì±‡€æXYcÄŸsDhâsÎeÆŸ#­1b€Ï=-‹ëŠÏÍø\tŸX<mïS§¨0·ÇçıxÄÙ[0<ï}=üŞcôîï“Ÿíö4Û·kÛccû²¾BÇw×~×ä¶-3öÙóÃƒöl_|¸G;_BÆşC/£ÀéùÖî_Õg'öfõ‘—|s|.‘BîÉgp&­$¢ƒn6Hv–ÔˆÌ\
+ç3Øş /d|Ağ:øm¾š#æÑİ•z±¯ãºp'‡l¸"®­R)Wûè ¹ã0…½2pb†Æ6ş‹¸kÈÓ¶’ƒe÷ÜìöhB¾?*ï>@FZÅ%ª£ŸÌ}ª°ÌjëŠKÒ2¾'“GæPlãÂ‰ü P`r'J¶»uáxŠ¾ÖõÉ‚âk7PÄ…{MóË^fE3ÿªƒŸNo¤óˆ¼´[NZÂM”‘”…Sx‹E’|IÀòfgQßJç¨û %.+/jšÅ¶ÎWLUZ$Şo±(&­LK½¸-êo
+PµÒm™•Á@â©ùS2Q¼U|R-û1¾amëu®*¥>¡æF ®ô¸À=q<ï™ZqÜp†“DÚÅèÇ—A)íd¹^eÕÊ5™a„)Å¶=PSz™n(P'¼ÅŒúÉ«µ3½È4¿äSÆ"QsŠš˜¨“Í¡÷W‰EHë’ ¹èo†À±2ÖJå¼?ık=Vu¬
+?ûW½¶Â;bUØkÊ¼UŠ€¨¤Ä´|¢ûaÉ$ìº’ŞÙÄ(D+gneÅGåŒu"û](˜oSá—Vøår8}µW~Àe¬üWá s¼ÄÀ¬B°ñy"~ø¾"œÜ\¥iA&Ÿ <¬şNËøM²æ71E‰Ş~D§
+#9œm[";zš’™pÈ)^<§búˆ‹6¢d¿O—f)O;Fæ{‹;ñT„•Ãnè\iU'íU2ˆ ÂÓ³Ã!(×AÉ
+óy¶UHN„4™êpGŠá} äéDôFÖ^LH¢©²¯r}°ò}²ôÌ›µ¯=‚~áQ	²6Ãı½šõÚó´Â=òŞ4ŞGÌåæëo6Ú:…Ta9¦¬9i•Ãîäì³rÏ
+9slèÜ‚ê;=.¢¤®~&ëS!v3Ú~ÒĞ¬Ş+BÈ·9®ø\†ö¤-Ş¸¸˜Zr8~tî+Ë72Á)¡ÜìDÒı`"äÑ·õ[Ü7Öj‘ÆQµãÏbr‹µ»+¯I'ß0(èÙ<L¿haÆï†u4Êr2höÂ,'£‚èøÄ5£vcÂĞ“Ö1ÈrzÚ˜§{h•5F³œ‘ñ‰kjtÊŸ'­1båô´P,®DTX–S©ä<ÈÙåıåíú²9;¿«¹¼Y}¥”ª8Ócj zoG¬©N¤Éà-Åiz¨Ö+¯©|ã¥ŠÉ:SŠŒò8ù»•£Á£ázom'uÕÏ¨@•ïùrµ²û_<â¼I„TÓRjdPÓ'Óğv!Ä8uüº^J–WŞ!Œœ\j5ÑİéúHz;¯Ë 0` ìÙ¹’9Ù˜_µ)<¬	CZŠpĞ‰
+îú
+ùßï?ÚlÎ×ï.şaõên³¹»ùiõö÷‹M÷BòÓ»»Íåığròœÿòşö|óşî}G[+tÛpİí5OQúòæÅÿ%éNİ
 endstream
 endobj
 125 0 obj
@@ -662,12 +663,12 @@ stream
 endstream
 endobj
 134 0 obj
-<</Title<FEFF00480069006C006200650072007420190073002000660069006600740068002000700072006F0062006C0065006D00200061006E0064002000720065006C006100740065006400A00074006F0070006900630073>/Author(Terence Tao)/Creator(Typst 0.15.1)/ModDate(D:20261014161824+01'00)/CreationDate(D:20261014161824+01'00)>>
+<</Title<FEFF00480069006C006200650072007420190073002000660069006600740068002000700072006F0062006C0065006D00200061006E0064002000720065006C006100740065006400A00074006F0070006900630073>/Author(Terence Tao)/Creator(Typst 0.15.1)/ModDate(D:20261014173650+01'00)/CreationDate(D:20261014173650+01'00)>>
 endobj
 135 0 obj
 <</Length 1191/Type/Metadata/Subtype/XML>>
 stream
-<?xpacket begin="ï»¿" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="xmp-writer"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/"  xmlns:xmp="http://ns.adobe.com/xap/1.0/"  xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"  xmlns:xmpTPg="http://ns.adobe.com/xap/1.0/t/pg/"  xmlns:pdf="http://ns.adobe.com/pdf/1.3/" ><dc:title><rdf:Alt><rdf:li xml:lang="x-default">Hilbertâ€™s fifth problem and relatedÂ topics</rdf:li></rdf:Alt></dc:title><dc:creator><rdf:Seq><rdf:li>Terence Tao</rdf:li></rdf:Seq></dc:creator><xmp:CreatorTool>Typst 0.15.1</xmp:CreatorTool><dc:language><rdf:Bag><rdf:li>en</rdf:li></rdf:Bag></dc:language><xmp:ModifyDate>2026-10-14T16:18:24+01:00</xmp:ModifyDate><xmp:CreateDate>2026-10-14T16:18:24+01:00</xmp:CreateDate><xmpTPg:NPages>1</xmpTPg:NPages><dc:format>application/pdf</dc:format><xmpMM:InstanceID>pKrxE4bLG69eNUNEKYkJvA==</xmpMM:InstanceID><xmpMM:DocumentID>hAn2c9HWIuEHLY3VmTbmyg==</xmpMM:DocumentID><xmpMM:RenditionClass>proof</xmpMM:RenditionClass><pdf:PDFVersion>1.7</pdf:PDFVersion></rdf:Description></rdf:RDF></x:xmpmeta><?xpacket end="r"?>
+<?xpacket begin="ï»¿" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="xmp-writer"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/"  xmlns:xmp="http://ns.adobe.com/xap/1.0/"  xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"  xmlns:xmpTPg="http://ns.adobe.com/xap/1.0/t/pg/"  xmlns:pdf="http://ns.adobe.com/pdf/1.3/" ><dc:title><rdf:Alt><rdf:li xml:lang="x-default">Hilbertâ€™s fifth problem and relatedÂ topics</rdf:li></rdf:Alt></dc:title><dc:creator><rdf:Seq><rdf:li>Terence Tao</rdf:li></rdf:Seq></dc:creator><xmp:CreatorTool>Typst 0.15.1</xmp:CreatorTool><dc:language><rdf:Bag><rdf:li>en</rdf:li></rdf:Bag></dc:language><xmp:ModifyDate>2026-10-14T17:36:50+01:00</xmp:ModifyDate><xmp:CreateDate>2026-10-14T17:36:50+01:00</xmp:CreateDate><xmpTPg:NPages>1</xmpTPg:NPages><dc:format>application/pdf</dc:format><xmpMM:InstanceID>rbrGVfILOPMW06AOAnjENw==</xmpMM:InstanceID><xmpMM:DocumentID>hAn2c9HWIuEHLY3VmTbmyg==</xmpMM:DocumentID><xmpMM:RenditionClass>proof</xmpMM:RenditionClass><pdf:PDFVersion>1.7</pdf:PDFVersion></rdf:Description></rdf:RDF></x:xmpmeta><?xpacket end="r"?>
 endstream
 endobj
 136 0 obj
@@ -682,138 +683,138 @@ xref
 0000000199 00000 n
 0000000234 00000 n
 0000000570 00000 n
-0000001060 00000 n
-0000001125 00000 n
-0000001226 00000 n
-0000001291 00000 n
-0000001396 00000 n
-0000001456 00000 n
-0000001561 00000 n
-0000001634 00000 n
-0000001739 00000 n
-0000001844 00000 n
-0000001988 00000 n
-0000002094 00000 n
-0000002200 00000 n
-0000002306 00000 n
-0000002434 00000 n
-0000002518 00000 n
-0000002665 00000 n
-0000002727 00000 n
-0000002799 00000 n
-0000002931 00000 n
-0000003034 00000 n
-0000003103 00000 n
-0000003172 00000 n
-0000003242 00000 n
-0000003310 00000 n
-0000003370 00000 n
-0000003495 00000 n
-0000003557 00000 n
-0000003629 00000 n
-0000003761 00000 n
-0000003864 00000 n
-0000003933 00000 n
-0000004002 00000 n
-0000004072 00000 n
-0000004363 00000 n
-0000004425 00000 n
-0000004497 00000 n
-0000004629 00000 n
-0000004732 00000 n
-0000004801 00000 n
-0000004870 00000 n
-0000004940 00000 n
-0000005379 00000 n
-0000005441 00000 n
-0000005513 00000 n
-0000005645 00000 n
-0000005748 00000 n
-0000005817 00000 n
-0000005886 00000 n
-0000005956 00000 n
-0000006043 00000 n
-0000006247 00000 n
-0000006350 00000 n
-0000006450 00000 n
-0000006582 00000 n
-0000006644 00000 n
-0000006716 00000 n
-0000006848 00000 n
-0000006951 00000 n
-0000007020 00000 n
-0000007089 00000 n
-0000007195 00000 n
-0000007272 00000 n
-0000007475 00000 n
-0000007520 00000 n
-0000007852 00000 n
-0000008083 00000 n
-0000008395 00000 n
-0000008633 00000 n
-0000008953 00000 n
-0000009274 00000 n
-0000009548 00000 n
-0000009793 00000 n
-0000010105 00000 n
-0000010465 00000 n
-0000010828 00000 n
-0000011190 00000 n
-0000011551 00000 n
-0000011912 00000 n
-0000012272 00000 n
-0000012632 00000 n
-0000012996 00000 n
-0000013259 00000 n
-0000013295 00000 n
-0000013331 00000 n
-0000013382 00000 n
-0000013599 00000 n
-0000013757 00000 n
-0000014577 00000 n
-0000014794 00000 n
-0000014953 00000 n
-0000015382 00000 n
-0000015599 00000 n
-0000015755 00000 n
-0000016365 00000 n
-0000016582 00000 n
-0000016741 00000 n
-0000017130 00000 n
-0000017348 00000 n
-0000017479 00000 n
-0000017682 00000 n
-0000017913 00000 n
-0000018182 00000 n
-0000018264 00000 n
-0000018999 00000 n
-0000026203 00000 n
-0000026284 00000 n
-0000026839 00000 n
-0000029669 00000 n
-0000029752 00000 n
-0000030378 00000 n
-0000035401 00000 n
-0000035481 00000 n
-0000036016 00000 n
-0000038561 00000 n
-0000038643 00000 n
-0000039436 00000 n
-0000050663 00000 n
-0000054792 00000 n
-0000055199 00000 n
-0000055542 00000 n
-0000055716 00000 n
-0000056239 00000 n
-0000056643 00000 n
-0000058332 00000 n
-0000059783 00000 n
-0000060913 00000 n
-0000062282 00000 n
-0000062595 00000 n
-0000063864 00000 n
+0000001088 00000 n
+0000001153 00000 n
+0000001254 00000 n
+0000001319 00000 n
+0000001424 00000 n
+0000001484 00000 n
+0000001589 00000 n
+0000001662 00000 n
+0000001767 00000 n
+0000001872 00000 n
+0000002016 00000 n
+0000002122 00000 n
+0000002228 00000 n
+0000002334 00000 n
+0000002462 00000 n
+0000002546 00000 n
+0000002693 00000 n
+0000002755 00000 n
+0000002827 00000 n
+0000002959 00000 n
+0000003062 00000 n
+0000003131 00000 n
+0000003200 00000 n
+0000003270 00000 n
+0000003338 00000 n
+0000003398 00000 n
+0000003523 00000 n
+0000003585 00000 n
+0000003657 00000 n
+0000003789 00000 n
+0000003892 00000 n
+0000003961 00000 n
+0000004030 00000 n
+0000004100 00000 n
+0000004391 00000 n
+0000004453 00000 n
+0000004525 00000 n
+0000004657 00000 n
+0000004760 00000 n
+0000004829 00000 n
+0000004898 00000 n
+0000004971 00000 n
+0000005410 00000 n
+0000005472 00000 n
+0000005544 00000 n
+0000005676 00000 n
+0000005782 00000 n
+0000005851 00000 n
+0000005920 00000 n
+0000005993 00000 n
+0000006080 00000 n
+0000006284 00000 n
+0000006387 00000 n
+0000006490 00000 n
+0000006622 00000 n
+0000006684 00000 n
+0000006756 00000 n
+0000006888 00000 n
+0000006991 00000 n
+0000007060 00000 n
+0000007129 00000 n
+0000007235 00000 n
+0000007312 00000 n
+0000007515 00000 n
+0000007560 00000 n
+0000007892 00000 n
+0000008123 00000 n
+0000008435 00000 n
+0000008673 00000 n
+0000008993 00000 n
+0000009314 00000 n
+0000009586 00000 n
+0000009830 00000 n
+0000010140 00000 n
+0000010501 00000 n
+0000010863 00000 n
+0000011224 00000 n
+0000011585 00000 n
+0000011947 00000 n
+0000012308 00000 n
+0000012668 00000 n
+0000013031 00000 n
+0000013293 00000 n
+0000013329 00000 n
+0000013365 00000 n
+0000013416 00000 n
+0000013633 00000 n
+0000013791 00000 n
+0000014611 00000 n
+0000014828 00000 n
+0000014987 00000 n
+0000015416 00000 n
+0000015633 00000 n
+0000015789 00000 n
+0000016399 00000 n
+0000016616 00000 n
+0000016775 00000 n
+0000017164 00000 n
+0000017382 00000 n
+0000017513 00000 n
+0000017716 00000 n
+0000017947 00000 n
+0000018216 00000 n
+0000018298 00000 n
+0000019033 00000 n
+0000026237 00000 n
+0000026318 00000 n
+0000026873 00000 n
+0000029703 00000 n
+0000029786 00000 n
+0000030412 00000 n
+0000035435 00000 n
+0000035515 00000 n
+0000036050 00000 n
+0000038595 00000 n
+0000038677 00000 n
+0000039470 00000 n
+0000050697 00000 n
+0000054889 00000 n
+0000055296 00000 n
+0000055639 00000 n
+0000055813 00000 n
+0000056336 00000 n
+0000056740 00000 n
+0000058429 00000 n
+0000059880 00000 n
+0000061010 00000 n
+0000062379 00000 n
+0000062692 00000 n
+0000063961 00000 n
 trailer
-<</Size 137/Root 136 0 R/Info 134 0 R/ID[(hAn2c9HWIuEHLY3VmTbmyg==)(pKrxE4bLG69eNUNEKYkJvA==)]>>
+<</Size 137/Root 136 0 R/Info 134 0 R/ID[(hAn2c9HWIuEHLY3VmTbmyg==)(rbrGVfILOPMW06AOAnjENw==)]>>
 startxref
-64066
+64163
 %%EOF

@@ -54,8 +54,8 @@ while retaining each original equation label, including sublabels such as
 
 ## Run locally
 
-Body text uses a 1.5em indent for consecutive paragraphs, 0.65em paragraph
-spacing, and separate 0.9em block spacing. Justification can adjust tracking by
+Body text uses a 12pt serif font and a 1.5em indent for consecutive paragraphs.
+Line, paragraph and block spacing use Typst's defaults. Justification can adjust tracking by
 up to ±0.01em. Titles and headings use optimized line breaks; comments use
 ragged-right text without paragraph indents. Punctuation overhang, kerning,
 standard ligatures and body hyphenation use Typst's defaults.
