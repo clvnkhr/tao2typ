@@ -24,7 +24,7 @@ from tao2typ.pipeline import (
     write_index,
 )
 from tao2typ.raw import load_raw_capture
-from tao2typ.schedule import plan_refresh
+from tao2typ.schedule import next_scheduled_check, plan_refresh
 from tao2typ.source import SourceError
 from tao2typ.state import ArchiveState, PostState
 from tao2typ.storage import read_json, write_json
@@ -108,7 +108,151 @@ def _cached_assets(post: Post, output: Path, index: dict[str, Path]) -> dict[str
     return assets
 
 
-def _apply_result(state: ArchiveState, result: dict[str, Any], fingerprint: str) -> None:
+def _acknowledge_initial_capture(row: PostState, output: Path) -> bool:
+    """Recover an initial check after a saved fetch was successfully converted.
+
+    Use the original fetch completion time, never the offline conversion time.
+    Existing checks and unacknowledged comment events remain untouched.
+    """
+    if row.last_checked_at or row.last_error or not row.converted_at or not row.source_manifest:
+        return False
+    try:
+        output = output.resolve()
+        for relative in (row.pdf, row.typst, row.ir, row.source_manifest):
+            if not relative:
+                return False
+            path = output / relative
+            if path.is_symlink() or not path.is_file() or not path.resolve().is_relative_to(output):
+                return False
+        metadata, _, capture_root = load_raw_capture(output / row.source_manifest)
+        payload = read_json(output / str(row.ir))
+        if not isinstance(payload, dict) or not all(
+            isinstance(metadata.get(key), str)
+            for key in ("captured_at", "finished_at", "published_at", "modified_at")
+        ):
+            return False
+        post = Post.from_dict(payload)
+        if (
+            capture_root != output
+            or metadata["post_url"] != row.url
+            or post.url != row.url
+            or post.source_manifest != row.source_manifest
+            or metadata.get("error")
+            or not row.converted_modified_at
+            or not post.published_at
+            or not post.modified_at
+            or not post.converted_at
+        ):
+            return False
+        published = parse_timestamp(row.published_at)
+        modified = parse_timestamp(row.modified_at)
+        converted = parse_timestamp(row.converted_at)
+        captured = parse_timestamp(metadata["captured_at"])
+        finished = parse_timestamp(metadata["finished_at"])
+        source_published = parse_timestamp(metadata["published_at"])
+        source_modified = parse_timestamp(metadata["modified_at"])
+        ir_published = parse_timestamp(post.published_at)
+        ir_modified = parse_timestamp(post.modified_at)
+        converted_modified = parse_timestamp(row.converted_modified_at)
+        ir_converted = parse_timestamp(post.converted_at)
+        dates = (
+            published,
+            modified,
+            converted,
+            captured,
+            finished,
+            source_published,
+            source_modified,
+            ir_published,
+            ir_modified,
+            converted_modified,
+            ir_converted,
+        )
+        if any(date.tzinfo is None or date.utcoffset() is None for date in dates):
+            return False
+        if not published <= captured <= finished <= converted <= datetime.now(UTC):
+            return False
+        if source_published != published or ir_published != published:
+            return False
+        if any(date != modified for date in (source_modified, ir_modified, converted_modified)):
+            return False
+        if ir_converted != converted:
+            return False
+        next_check = next_scheduled_check(published, finished)
+    except (OSError, EOFError, ValueError, KeyError, TypeError):
+        return False
+    row.last_checked_at = timestamp(finished)
+    row.next_check_at = timestamp(next_check)
+    return True
+
+
+def reconcile_initial_checks(output: Path) -> dict[str, Any]:
+    """Repair existing initial-check records without fetching or compiling."""
+    output = output.resolve()
+    state = ArchiveState.load(output / "state.json")
+    now = datetime.now(UTC)
+    results = []
+    for row in state.posts.values():
+        if _acknowledge_initial_capture(row, output):
+            results.append(
+                {
+                    "id": row.id,
+                    "checked_at": row.last_checked_at,
+                    "next_check_at": row.next_check_at,
+                    "source_manifest": row.source_manifest,
+                }
+            )
+    changed = {result["id"] for result in results}
+    queue_path = output / "queue.json"
+    queue = read_json(queue_path) if queue_path.is_file() else {"posts": []}
+    entries = []
+    milestones = {"initial", "one-week", "one-month", "birthday"}
+    for entry in queue["posts"]:
+        row = state.posts.get(str(entry["id"]))
+        if row is None or not row.last_checked_at:
+            entries.append(entry)
+            continue
+        plan = plan_refresh(
+            parse_timestamp(row.published_at),
+            parse_timestamp(row.last_checked_at),
+            now=now,
+            recent_comment=bool(row.pending_comments),
+        )
+        reasons = list(
+            dict.fromkeys(
+                [
+                    *plan.reasons,
+                    *(reason for reason in entry["reasons"] if reason not in milestones),
+                ]
+            )
+        )
+        if reasons:
+            entries.append({**entry, "reasons": reasons})
+    report = {
+        "schema_version": 1,
+        "kind": "source-check-reconciliation",
+        "started_at": timestamp(now),
+        "results": results,
+        "reconciled": len(results),
+        "remaining": len(entries),
+        "network_requests": 0,
+        "daily_attempts_consumed": 0,
+        "finished_at": timestamp(datetime.now(UTC)),
+    }
+    if changed or entries != queue["posts"]:
+        write_json(
+            output / "jobs" / (now.strftime("%Y%m%dT%H%M%S.%fZ") + "-reconcile.json.gz"), report
+        )
+        state.save(output / "state.json")
+        write_json(queue_path, {"updated_at": report["finished_at"], "posts": entries})
+        write_index(state, output)
+    generate_site(output, output.parent / "docs")
+    return report
+
+
+def _apply_result(
+    state: ArchiveState, result: dict[str, Any], fingerprint: str, output: Path
+) -> None:
     row = state.posts[str(result["id"])]
     row.last_attempted_at = result["attempted_at"]
     if result["status"] == "converted":
@@ -119,6 +263,7 @@ def _apply_result(state: ArchiveState, result: dict[str, Any], fingerprint: str)
         row.converter_fingerprint = fingerprint
         row.source_manifest = result["source_manifest"]
         row.last_error = None
+        _acknowledge_initial_capture(row, output)
     elif result["status"] == "failed":
         row.last_error = result["error"]
 
@@ -201,7 +346,7 @@ def run_offline_regeneration(
     results: dict[int, dict[str, Any]] = {result["id"]: result for result in report["results"]}
     for result in results.values():
         if result["status"] in {"converted", "failed"}:
-            _apply_result(state, result, fingerprint)
+            _apply_result(state, result, fingerprint, output)
     stems, index = artifact_stems(state.posts.values()), _asset_index(output)
 
     def checkpoint() -> None:
@@ -298,7 +443,7 @@ def run_offline_regeneration(
                     result = future.result()
                     tasks.pop(future)
                     results[result["id"]] = result
-                    _apply_result(state, result, fingerprint)
+                    _apply_result(state, result, fingerprint, output)
                     checkpoint()
         except KeyboardInterrupt:
             interrupted = True
@@ -307,7 +452,7 @@ def run_offline_regeneration(
             for future in tasks:
                 result = future.result()
                 results[result["id"]] = result
-                _apply_result(state, result, fingerprint)
+                _apply_result(state, result, fingerprint, output)
                 checkpoint()
         finally:
             if not interrupted and len(pending) == unfinished_count:

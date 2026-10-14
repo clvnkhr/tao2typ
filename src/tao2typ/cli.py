@@ -62,6 +62,10 @@ def main() -> int:
     regenerate.add_argument(
         "--new", action="store_true", help="Start a fresh job instead of resuming"
     )
+    reconcile = commands.add_parser(
+        "reconcile-checks", help="Recover initial check dates from verified saved conversions"
+    )
+    reconcile.add_argument("--output", type=Path, default=Path("archive"))
     convert = commands.add_parser("convert", help="Convert one URL or a saved HTML file")
     convert.add_argument("source")
     convert.add_argument("--url", help="Canonical source URL for a saved HTML file")
@@ -100,6 +104,11 @@ def main() -> int:
     preview.add_argument("--archive", type=Path, default=Path("archive"))
     preview.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
+    if args.command == "reconcile-checks":
+        from tao2typ.offline import reconcile_initial_checks
+
+        print(json.dumps(reconcile_initial_checks(args.output), ensure_ascii=False, indent=2))
+        return 0
     if args.command == "regenerate":
         from tao2typ.offline import run_offline_regeneration
 

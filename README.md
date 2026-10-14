@@ -98,8 +98,12 @@ uv run --frozen tao2typ regenerate --output archive --workers 2
 Regeneration reads saved IR for converted posts and verified complete raw captures
 for failed posts. It uses cached image assets, with linked placeholders for
 unavailable images. Each successful regeneration recompiles the PDF and updates its
-conversion date. Source check dates, refresh schedules, pending comment events
-and daily Actions quotas are preserved.
+conversion date. Existing source check dates, pending comment events and daily
+Actions quotas are preserved. If an initial fetch succeeded but its conversion
+failed, a successful offline repair records that verified capture's original
+completion date and schedules the next check from the post's publication date.
+To reconcile already-repaired posts without fetching or recompiling, run
+`uv run --frozen tao2typ reconcile-checks --output archive`.
 
 Progress is checkpointed in `archive/jobs/`. Repeating the command resumes the
 newest unfinished regeneration job. Use `--resume JOB` to choose a particular job,
