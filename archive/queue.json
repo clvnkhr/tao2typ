@@ -1,12 +1,93 @@
 {
-  "updated_at": "2026-10-14T17:08:05.956788+00:00",
+  "updated_at": "2026-10-14T17:17:28.103654+00:00",
   "posts": [
+    {
+      "id": 11075,
+      "url": "https://terrytao.wordpress.com/2019/04/30/11075/",
+      "title": "Effective approximation of heat flow evolution of the Riemann xi function, and a new upper bound for the de Bruijn-Newman constant",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 15871,
+      "url": "https://terrytao.wordpress.com/2025/11/24/call-for-industry-sponsors-for-ipams-rips-program/",
+      "title": "Call for industry sponsors for IPAM’s RIPS program",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18389,
+      "url": "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/",
+      "title": "AHM Statement on OpenAI’s October 6 Release of Mathematical Documents",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18384,
+      "url": "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/",
+      "title": "What should we tell our students?",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18348,
+      "url": "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/",
+      "title": "What mathematicians should know about the Lean Theorem Prover: questions of reliability and AI",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18405,
+      "url": "https://terrytao.wordpress.com/2026/10/10/math-2-0/",
+      "title": "Math 2.0",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18399,
+      "url": "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/",
+      "title": "Illustration beyond Proof",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18335,
+      "url": "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/",
+      "title": "Additional recent pieces on math and AI",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
+    {
+      "id": 18421,
+      "url": "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/",
+      "title": "This is normal bad work",
+      "reasons": [
+        "recent-comment"
+      ]
+    },
     {
       "id": 18211,
       "url": "https://terrytao.wordpress.com/2026/09/14/why-i-do-mathematical-research/",
       "title": "Why I do mathematical research",
       "reasons": [
         "one-month"
+      ]
+    },
+    {
+      "id": 18435,
+      "url": "https://terrytao.wordpress.com/2026/10/14/first-proof-third-batch-webinar/",
+      "title": "First Proof, Third Batch webinar",
+      "reasons": [
+        "initial",
+        "source-modified"
       ]
     }
   ]
