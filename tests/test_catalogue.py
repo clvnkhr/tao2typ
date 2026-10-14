@@ -125,6 +125,8 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert ready["data-failed"] == "true"  # A failed refresh can retain an older PDF.
     assert selected(ready, ".failure-details summary").text == "Failed · Conversion failed"
     assert selected(soup, "#failed")["type"] == "checkbox"
+    assert soup.select_one("#ready") is None
+    assert "PDFs only" not in soup.get_text()
     assert not soup.select('a[data-route="failures"]')
 
 
@@ -339,7 +341,7 @@ def test_queue_includes_refreshes_in_processing_order_without_diagnostics(tmp_pa
     assert rows[1]["data-queue-position"] == "0"
     assert rows[1]["data-queue-status"] == "retry"
     assert selected(rows[1], ".queue-status").get_text() == "Retry · Recent comments"
-    assert selected(rows[0], ".queue-status").get_text() == "Waiting · First conversion"
+    assert selected(rows[0], ".queue-status").get_text() == "Waiting · Initial source check"
     assert attribute(selected(soup, 'a[data-route="queue"]'), "href") == "#queue"
     assert "2026-10-14T09:00:00+00:00" in page
 

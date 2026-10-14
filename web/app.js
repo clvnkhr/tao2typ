@@ -6,7 +6,6 @@
     title: element.dataset.title,
     date: element.dataset.date,
     search: element.dataset.search,
-    ready: element.dataset.ready === "true",
     failed: element.dataset.failed === "true",
     id: element.dataset.id,
     queuePosition: element.dataset.queuePosition !== undefined && element.dataset.queuePosition !== ""
@@ -15,7 +14,6 @@
     categories: JSON.parse(element.dataset.categories),
   }));
   const search = document.getElementById("search");
-  const ready = document.getElementById("ready");
   const failed = document.getElementById("failed");
   const failureFilter = failed.closest("label");
   const sort = document.getElementById("sort");
@@ -38,7 +36,6 @@
       const saved = JSON.parse(sessionStorage.getItem(previewStateKey));
       sessionStorage.removeItem(previewStateKey);
       if (saved && typeof saved.search === "string") search.value = saved.search;
-      if (saved && typeof saved.ready === "boolean") ready.checked = saved.ready;
       if (saved && typeof saved.failed === "boolean") failed.checked = saved.failed;
       if (saved && Array.from(sort.options).some(option => option.value === saved.order && option.value !== "queue")) {
         selectedOrder = saved.order;
@@ -81,7 +78,6 @@
     const fragment = document.createDocumentFragment();
     for (const post of posts) {
       const matches = (!query || post.search.includes(query))
-        && (!ready.checked || post.ready)
         && (!isQueue || !failed.checked || post.failed)
         && (!isQueue || post.queuePosition !== null)
         && (!filtering || (kind === "tag" ? post.tags : post.categories).includes(slug));
@@ -103,7 +99,6 @@
   }
   search.addEventListener("input", render);
   document.querySelector("form.controls").addEventListener("submit", event => event.preventDefault());
-  ready.addEventListener("change", render);
   failed.addEventListener("change", render);
   sort.addEventListener("change", () => {
     if (!sort.disabled) selectedOrder = sort.value;
@@ -141,7 +136,6 @@
         try {
           sessionStorage.setItem(previewStateKey, JSON.stringify({
             search: search.value,
-            ready: ready.checked,
             failed: failed.checked,
             order: selectedOrder,
             openFailures: posts.filter(post => post.element.querySelector(".failure-details")?.open).map(post => post.id),

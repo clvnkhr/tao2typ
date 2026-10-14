@@ -454,7 +454,7 @@ def _post_markup(
 
 
 _QUEUE_REASONS = {
-    "initial": "First conversion",
+    "initial": "Initial source check",
     "one-week": "One-week check",
     "one-month": "One-month check",
     "birthday": "Birthday check",
