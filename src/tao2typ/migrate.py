@@ -44,7 +44,10 @@ def migrate_existing_archive(output: Path) -> dict[str, int]:
 
     def plan_move(relative: str, stem: str, *, required: bool) -> str | None:
         source = _archive_path(output, relative)
-        destination = source.with_name(stem + source.suffix)
+        extension = source.suffix
+        if extension == ".gz":
+            extension = source.with_suffix("").suffix + extension
+        destination = source.with_name(stem + extension)
         if source.is_symlink() or destination.is_symlink():
             raise ValueError(f"Artifact is not a regular file: {relative}")
         if source == destination:
@@ -79,7 +82,7 @@ def migrate_existing_archive(output: Path) -> dict[str, int]:
         # Failed conversions have diagnostic source/IR outside the canonical
         # state paths. Keep those inspectable under the same readable names.
         legacy_stem = f"{post.published_at[:10]}-{post.id}"
-        for suffix in (".typ", ".json"):
+        for suffix in (".typ", ".json", ".typ.gz", ".json.gz"):
             relative = f"failures/{legacy_stem}{suffix}"
             if plan_move(relative, stems[post.id], required=False) is not None:
                 changed_posts.add(post.id)

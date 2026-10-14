@@ -2,7 +2,8 @@
 
 Default builds contain public metadata and repository download links. An explicit
 download base URL exports referenced documents and their image assets. Operational
-state, queues, job reports and failure diagnostics are never exported.
+state, job reports and failure diagnostics are never exported. The page includes
+the ordered queue's post IDs and readable reasons, without error diagnostics.
 """
 
 import html
@@ -15,6 +16,8 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from unicodedata import normalize
 from urllib.parse import quote, urlsplit
+
+from tao2typ.storage import read_bytes, read_json, read_text
 
 _DEFAULT_REPO = "https://github.com/clvnkhr/tao2typ"
 _MODULE = Path(__file__).resolve()
@@ -66,6 +69,7 @@ def _download(
         return None
     relative = path.relative_to(archive).as_posix()
     if download_base_url is not None:
+        relative = relative.removesuffix(".gz")
         return f"{download_base_url}/{quote(relative, safe='/')}"
     return f"{repo_url}/blob/{quote(branch, safe='')}/{quote('archive/' + relative, safe='/')}"
 
@@ -85,7 +89,9 @@ def _artifact_path(archive: Path, post: dict[str, Any], kind: str) -> Path | Non
         or ".." in path.parts
         or len(path.parts) != 2
         or path.parts[0] != folder
-        or path.suffix != extension
+        or not (
+            path.name.endswith(extension) or kind != "pdf" and path.name.endswith(extension + ".gz")
+        )
     ):
         return None
     source = archive / path
@@ -141,9 +147,7 @@ def _export_downloads(archive: Path, output: Path, posts: list[dict[str, Any]]) 
                 continue
             sources.add(source)
             if kind == "typst":
-                for literal in re.findall(
-                    r'#image\(\s*("(?:[^"\\]|\\.)*")', source.read_text(encoding="utf-8")
-                ):
+                for literal in re.findall(r'#image\(\s*("(?:[^"\\]|\\.)*")', read_text(source)):
                     asset = json.loads(literal)
                     if urlsplit(asset).scheme in {"http", "https"}:
                         continue
@@ -151,16 +155,22 @@ def _export_downloads(archive: Path, output: Path, posts: list[dict[str, Any]]) 
                         raise ValueError(f"Unsupported exported Typst image path: {asset}")
                     sources.add(_asset_path(archive, asset[3:]))
             elif kind == "ir":
-                payload = json.loads(source.read_text(encoding="utf-8"))
+                payload = read_json(source)
                 sources.update(_asset_path(archive, asset) for asset in _ir_assets(payload))
     # Validate the complete set before writing any document, including output symlinks.
-    destinations = [(source, output / source.relative_to(archive)) for source in sources]
+    destinations = [
+        (source, output / source.relative_to(archive).as_posix().removesuffix(".gz"))
+        for source in sources
+    ]
     for _, destination in destinations:
         if destination.is_symlink() or not destination.resolve().is_relative_to(output.resolve()):
             raise ValueError(f"Unsafe public export destination: {destination}")
     for source, destination in destinations:
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, destination)
+        if source.suffix == ".gz":
+            destination.write_bytes(read_bytes(source))
+        else:
+            shutil.copyfile(source, destination)
     return len(sources)
 
 
@@ -251,6 +261,9 @@ def _post_markup(
     branch: str,
     category_index: dict[str, dict[str, Any]],
     download_base_url: str | None,
+    queue_position: int | None = None,
+    queue_status: str = "",
+    queue_reasons: str = "",
 ) -> tuple[str, bool]:
     tags = _terms(post, "tags")
     categories = _terms(post, "categories")
@@ -270,6 +283,9 @@ def _post_markup(
         "ready": str(ready).lower(),
         "tags": json.dumps([str(term["slug"]) for term in tags], ensure_ascii=False),
         "categories": json.dumps(_category_slugs(categories, category_index), ensure_ascii=False),
+        "queue-position": "" if queue_position is None else str(queue_position),
+        "queue-status": queue_status,
+        "queue-reasons": queue_reasons,
     }
     attrs = " ".join(f'data-{key}="{_escape(value)}"' for key, value in attributes.items())
     chips = "".join(
@@ -279,22 +295,81 @@ def _post_markup(
         for term in terms
     )
     buttons = "".join(
-        f'<a class="{kind}" href="{_escape(url)}">{label}</a>'
+        f'<a class="{kind}" href="{_escape(url)}">{label}{".gz" if url.endswith(".gz") else ""}</a>'
         for kind, label in (("pdf", "PDF"), ("typst", ".typ"), ("ir", "JSON"))
         if (url := downloads[kind])
     )
     converted = _conversion_date(post.get("converted_at")) if ready else ""
     availability = f'Converted <time datetime="{converted}">{converted}</time>' if converted else ""
     ready_class = " ready" if ready else ""
+    queue_label = "Retry" if queue_status == "retry" else "Waiting"
+    if queue_reasons:
+        queue_label += " · " + queue_reasons
     return (
         f'<li class="post" {attrs}><div class="post-meta">'
         f'<time datetime="{_escape(published)}">{_escape(published)}</time>'
-        f'<span class="availability{ready_class}">{availability}</span></div>'
+        f'<span class="availability{ready_class}">{availability}</span>'
+        f'<span class="queue-status">{_escape(queue_label) if queue_status else ""}</span></div>'
         f'<h3><a href="{original}">{_escape(title)}</a></h3>'
         f'<div class="post-taxonomy">{chips}</div><div class="post-actions">{buttons}'
         f'<a class="original" href="{original}">Original</a></div></li>',
         ready,
     )
+
+
+_QUEUE_REASONS = {
+    "initial": "First conversion",
+    "one-week": "One-week check",
+    "one-month": "One-month check",
+    "birthday": "Birthday check",
+    "recent-comment": "Recent comments",
+    "source-modified": "Post updated",
+    "converter-changed": "Converter updated",
+    "missing-pdf": "Missing PDF",
+    "missing-raw-source": "Missing source",
+    "missing-typst": "Missing Typst",
+    "missing-ir": "Missing IR",
+    "forced": "Refresh",
+}
+
+
+def _queue_entries(
+    archive: Path, posts: list[dict[str, Any]]
+) -> tuple[dict[str, tuple[int, str, str]], str]:
+    by_id = {str(post.get("id", "")): post for post in posts}
+    queue_path = archive / "queue.json"
+    if queue_path.is_file():
+        queue = read_json(queue_path)
+        entries = queue.get("posts", [])
+        updated = str(queue.get("updated_at") or "")
+    else:
+        entries = [
+            {"id": post.get("id"), "reasons": ["initial"]}
+            for post in posts
+            if _artifact_path(archive, post, "pdf") is None
+        ]
+        updated = ""
+    result: dict[str, tuple[int, str, str]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        post_id = str(entry.get("id", ""))
+        if post_id not in by_id or post_id in result:
+            continue
+        reasons = entry.get("reasons", [])
+        if not isinstance(reasons, list):
+            reasons = []
+        label = next(
+            (
+                _QUEUE_REASONS[reason]
+                for reason in reasons
+                if isinstance(reason, str) and reason in _QUEUE_REASONS
+            ),
+            "",
+        )
+        status = "retry" if by_id[post_id].get("last_error") else "waiting"
+        result[post_id] = (len(result), status, label)
+    return result, updated
 
 
 def generate_site(
@@ -319,21 +394,30 @@ def generate_site(
             raise ValueError("Download base URL must be an HTTP or HTTPS URL")
     raw = json.loads((archive / "state.json").read_text(encoding="utf-8"))
     posts = sorted(
-        raw.get("posts", {}).values(),
+        ({**post, "id": post.get("id", key)} for key, post in raw.get("posts", {}).items()),
         key=lambda post: str(post.get("published_at") or ""),
         reverse=True,
     )
     tags, tag_counts = _term_index(posts, "tags")
     categories, category_counts = _term_index(posts, "categories")
+    queue, queue_updated = _queue_entries(archive, posts)
     rendered = [
-        _post_markup(archive, post, repo_url, branch, categories, download_base_url)
+        _post_markup(
+            archive,
+            post,
+            repo_url,
+            branch,
+            categories,
+            download_base_url,
+            *queue.get(str(post["id"]), (None, "", "")),
+        )
         for post in posts
     ]
     converted = sum(ready for _, ready in rendered)
     counts = {
         "total": len(posts),
         "converted": converted,
-        "queued": len(posts) - converted,
+        "queued": len(queue),
         "tags": len(tags),
         "categories": len(categories),
     }
@@ -344,6 +428,7 @@ def generate_site(
         "TOTAL": f"{counts['total']:,}",
         "CONVERTED": f"{counts['converted']:,}",
         "QUEUED": f"{counts['queued']:,}",
+        "QUEUE_UPDATED": _escape(queue_updated),
         "TAG_COUNT": str(counts["tags"]),
         "CATEGORY_COUNT": str(counts["categories"]),
         "TAG_LINKS": _taxonomy_links(tags, tag_counts, "tag"),

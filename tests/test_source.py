@@ -1,6 +1,7 @@
 """Offline tests for pagination completeness, invalidation, and HTTP limits."""
 
 import gzip
+import json
 from datetime import UTC, datetime, timedelta
 
 import httpx
@@ -376,6 +377,109 @@ def test_retry_after_and_polite_interval() -> None:
         assert client.fetch_asset("https://uploads.example/another-image.png") == b"image"
     assert attempts == 3
     assert waits == [4, 1]
+
+
+def test_request_statistics_record_rate_limits_waits_hosts_and_cached_successes() -> None:
+    now = 0.0
+    waits: list[float] = []
+    requests: list[httpx.Request] = []
+
+    def sleep(seconds: float) -> None:
+        nonlocal now
+        waits.append(seconds)
+        now += seconds
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        if len(requests) == 1:
+            return httpx.Response(429, headers={"Retry-After": "4"})
+        return httpx.Response(200, content=b"image")
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=1, sleep=sleep, monotonic=lambda: now)
+        url = "https://uploads.example/image.png"
+        assert client.fetch_asset(url) == b"image"
+        assert client.fetch_asset(url + "#same-image") == b"image"
+        assert client.fetch_asset("https://diagrams.example/another-image.png") == b"image"
+        snapshot = client.request_statistics
+        assert snapshot == {
+            "attempts": 3,
+            "status_counts": {"429": 1, "200": 2},
+            "by_host": {
+                "uploads.example": {"attempts": 2, "status_counts": {"429": 1, "200": 1}},
+                "diagrams.example": {"attempts": 1, "status_counts": {"200": 1}},
+            },
+            "rate_limit_responses": 1,
+            "retries": 1,
+            "retry_wait_seconds": 4.0,
+            "transport_failures": 0,
+            "asset_cache_hits": 1,
+        }
+        assert json.loads(json.dumps(snapshot)) == snapshot
+        # A caller can serialize or annotate a snapshot without altering counters.
+        hosts = snapshot["by_host"]
+        assert isinstance(hosts, dict)
+        hosts["uploads.example"]["status_counts"]["429"] = 100
+        assert client.request_statistics["by_host"] == {
+            "uploads.example": {"attempts": 2, "status_counts": {"429": 1, "200": 1}},
+            "diagrams.example": {"attempts": 1, "status_counts": {"200": 1}},
+        }
+        fresh_client = BlogClient(http_client=http_client, interval=0)
+        assert fresh_client.request_statistics["attempts"] == 0
+        assert fresh_client.request_statistics["by_host"] == {}
+    assert waits == [4, 1]
+    assert len(requests) == 3
+
+
+def test_request_statistics_include_exhausted_rate_limits_before_raising() -> None:
+    with httpx.Client(
+        transport=httpx.MockTransport(lambda request: httpx.Response(429))
+    ) as http_client:
+        client = BlogClient(http_client=http_client, interval=0, retries=0)
+        with pytest.raises(httpx.HTTPStatusError):
+            client.fetch_asset("https://uploads.example/rate-limited.png")
+        statistics = client.request_statistics
+    assert statistics["attempts"] == statistics["rate_limit_responses"] == 1
+    assert statistics["status_counts"] == {"429": 1}
+    assert statistics["retries"] == statistics["retry_wait_seconds"] == 0
+
+
+def test_request_statistics_record_transport_failures_and_backoff() -> None:
+    requests = 0
+    waits: list[float] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal requests
+        requests += 1
+        if requests == 1:
+            raise httpx.ConnectError("offline", request=request)
+        return httpx.Response(200, content=b"image")
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http_client:
+        client = BlogClient(http_client=http_client, interval=0, sleep=waits.append)
+        assert client.fetch_asset("https://uploads.example/image.png") == b"image"
+        statistics = client.request_statistics
+    assert statistics["attempts"] == 2
+    assert statistics["status_counts"] == {"200": 1}
+    assert statistics["by_host"] == {
+        "uploads.example": {"attempts": 2, "status_counts": {"200": 1}}
+    }
+    assert statistics["transport_failures"] == statistics["retries"] == 1
+    assert statistics["retry_wait_seconds"] == 1.0
+    assert waits == [1.0]
+
+
+def test_request_statistics_are_safe_for_offline_mock_subclasses() -> None:
+    class OfflineClient(BlogClient):
+        def __init__(self) -> None:
+            pass
+
+    client = OfflineClient()
+    snapshot = client.request_statistics
+    assert snapshot["attempts"] == 0
+    assert snapshot["by_host"] == {}
+    assert snapshot["asset_cache_hits"] == 0
+    assert json.loads(json.dumps(snapshot)) == snapshot
 
 
 def test_permanent_http_errors_are_not_retried() -> None:

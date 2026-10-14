@@ -15,6 +15,7 @@ from tao2typ import pipeline
 from tao2typ.ir import Node, Post
 from tao2typ.source import BlogClient, FetchedPage, PostMetadata, RecentComment, SourceError
 from tao2typ.state import ArchiveState
+from tao2typ.storage import read_bytes, read_json, read_text
 
 
 def instant(year: int, month: int, day: int) -> datetime:
@@ -148,6 +149,65 @@ def archive(output: Path) -> ArchiveState:
     return ArchiveState.load(output / "state.json")
 
 
+def test_retained_ir_and_typst_are_gzip_but_compiler_reads_native_source(
+    tmp_path: Path, compiler: FakeCompiler
+) -> None:
+    post = Post(title="Compressed", url="https://example.com/post/", body=[Node("text", "café")])
+    artifacts = pipeline.save_post(post, "compressed", tmp_path, None)
+    assert artifacts["ir"] == "ir/compressed.json.gz"
+    assert artifacts["typst"] == "typst/compressed.typ.gz"
+    assert artifacts["pdf"] == "pdfs/compressed.pdf"
+    for key in ("ir", "typst"):
+        assert (tmp_path / artifacts[key]).read_bytes().startswith(b"\x1f\x8b")
+    assert Post.from_dict(read_json(tmp_path / artifacts["ir"])) == post
+    assert (tmp_path / artifacts["pdf"]).read_bytes() == (
+        b"%PDF-test\n" + read_bytes(tmp_path / artifacts["typst"])
+    )
+    assert not list(tmp_path.rglob("*.tmp*"))
+
+
+def test_unchanged_legacy_artifacts_are_compressed_without_recompiling_or_redating(
+    tmp_path: Path, compiler: FakeCompiler
+) -> None:
+    post = Post(title="Legacy", url="https://example.com/post/", body=[Node("text", "old")])
+    converted = instant(2026, 10, 13)
+    first = pipeline.save_post(post, "legacy", tmp_path, None, converted_at=converted)
+    for kind in ("ir", "typst"):
+        compressed = tmp_path / first[kind]
+        compressed.with_suffix("").write_bytes(read_bytes(compressed))
+        compressed.unlink()
+    original_pdf = (tmp_path / first["pdf"]).read_bytes()
+    post.source_manifest = "raw/refreshed/manifest.json.gz"
+    refreshed = pipeline.save_post(
+        post,
+        "legacy",
+        tmp_path,
+        None,
+        previous_digest=first["content_sha256"],
+        converted_at=converted + timedelta(days=1),
+    )
+    assert compiler.calls == 1
+    assert refreshed["converted_at"] == first["converted_at"]
+    assert (tmp_path / refreshed["pdf"]).read_bytes() == original_pdf
+    assert read_json(tmp_path / refreshed["ir"])["source_manifest"] == post.source_manifest
+    assert read_text(tmp_path / refreshed["typst"]) == read_text(
+        (tmp_path / refreshed["typst"]).with_suffix("")
+    )
+
+
+def test_failed_compilation_retains_compressed_inspectable_ir_and_source(
+    tmp_path: Path, compiler: FakeCompiler
+) -> None:
+    compiler.fail = True
+    post = Post(title="Failure", url="https://example.com/post/", body=[Node("text", "inspect")])
+    with pytest.raises(RuntimeError, match="mock compiler failed"):
+        pipeline.save_post(post, "failure", tmp_path, None)
+    assert read_json(tmp_path / "failures/failure.json.gz") == post.to_dict()
+    assert "inspect" in read_text(tmp_path / "failures/failure.typ.gz")
+    assert not list(tmp_path.rglob("*.tmp*"))
+    assert not list((tmp_path / "pdfs").iterdir())
+
+
 def test_inventory_is_complete_even_when_conversion_is_limited(
     tmp_path: Path, compiler: FakeCompiler
 ) -> None:
@@ -191,7 +251,7 @@ def test_unlimited_initial_batch_persists_source_dates_and_timestamped_report(
     assert first.next_check_at == instant(2026, 11, 1).isoformat()
     assert state.posts["2"].next_check_at == instant(2027, 4, 15).replace(hour=0).isoformat()
     assert first.ir is not None
-    ir = json.loads((tmp_path / first.ir).read_text())
+    ir = read_json(tmp_path / first.ir)
     assert ir["published_at"] == first.published_at
     assert ir["modified_at"] == first.modified_at
     assert first.pdf is not None and (tmp_path / first.pdf).exists()
@@ -238,10 +298,10 @@ def test_raw_refresh_updates_provenance_without_recompiling_identical_pdf(
     assert current.source_manifest != first.source_manifest
     assert (tmp_path / first.source_manifest).read_bytes() == original
     assert current.ir is not None
-    ir = json.loads((tmp_path / current.ir).read_text())
+    ir = read_json(tmp_path / current.ir)
     assert ir["source_manifest"] == current.source_manifest
     # Identical article/comment pages are shared by both timestamped manifests.
-    assert len(list((tmp_path / "raw" / "pages").glob("*.html"))) == 2
+    assert len(list((tmp_path / "raw" / "pages").glob("*.html.gz"))) == 2
 
 
 def test_partial_fetch_failure_retains_received_raw_pages(
@@ -261,10 +321,10 @@ def test_partial_fetch_failure_retains_received_raw_pages(
     state = archive(tmp_path).posts["1"]
     assert report["failed"] == 1 and compiler.calls == 0
     assert state.source_manifest is not None
-    manifest = json.loads((tmp_path / state.source_manifest).read_text())
+    manifest = read_json(tmp_path / state.source_manifest)
     assert manifest["complete"] is False
     assert manifest["error"] == "Later comment page unavailable"
-    assert (tmp_path / manifest["pages"][0]["path"]).read_bytes() == "First page α\r\n".encode()
+    assert read_bytes(tmp_path / manifest["pages"][0]["path"]) == "First page α\r\n".encode()
 
 
 def test_parser_failure_keeps_complete_raw_capture(
@@ -280,7 +340,7 @@ def test_parser_failure_keeps_complete_raw_capture(
     state = archive(tmp_path).posts["1"]
     assert report["failed"] == 1 and compiler.calls == 0
     assert state.source_manifest is not None
-    manifest = json.loads((tmp_path / state.source_manifest).read_text())
+    manifest = read_json(tmp_path / state.source_manifest)
     assert manifest["complete"] is True and len(manifest["pages"]) == 2
 
 
@@ -298,7 +358,7 @@ def test_failed_forced_refresh_retries_and_retains_each_source_attempt(
     retried = pipeline.run_batch(tmp_path, client, now=now + timedelta(days=2))
     assert retried["converted"] == 1
     assert "previous-failure" in retried["results"][0]["reasons"]
-    assert len(list((tmp_path / "raw").glob("*/20*/manifest.json"))) == 3
+    assert len(list((tmp_path / "raw").glob("*/20*/manifest.json.gz"))) == 3
 
 
 def test_missed_checks_are_collapsed_into_one_refresh(
@@ -402,7 +462,7 @@ def test_failed_artifact_promotion_restores_complete_previous_set(
     post = Post(title="Original", url="https://example.com/post/", body=[Node("text", "old")])
     paths = [
         tmp_path / path / f"post.{ext}"
-        for path, ext in [("ir", "json"), ("typst", "typ"), ("pdfs", "pdf")]
+        for path, ext in [("ir", "json.gz"), ("typst", "typ.gz"), ("pdfs", "pdf")]
     ]
     if prior_outputs:
         pipeline.save_post(post, "post", tmp_path, None)

@@ -7,6 +7,7 @@ import pytest
 from tao2typ import migrate
 from tao2typ.naming import artifact_stem, artifact_stems
 from tao2typ.state import ArchiveState, PostState
+from tao2typ.storage import read_bytes, write_bytes
 
 
 def post(identifier: int, slug: str, title: str = "A title") -> PostState:
@@ -54,6 +55,19 @@ def test_long_names_keep_space_for_collision_suffix() -> None:
     stems = artifact_stems([post(1, "a" * 300), post(1234, "a" * 300)])
     assert len(stems[1]) == len(stems[1234]) == 180
     assert stems[1234].endswith("-1234")
+
+
+def test_rename_preserves_gzip_suffix_and_compressed_bytes(tmp_path: Path) -> None:
+    record = post(42, "better-name")
+    record.typst = "typst/old.source.typ.gz"
+    write_bytes(tmp_path / record.typst, b"exact Typst source")
+    original_gzip = (tmp_path / record.typst).read_bytes()
+    ArchiveState(posts={"42": record}).save(tmp_path / "state.json")
+    migrate.migrate_existing_archive(tmp_path)
+    result = ArchiveState.load(tmp_path / "state.json").posts["42"]
+    assert result.typst == "typst/better-name.typ.gz"
+    assert (tmp_path / result.typst).read_bytes() == original_gzip
+    assert read_bytes(tmp_path / result.typst) == b"exact Typst source"
 
 
 def populated_archive(output: Path) -> tuple[ArchiveState, dict[str, bytes]]:

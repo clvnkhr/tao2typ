@@ -13,6 +13,7 @@ from tao2typ import pipeline
 from tao2typ.ir import Node, Post
 from tao2typ.source import BlogClient, FetchedPage, PostMetadata, RecentComment
 from tao2typ.state import ArchiveState
+from tao2typ.storage import read_json, read_text
 from tao2typ.typst import render_post
 
 URL = "https://terrytao.wordpress.com/2026/10/01/conversion-date/"
@@ -101,7 +102,7 @@ def test_identical_next_day_refresh_keeps_artifact_date_bytes_and_mtime(
     assert again["converted_at"] == first["converted_at"]
     assert {kind: path.read_bytes() for kind, path in paths.items()} == original_bytes
     assert {kind: path.stat().st_mtime_ns for kind, path in paths.items()} == original_mtimes
-    saved = Post.from_dict(json.loads((tmp_path / again["ir"]).read_text()))
+    saved = Post.from_dict(read_json(tmp_path / again["ir"]))
     assert saved.converted_at == FIRST.isoformat()
     assert saved.source_manifest == refreshed.source_manifest
 
@@ -119,9 +120,9 @@ def test_identical_next_day_refresh_keeps_artifact_date_bytes_and_mtime(
     assert changed["content_sha256"] != first["content_sha256"]
     assert paths["typst"].read_bytes() != original_bytes["typst"]
     assert paths["pdf"].read_bytes() != original_bytes["pdf"]
-    saved = Post.from_dict(json.loads((tmp_path / changed["ir"]).read_text()))
+    saved = Post.from_dict(read_json(tmp_path / changed["ir"]))
     assert saved.converted_at == changed_day.isoformat()
-    assert " · converted to Typst 2026-10-15 (UTC)" in paths["typst"].read_text()
+    assert " · converted to Typst 2026-10-15 (UTC)" in read_text(paths["typst"])
 
 
 def test_default_timestamp_records_actual_build_time(tmp_path: Path, compiler: Compiler) -> None:
@@ -133,7 +134,7 @@ def test_default_timestamp_records_actual_build_time(tmp_path: Path, compiler: C
     built = datetime.fromisoformat(artifacts["converted_at"])
     assert before <= built <= after
     assert compiler.calls == 1
-    saved = Post.from_dict(json.loads((tmp_path / artifacts["ir"]).read_text()))
+    saved = Post.from_dict(read_json(tmp_path / artifacts["ir"]))
     assert saved.converted_at == artifacts["converted_at"]
 
 

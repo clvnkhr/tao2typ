@@ -25,6 +25,7 @@ from tao2typ.pipeline import (
 from tao2typ.raw import RawCapture, load_raw_capture
 from tao2typ.source import BlogClient, canonical_post_url
 from tao2typ.state import ArchiveState, write_json
+from tao2typ.storage import read_json, read_text, write_text
 from tao2typ.typst import render_post
 
 
@@ -61,6 +62,8 @@ def main() -> int:
         "migrate-names", help="Rename existing outputs without conversion"
     )
     migrate.add_argument("--output", type=Path, default=Path("archive"))
+    compress = commands.add_parser("compress", help="Losslessly compress retained source artifacts")
+    compress.add_argument("--output", type=Path, default=Path("archive"))
     metadata = commands.add_parser("sync-metadata", help="Update post tags/categories without PDFs")
     metadata.add_argument("--output", type=Path, default=Path("archive"))
     metadata.add_argument("--interval", type=float, default=1.0)
@@ -73,6 +76,12 @@ def main() -> int:
         "--download-base-url", help="Export public documents/assets and use this hosting URL"
     )
     args = parser.parse_args()
+    if args.command == "compress":
+        from tao2typ.compression import compress_archive
+
+        result = compress_archive(args.output)
+        print(json.dumps(result, indent=2))
+        return 0
     if args.command == "parse-raw":
         metadata, pages, archive = load_raw_capture(args.manifest)
         post = parse_post(
@@ -106,7 +115,7 @@ def main() -> int:
         print(json.dumps(result, indent=2))
         return 0
     if args.command == "render":
-        post = Post.from_dict(json.loads(args.ir.read_text(encoding="utf-8")))
+        post = Post.from_dict(read_json(args.ir))
         post.converted_at = datetime.now(UTC).isoformat()
         args.output.parent.mkdir(parents=True, exist_ok=True)
         # Existing archive image assets can be located independently of fetching HTML.
@@ -134,11 +143,20 @@ def main() -> int:
             asset = archive / "assets" / (hashlib.sha256(url.encode()).hexdigest() + suffix)
             if asset.exists():
                 assets[url] = os.path.relpath(asset, args.output.parent)
-        args.output.write_text(render_post(post, assets=assets), encoding="utf-8")
+        rendered = render_post(post, assets=assets)
+        write_text(args.output, rendered)
         if args.pdf:
             args.pdf.parent.mkdir(parents=True, exist_ok=True)
             root = Path(os.path.commonpath([archive.resolve(), args.output.resolve()]))
-            compile_typst(args.output, args.pdf, root)
+            if args.output.suffix == ".gz":
+                native_source = args.output.with_name(args.output.stem + ".tmp.typ")
+                try:
+                    write_text(native_source, rendered)
+                    compile_typst(native_source, args.pdf, root)
+                finally:
+                    native_source.unlink(missing_ok=True)
+            else:
+                compile_typst(args.output, args.pdf, root)
         return 0
     if args.command == "convert":
         if args.stem and (Path(args.stem).name != args.stem or args.stem in {".", "..", ""}):
@@ -147,7 +165,7 @@ def main() -> int:
         if local.is_file():
             if not args.url:
                 parser.error("Saved HTML requires --url for attribution")
-            html = local.read_bytes().decode("utf-8")
+            html = read_text(local)
             stem = args.stem or artifact_stem(local.stem, args.url, 0)
             capture = RawCapture(args.output, stem, args.url, published_at=args.published_at)
             capture.add(html, args.url)
@@ -197,6 +215,9 @@ def main() -> int:
             daily_limit=args.daily_limit,
         )
     if (args.output / "state.json").exists():
+        from tao2typ.compression import compress_completed_reports
+
+        compress_completed_reports(args.output)
         generate_site(args.output, args.output.parent / "docs")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 1 if report["failed"] or report["errors"] else 0

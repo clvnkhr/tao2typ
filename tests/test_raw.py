@@ -12,10 +12,11 @@ import pytest
 from tao2typ import raw
 from tao2typ.cli import main
 from tao2typ.raw import RawCapture, load_raw_capture
+from tao2typ.storage import read_bytes, read_json, read_text, write_json, write_text
 
 
 def manifest(output: Path, capture: RawCapture) -> dict[str, Any]:
-    return json.loads((output / capture.manifest_path).read_text(encoding="utf-8"))
+    return read_json(output / capture.manifest_path)
 
 
 def test_captures_exact_utf8_parser_input_and_metadata(tmp_path: Path) -> None:
@@ -43,7 +44,9 @@ def test_captures_exact_utf8_parser_input_and_metadata(tmp_path: Path) -> None:
     assert result["modified_at"] == "2010-01-09T03:04:05+00:00"
     assert result["complete"] is True
     page = result["pages"][0]
-    assert (tmp_path / page["path"]).read_bytes() == html.encode("utf-8")
+    assert read_bytes(tmp_path / page["path"]) == html.encode("utf-8")
+    assert page["path"].endswith(".html.gz")
+    assert capture.manifest_path.endswith("manifest.json.gz")
     assert page["bytes_sha256"] == hashlib.sha256(html.encode("utf-8")).hexdigest()
     assert page["bytes"] == len(html.encode("utf-8"))
     assert page["requested_url"] == "http://example.com/lp-spaces/"
@@ -60,7 +63,7 @@ def test_replay_rejects_modified_bytes_or_partial_capture(tmp_path: Path) -> Non
         load_raw_capture(tmp_path / capture.manifest_path)
     capture.finish()
     page = manifest(tmp_path, capture)["pages"][0]
-    (tmp_path / page["path"]).write_text("altered")
+    write_text(tmp_path / page["path"], "altered")
     with pytest.raises(ValueError, match="checksum mismatch"):
         load_raw_capture(tmp_path / capture.manifest_path)
 
@@ -112,7 +115,7 @@ def test_same_bytes_share_blob_without_overwriting_prior_capture(tmp_path: Path)
     after_blob = (tmp_path / first_page["path"]).stat()
     assert after_blob.st_ino == before_blob.st_ino
     assert after_blob.st_mtime_ns == before_blob.st_mtime_ns
-    assert len(list((tmp_path / "raw" / "pages").glob("*.html"))) == 1
+    assert len(list((tmp_path / "raw" / "pages").glob("*.html.gz"))) == 1
 
 
 def test_page_order_and_urls_preserve_comment_pagination(tmp_path: Path) -> None:
@@ -124,7 +127,7 @@ def test_page_order_and_urls_preserve_comment_pagination(tmp_path: Path) -> None
     assert [page["url"] for page in pages] == [
         f"https://example.com/post/comment-page-{index}/" for index in (1, 2, 3)
     ]
-    assert [(tmp_path / page["path"]).read_text(encoding="utf-8") for page in pages] == [
+    assert [read_text(tmp_path / page["path"]) for page in pages] == [
         "article",
         "first comments",
         "second comments",
@@ -139,7 +142,7 @@ def test_failed_fetch_retains_partial_pages_and_error(tmp_path: Path) -> None:
     assert result["complete"] is False
     assert result["error"] == "Timed out fetching comment page 2"
     assert len(result["pages"]) == 1
-    assert (tmp_path / result["pages"][0]["path"]).read_text(encoding="utf-8") == "article"
+    assert read_text(tmp_path / result["pages"][0]["path"]) == "article"
     assert "finished_at" in result
 
 
@@ -166,8 +169,8 @@ def test_coincident_timestamps_create_separate_manifests(
     monkeypatch.setattr(raw, "_now", lambda: datetime(2026, 10, 13, 12, 0, 0, tzinfo=UTC))
     first = RawCapture(tmp_path, "post", "https://example.com/post/")
     second = RawCapture(tmp_path, "post", "https://example.com/post/")
-    assert first.manifest_path == "raw/post/20261013T120000.000000Z/manifest.json"
-    assert second.manifest_path == "raw/post/20261013T120000.000001Z/manifest.json"
+    assert first.manifest_path == "raw/post/20261013T120000.000000Z/manifest.json.gz"
+    assert second.manifest_path == "raw/post/20261013T120000.000001Z/manifest.json.gz"
     assert (tmp_path / first.manifest_path).is_file()
     assert (tmp_path / second.manifest_path).is_file()
 
@@ -184,7 +187,7 @@ def test_rejects_corrupted_existing_blob_instead_of_replacing_it(tmp_path: Path)
     digest = hashlib.sha256(html.encode("utf-8")).hexdigest()
     pages = tmp_path / "raw" / "pages"
     pages.mkdir(parents=True)
-    blob = pages / f"{digest}.html"
+    blob = pages / f"{digest}.html.gz"
     blob.write_bytes(b"damaged data")
     capture = RawCapture(tmp_path, "post", "https://example.com/post/")
     with pytest.raises(ValueError, match="content hash"):
@@ -192,3 +195,80 @@ def test_rejects_corrupted_existing_blob_instead_of_replacing_it(tmp_path: Path)
     assert blob.read_bytes() == b"damaged data"
     assert manifest(tmp_path, capture)["pages"] == []
     assert not list(pages.glob("*.tmp"))
+
+
+def test_legacy_plain_capture_replays_without_rewriting_it(tmp_path: Path) -> None:
+    capture = RawCapture(tmp_path, "post", "https://example.com/post/")
+    html = "original\r\nπ"
+    capture.add(html, "https://example.com/post/")
+    capture.finish()
+    metadata = manifest(tmp_path, capture)
+    page = metadata["pages"][0]
+    compressed_blob = tmp_path / page["path"]
+    page["path"] = page["path"].removesuffix(".gz")
+    plain_blob = tmp_path / page["path"]
+    plain_blob.write_bytes(read_bytes(compressed_blob))
+    compressed_blob.unlink()
+    plain_manifest = tmp_path / capture.manifest_path.removesuffix(".gz")
+    write_json(plain_manifest, metadata)
+    (tmp_path / capture.manifest_path).unlink()
+    before = plain_manifest.read_bytes(), plain_blob.read_bytes()
+
+    loaded_metadata, pages, output = load_raw_capture(plain_manifest)
+
+    assert loaded_metadata == metadata
+    assert pages == [html] and output == tmp_path.resolve()
+    assert (plain_manifest.read_bytes(), plain_blob.read_bytes()) == before
+
+
+@pytest.mark.parametrize("damage", ["invalid-gzip", "different-content"])
+def test_compressed_blob_replay_checks_original_bytes(tmp_path: Path, damage: str) -> None:
+    capture = RawCapture(tmp_path, "post", "https://example.com/post/")
+    capture.add("article", "https://example.com/post/")
+    capture.finish()
+    blob = tmp_path / manifest(tmp_path, capture)["pages"][0]["path"]
+    if damage == "invalid-gzip":
+        blob.write_bytes(b"not gzip")
+    else:
+        write_text(blob, "changed")
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        load_raw_capture(tmp_path / capture.manifest_path)
+
+
+def test_rejects_raw_blob_symlink_even_with_matching_bytes(tmp_path: Path) -> None:
+    capture = RawCapture(tmp_path, "post", "https://example.com/post/")
+    capture.add("article", "https://example.com/post/")
+    capture.finish()
+    blob = tmp_path / manifest(tmp_path, capture)["pages"][0]["path"]
+    elsewhere = tmp_path / "elsewhere.gz"
+    blob.rename(elsewhere)
+    blob.symlink_to(elsewhere)
+    with pytest.raises(ValueError, match="escapes"):
+        load_raw_capture(tmp_path / capture.manifest_path)
+    duplicate = RawCapture(tmp_path, "post", "https://example.com/post/")
+    with pytest.raises(ValueError, match="content hash"):
+        duplicate.add("article", "https://example.com/post/")
+
+
+def test_rejects_manifest_symlink(tmp_path: Path) -> None:
+    capture = RawCapture(tmp_path, "post", "https://example.com/post/")
+    capture.add("article", "https://example.com/post/")
+    capture.finish()
+    path = tmp_path / capture.manifest_path
+    elsewhere = tmp_path / "elsewhere.gz"
+    path.rename(elsewhere)
+    path.symlink_to(elsewhere)
+    with pytest.raises(ValueError, match="symlink"):
+        load_raw_capture(path)
+
+
+def test_rejects_compressed_page_path_traversal(tmp_path: Path) -> None:
+    capture = RawCapture(tmp_path, "post", "https://example.com/post/")
+    capture.add("article", "https://example.com/post/")
+    capture.finish()
+    path = tmp_path / capture.manifest_path
+    metadata = manifest(tmp_path, capture)
+    metadata["pages"][0]["path"] = "raw/pages/../escape.html.gz"
+    write_json(path, metadata)
+    with pytest.raises(ValueError, match="Invalid raw page path"):
+        load_raw_capture(path)

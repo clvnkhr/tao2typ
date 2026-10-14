@@ -11,7 +11,7 @@ import re
 import time
 from collections import OrderedDict, deque
 from collections.abc import Callable, Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
 from types import TracebackType
@@ -273,6 +273,36 @@ def _retry_delay(response: httpx.Response | None, attempt: int) -> float:
     return max(backoff, min(delay, 300.0))
 
 
+@dataclass
+class _HostRequestStatistics:
+    attempts: int = 0
+    status_counts: dict[str, int] = field(default_factory=dict)
+
+
+@dataclass
+class _RequestStatistics:
+    attempts: int = 0
+    status_counts: dict[str, int] = field(default_factory=dict)
+    by_host: dict[str, _HostRequestStatistics] = field(default_factory=dict)
+    rate_limit_responses: int = 0
+    retries: int = 0
+    retry_wait_seconds: float = 0.0
+    transport_failures: int = 0
+    asset_cache_hits: int = 0
+
+    def begin_attempt(self, host: str) -> None:
+        self.attempts += 1
+        self.by_host.setdefault(host, _HostRequestStatistics()).attempts += 1
+
+    def record_status(self, host: str, status: int) -> None:
+        key = str(status)
+        self.status_counts[key] = self.status_counts.get(key, 0) + 1
+        counts = self.by_host[host].status_counts
+        counts[key] = counts.get(key, 0) + 1
+        if status == 429:
+            self.rate_limit_responses += 1
+
+
 class BlogClient:
     """A synchronous, rate-limited client with bounded downloads and retries.
 
@@ -301,6 +331,7 @@ class BlogClient:
         self._sleep = sleep
         self._monotonic = monotonic
         self._last_request: float | None = None
+        self._statistics = _RequestStatistics()
         # Reuse avatars/diagrams across posts in one job, while every new
         # client revalidates remote bytes during the next scheduled refresh.
         self._asset_cache: OrderedDict[str, bytes] = OrderedDict()
@@ -308,7 +339,11 @@ class BlogClient:
         self._owns_client = http_client is None
         self._client = http_client or httpx.Client(
             timeout=httpx.Timeout(timeout),
-            headers={"User-Agent": "tao2typ/0.1 (public blog archive; polite sequential fetcher)"},
+            headers={
+                "User-Agent": (
+                    "tao2typ/0.1 (+https://clvnkhr.github.io/tao2typ/; blog-to-PDF converter)"
+                )
+            },
         )
 
     def __enter__(self) -> BlogClient:
@@ -326,19 +361,33 @@ class BlogClient:
         if self._owns_client:
             self._client.close()
 
+    @property
+    def request_statistics(self) -> dict[str, object]:
+        """Return an independent JSON-ready snapshot for this client lifetime.
+
+        Host counts describe requested hosts, including final response statuses
+        after redirects. Retry waits exclude the ordinary polite interval.
+        Offline mock subclasses need not call this class's initializer.
+        """
+        statistics = getattr(self, "_statistics", None)
+        return asdict(statistics if statistics is not None else _RequestStatistics())
+
     def _request(
         self, url: str, *, params: Mapping[str, str | int] | None = None
     ) -> httpx.Response:
+        host = urlsplit(url).hostname or ""
         for attempt in range(self.retries + 1):
             if self._last_request is not None:
                 delay = self.interval - (self._monotonic() - self._last_request)
                 if delay > 0:
                     self._sleep(delay)
             self._last_request = self._monotonic()
+            self._statistics.begin_attempt(host)
             try:
                 with self._client.stream(
                     "GET", url, params=params, follow_redirects=True
                 ) as response:
+                    self._statistics.record_status(host, response.status_code)
                     response.raise_for_status()
                     if content_length := response.headers.get("Content-Length"):
                         try:
@@ -368,11 +417,18 @@ class BlogClient:
             except httpx.HTTPStatusError as error:
                 if error.response.status_code not in _RETRY_STATUS or attempt == self.retries:
                     raise
-                self._sleep(_retry_delay(error.response, attempt))
+                delay = _retry_delay(error.response, attempt)
+                self._statistics.retries += 1
+                self._statistics.retry_wait_seconds += delay
+                self._sleep(delay)
             except httpx.TransportError:
+                self._statistics.transport_failures += 1
                 if attempt == self.retries:
                     raise
-                self._sleep(_retry_delay(None, attempt))
+                delay = _retry_delay(None, attempt)
+                self._statistics.retries += 1
+                self._statistics.retry_wait_seconds += delay
+                self._sleep(delay)
         raise AssertionError("Unreachable HTTP retry state")
 
     def discover_posts(
@@ -524,6 +580,7 @@ class BlogClient:
         url = urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
         cache_key = url
         if cache_key in self._asset_cache:
+            self._statistics.asset_cache_hits += 1
             self._asset_cache.move_to_end(cache_key)
             return self._asset_cache[cache_key]
         for attempt in range(3):

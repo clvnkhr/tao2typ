@@ -110,6 +110,39 @@ def _conversion_date(value: str | None) -> str:
     return "date unavailable"
 
 
+def _text_superscripts(source: str) -> str:
+    """Expand braced text superscripts as one empty-base text-script atom."""
+    result: list[str] = []
+    position = 0
+    command = re.compile(r"(?<!\\)\\textsuperscript(?![A-Za-z])\s*(?=\{)")
+    while match := command.search(source, position):
+        opening = match.end()
+        cursor, depth = opening + 1, 1
+        while cursor < len(source) and depth:
+            character = source[cursor]
+            if character == "\\":
+                cursor += 2
+                continue
+            if character == "%":
+                newline = source.find("\n", cursor)
+                cursor = len(source) if newline < 0 else newline + 1
+                continue
+            if character == "{":
+                depth += 1
+            elif character == "}":
+                depth -= 1
+            cursor += 1
+        if depth:
+            break  # Leave a malformed source argument for the normal diagnostics.
+        result.append(source[position : match.start()])
+        # LaTeX encloses the empty-base superscript in a group. Retain that group
+        # so i^\textsuperscript{th} has a nested script, not two scripts on i.
+        result.append(r"{{}^{\text" + source[opening:cursor] + "}}")
+        position = cursor
+    result.append(source[position:])
+    return "".join(result)
+
+
 def _legacy_tex(source: str) -> str:
     """Normalize equivalent legacy TeX forms unsupported by pinned MiTeX.
 
@@ -117,6 +150,26 @@ def _legacy_tex(source: str) -> str:
     ``\\sqrt(n)`` becomes ``\\sqrt{(}n)``, not a newly invented radicand ``n``.
     Original source remains untouched in the IR.
     """
+    # A font declaration affects only the remainder of its group. In an empty
+    # group it has no glyphs to style, while MiTeX's greedy font handler errors.
+    # Keep the empty group: it may be a fraction, script or accent argument.
+    source = re.sub(r"(?<!\\)\{\s*\\(?:bf|rm|it|sf|frak|tt|cal)\s*\}", "{}", source)
+    source = _text_superscripts(source)
+    # AMS's variant limits are complete operators with an arrow underneath.
+    # Use pinned MiTeX's operator-with-limits and underset, keeping later scripts
+    # attached to the operator rather than to the arrow or the following term.
+    source = re.sub(
+        r"(?<!\\)\\var(inj|proj)lim(?![A-Za-z])",
+        lambda match: (
+            r"\operatorname*{\underset{\textstyle"
+            + (r"\rightarrow" if match[1] == "inj" else r"\leftarrow")
+            + "}{lim}}"
+        ),
+        source,
+    )
+    # An explicitly empty optional root index prints no index, like sqrt's
+    # default. Retain a separator so an unbraced following token stays an arg.
+    source = re.sub(r"(?<!\\)\\sqrt\s*\[\s*\]", r"\\sqrt ", source)
     source = re.sub(r"(?<!\\)\\mbox(?![A-Za-z])", r"\\text", source)
     # MiTeX drops hbox's text styling and spaces. Its simple braced form is
     # horizontal text like mbox; primitive forms such as hbox to ... stay intact.

@@ -93,6 +93,7 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
         "pipeline.py",
         "source.py",
         "raw.py",
+        "storage.py",
     ):
         (tmp_path / name).write_text(name)
     monkeypatch.setattr(pipeline, "__file__", str(tmp_path / "pipeline.py"))
@@ -108,3 +109,6 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
     after_tex_fix = pipeline.converter_fingerprint()
     (tmp_path / "alignment.py").write_text("Shared display alignment fixed")
     assert pipeline.converter_fingerprint() != after_tex_fix
+    after_alignment_fix = pipeline.converter_fingerprint()
+    (tmp_path / "storage.py").write_text("Retained source compression fixed")
+    assert pipeline.converter_fingerprint() != after_alignment_fix

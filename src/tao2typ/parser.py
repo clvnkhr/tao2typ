@@ -166,6 +166,25 @@ class _Parser:
             "jp-relatedposts",
         }
 
+    def _wordpress_more_marker(self, tag: Tag) -> bool:
+        # TinyMCE represents WordPress's read-more break with this transparent
+        # editor asset. Some old posts leaked the marker into their published
+        # HTML. Require its exact metadata and origin; ordinary images, even
+        # missing ones or other files named trans.gif, remain required content.
+        if tag.name != "img" or _attr(tag, "title") != "More..." or _attr(tag, "alt").strip():
+            return False
+        source = urlparse(urljoin(self.url, _attr(tag, "src") or _attr(tag, "data-src")))
+        origin = (urlparse(self.url).hostname or "").lower()
+        path = "/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif"
+        host = (source.hostname or "").lower()
+        return bool(origin) and (
+            (host == origin and source.path == path)
+            or (
+                re.fullmatch(r"i\d+\.wp\.com", host) is not None
+                and source.path == f"/{origin}{path}"
+            )
+        )
+
     def text(self, value: str) -> list[Node]:
         # Only unambiguous delimiters: a dollar sign in prose may mean currency.
         nodes: list[Node] = []
@@ -219,6 +238,9 @@ class _Parser:
             return []
         name = element.name
         if name == "img":
+            if self._wordpress_more_marker(element):
+                anchor = _attr(element, "id")
+                return [Node("anchor", attrs={"id": anchor})] if anchor else []
             math = self.math_image(element)
             if math is not None:
                 return [math]
@@ -272,6 +294,8 @@ class _Parser:
             if urlparse(url).scheme not in {"http", "https", "mailto"}:
                 return prefix + children
             if not children:
+                if any(self._wordpress_more_marker(image) for image in element.find_all("img")):
+                    return prefix
                 if self._in_comment_body and any(
                     self._avatar(image) for image in element.find_all("img")
                 ):

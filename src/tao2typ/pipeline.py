@@ -21,6 +21,7 @@ from tao2typ.raw import RawCapture
 from tao2typ.schedule import next_scheduled_check, plan_refresh
 from tao2typ.source import BlogClient, FetchedPage, SourceError
 from tao2typ.state import ArchiveState, PostState, write_json
+from tao2typ.storage import read_json, read_text, write_text
 from tao2typ.typst import render_post
 
 
@@ -44,6 +45,7 @@ def converter_fingerprint() -> str:
         "pipeline.py",
         "source.py",
         "raw.py",
+        "storage.py",
     ):
         digest.update((directory / name).read_bytes())
     return digest.hexdigest()
@@ -175,15 +177,22 @@ def save_post(
     Each replacement is atomic; handled failures preserve the previous complete
     set. A process kill during promotion can still leave mixed generations.
     """
-    paths = {"ir": f"ir/{stem}.json", "typst": f"typst/{stem}.typ", "pdf": f"pdfs/{stem}.pdf"}
+    paths = {
+        "ir": f"ir/{stem}.json.gz",
+        "typst": f"typst/{stem}.typ.gz",
+        "pdf": f"pdfs/{stem}.pdf",
+    }
     source = output / paths["typst"]
     pdf = output / paths["pdf"]
     source.parent.mkdir(parents=True, exist_ok=True)
     pdf.parent.mkdir(parents=True, exist_ok=True)
-    staged_source = source.with_name(source.stem + ".tmp.typ")
+    # Typst requires ordinary source files; retain only the losslessly compressed
+    # source after a successful compilation.
+    native_source = source.with_name(stem + ".tmp.typ")
+    staged_source = source.with_name(stem + ".tmp.typ.gz")
     staged_pdf = pdf.with_name(pdf.stem + ".tmp.pdf")
     ir = output / paths["ir"]
-    staged_ir = ir.with_name(ir.stem + ".tmp.json")
+    staged_ir = ir.with_name(stem + ".tmp.json.gz")
     promotions = [(staged_ir, ir), (staged_source, source), (staged_pdf, pdf)]
     backups = {
         target: target.with_name(target.stem + ".previous" + target.suffix)
@@ -213,11 +222,17 @@ def save_post(
             + json.dumps(image_digests, sort_keys=True)
         ).encode()
     ).hexdigest()
-    if previous_digest == digest and all((output / path).exists() for path in paths.values()):
+    previous_ir = ir if ir.is_file() else ir.with_suffix("")
+    previous_source = source if source.is_file() else source.with_suffix("")
+    if previous_digest == digest and all(
+        path.is_file() for path in (previous_ir, previous_source, pdf)
+    ):
         # Refresh capture provenance without recompiling identical document content.
-        previous_post = Post.from_dict(json.loads(ir.read_text(encoding="utf-8")))
+        previous_post = Post.from_dict(read_json(previous_ir))
         if previous_post.converted_at:
             post.converted_at = previous_post.converted_at
+            if not source.is_file():
+                write_text(source, read_text(previous_source))
             write_json(ir, post.to_dict())
             return {**paths, "content_sha256": digest, "converted_at": post.converted_at}
     post.converted_at = timestamp(converted_at or datetime.now(UTC))
@@ -227,8 +242,9 @@ def save_post(
     originals: set[Path] = set()
     recovery_backups: set[Path] = set()
     try:
-        staged_source.write_text(rendered, encoding="utf-8")
-        compile_typst(staged_source, staged_pdf, output)
+        write_text(native_source, rendered)
+        compile_typst(native_source, staged_pdf, output)
+        write_text(staged_source, rendered)
         write_json(staged_ir, payload)
         # Copy before changing any canonical path. Backups also retain the old
         # bytes when an interrupt lands immediately after a replacement.
@@ -239,8 +255,8 @@ def save_post(
         for staged, target in promotions:
             attempted.append(target)
             staged.replace(target)
-        (output / "failures" / (stem + ".json")).unlink(missing_ok=True)
-        (output / "failures" / (stem + ".typ")).unlink(missing_ok=True)
+        for suffix in (".json", ".typ", ".json.gz", ".typ.gz"):
+            (output / "failures" / (stem + suffix)).unlink(missing_ok=True)
     except BaseException as error:
         for target in reversed(attempted):
             try:
@@ -255,10 +271,11 @@ def save_post(
         # Preserve an inspectable IR/source for unsupported equations, while the
         # canonical paths keep the last successfully compiled document.
         if isinstance(error, Exception):
-            write_json(output / "failures" / (stem + ".json"), payload)
-            (output / "failures" / (stem + ".typ")).write_text(rendered, encoding="utf-8")
+            write_json(output / "failures" / (stem + ".json.gz"), payload)
+            write_text(output / "failures" / (stem + ".typ.gz"), rendered)
         raise
     finally:
+        native_source.unlink(missing_ok=True)
         for staged, _ in promotions:
             staged.unlink(missing_ok=True)
         staged_ir.with_suffix(staged_ir.suffix + ".tmp").unlink(missing_ok=True)
@@ -321,7 +338,12 @@ def run_batch(
         "errors": [],
     }
     report_path = output / "jobs" / (now.strftime("%Y%m%dT%H%M%S.%fZ") + ".json")
-    write_json(report_path, report)
+
+    def checkpoint_report() -> None:
+        report["request_statistics"] = client.request_statistics
+        write_json(report_path, report)
+
+    checkpoint_report()
     try:
         # Small metadata-only pages scan the complete inventory every run. This also
         # detects modifications to older posts without relying on an RSS window.
@@ -388,7 +410,7 @@ def run_batch(
         )
         report["due"] = len(candidates)
         state.save(state_path)
-        write_json(report_path, report)
+        checkpoint_report()
         selected = candidates[:max_posts] if max_posts else candidates
         if daily_limit is not None:
             allowance = max(0, daily_limit - state.daily_attempts.get(quota_day, 0))
@@ -414,7 +436,7 @@ def run_batch(
                 "url": post_state.url,
                 "reasons": reasons,
             }
-            post_state.last_attempted_at = timestamp(now)
+            post_state.last_attempted_at = timestamp(now if clock_supplied else datetime.now(UTC))
             if daily_limit is not None:
                 # Reserve the budget before fetching/compiling. An interrupted
                 # or failed attempt still consumes runner time.
@@ -481,8 +503,14 @@ def run_batch(
                 state.daily_attempts[finished_day] = state.daily_attempts.get(finished_day, 0) + 1
             report["results"].append(result)
             state.save(state_path)
-            write_json(queue_path, {"updated_at": timestamp(now), "posts": queue})
-            write_json(report_path, report)
+            write_json(
+                queue_path,
+                {
+                    "updated_at": timestamp(now if clock_supplied else datetime.now(UTC)),
+                    "posts": queue,
+                },
+            )
+            checkpoint_report()
         report["remaining"] = len(queue)
     except Exception as exc:
         report["errors"].append({"stage": "discovery", "error": str(exc)})
@@ -491,6 +519,6 @@ def run_batch(
         report["converted"] = sum(r["status"] == "converted" for r in report["results"])
         report["failed"] = sum(r["status"] == "failed" for r in report["results"])
         state.save(state_path)
-        write_json(report_path, report)
+        checkpoint_report()
         write_index(state, output)
     return report

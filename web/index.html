@@ -9,20 +9,22 @@
 </head>
 <body>
   <a class="skip-link" href="#posts">Skip to posts</a>
-  <header><a class="wordmark" href="./">tao2typ</a><nav aria-label="Links"><a href="https://terrytao.wordpress.com/">Blog</a><a href="@@REPO_URL@@">GitHub</a></nav></header>
+  <header><a class="wordmark" href="./">tao2typ</a><nav aria-label="Links"><a href="https://terrytao.wordpress.com/">Tao’s Blog</a><a href="@@REPO_URL@@">GitHub</a></nav></header>
   <p class="site-note">An unofficial personal site converting Terence Tao’s blog posts to PDFs with Typst.</p>
   <main>
     <aside class="taxonomy">
       <a class="all-posts" href="#" data-route="all">All posts <span>@@TOTAL@@</span></a>
+      <a class="queue-link" href="#queue" data-route="queue">Queue <span>@@QUEUED@@</span></a>
       <details open><summary>Categories <span>@@CATEGORY_COUNT@@</span></summary><nav aria-label="Categories">@@CATEGORY_LINKS@@</nav></details>
       <details><summary>Tags <span>@@TAG_COUNT@@</span></summary><nav aria-label="Tags">@@TAG_LINKS@@</nav></details>
     </aside>
     <section class="catalogue" aria-label="Posts">
       <div class="catalogue-heading"><h1 id="collection-title">All posts</h1><span id="result-count" role="status" aria-live="polite">@@TOTAL@@ posts</span></div>
+      <p id="queue-updated" class="queue-updated" data-updated="@@QUEUE_UPDATED@@" hidden>Updated <time datetime="@@QUEUE_UPDATED@@"></time> UTC</p>
       <form class="controls" role="search">
         <label class="search-label" for="search">Search<input id="search" type="search" placeholder="Search" autocomplete="off"></label>
         <label class="ready-filter"><input type="checkbox" id="ready"> PDFs only</label>
-        <label class="sort-label" for="sort">Order<select id="sort"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="title">A–Z</option></select></label>
+        <label class="sort-label" for="sort">Order<select id="sort"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="title">A–Z</option><option value="queue" hidden>Queue order</option></select></label>
       </form>
       <ol id="posts" class="post-list" tabindex="-1">@@POSTS@@</ol>
       <p id="empty" hidden>No matches.</p>

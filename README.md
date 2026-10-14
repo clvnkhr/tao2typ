@@ -96,10 +96,15 @@ batch. The converter waits one second between requests and
 retries transient errors with backoff. `--interval` adjusts this locally.
 Successful image bytes are reused within a job in a bounded 64 MiB cache;
 the next job fetches them again. Failed downloads are not cached.
+Job reports include response codes by host, rate-limit responses, retries and
+wait times, transport failures, and image-cache hits.
 
 The daily quota survives manual reruns and counts failed attempts too. Remaining
 posts stay in `archive/queue.json`; the next day receives a fresh budget. The first
 local batch has no daily quota and does not consume the Actions allowance.
+The site's [Queue view](https://clvnkhr.github.io/tao2typ/#queue) shows the saved
+processing order, waiting/retry status, and last checkpoint time. Search works
+within the queue; posts awaiting a refresh can still link to their existing PDF.
 
 ## Daily updates
 
@@ -146,13 +151,13 @@ Generated files are committed directly to this private repository:
 archive/
   state.json        # source dates, check dates, pending/seen comments, hashes
   queue.json        # due posts awaiting successful conversion
-  jobs/*.json       # one timestamped report per batch
-  ir/*.json         # versioned intermediate documents
-  typst/*.typ       # escaped, independently compilable Typst source
+  jobs/*.json.gz    # completed timestamped reports; active reports stay plain
+  ir/*.json.gz      # versioned intermediate documents
+  typst/*.typ.gz    # escaped Typst source; decompress to compile independently
   pdfs/*.pdf        # stable lower kebab case filenames from post permalinks
   assets/*          # image assets addressed by URL + content hashes
-  raw/pages/*.html  # exact decoded HTML parser input, addressed by SHA-256
-  raw/<post>/<job>/manifest.json # ordered pages, URLs, fetch times, source dates
+  raw/pages/*.html.gz # exact decoded HTML parser input, addressed by SHA-256
+  raw/<post>/<job>/manifest.json.gz # pages, URLs, fetch times, source dates
   failures/*        # diagnostic IR/Typst for failed compilations
   README.md         # chronological PDF index
 ```
@@ -169,10 +174,18 @@ compilation failure retains its complete source capture. IR records the manifest
 used to create it. Refreshing raw provenance alone does not recompile an unchanged
 PDF. Older conversions are backfilled as their queued refreshes run.
 
+Retained HTML, manifests, IR, Typst, failure diagnostics and completed reports
+use deterministic gzip. PDF bytes and conversion dates are unchanged. Native
+image formats and small working indexes remain directly usable. The parser and
+renderer accept both legacy plain files and gzip files. After a batch has stopped,
+compress existing artifacts with `uv run tao2typ compress --output archive`;
+the migration verifies raw-page checksums and compressed bytes before relinking
+records and removing the redundant plain copies.
+
 Reparse a complete capture offline, checking its page checksums first:
 
 ```sh
-uv run tao2typ parse-raw archive/raw/<post>/<job>/manifest.json --output replay.ir.json
+uv run tao2typ parse-raw archive/raw/<post>/<job>/manifest.json.gz --output replay.ir.json
 ```
 
 Raw HTML is kept in the repository; public download exports include PDF, Typst,
@@ -189,7 +202,9 @@ private during development; the intended release provides public downloads.
 Default builds contain metadata and GitHub file links. Public release builds use
 `--download-base-url` to export existing PDFs, `.typ` sources, IR JSON and only
 their referenced image assets beside the page. Relative Typst image paths are
-preserved. State, queues, job reports, failure diagnostics and caches are excluded.
+preserved. Queue membership and readable refresh reasons appear in the page;
+full state, job reports, failure diagnostics and caches are excluded. Public
+release exports decompress Typst and IR to ordinary `.typ` and `.json` files.
 
 Build or refresh the site without generating PDFs:
 

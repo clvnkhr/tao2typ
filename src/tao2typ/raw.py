@@ -1,25 +1,28 @@
 """Retain exact parser input and a manifest for every individual fetch attempt."""
 
 import hashlib
-import json
 import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
 
+from tao2typ.storage import read_bytes, read_json, write_bytes, write_json
+
 
 def load_raw_capture(manifest: Path) -> tuple[dict[str, Any], list[str], Path]:
     """Read a complete capture and verify every input before offline parsing."""
+    if manifest.is_symlink():
+        raise ValueError("Raw manifest cannot be a symlink")
     manifest = manifest.resolve()
     if (
         len(manifest.parents) < 4
-        or manifest.name != "manifest.json"
+        or manifest.name not in {"manifest.json", "manifest.json.gz"}
         or manifest.parents[2].name != "raw"
     ):
-        raise ValueError("Expected archive/raw/<post>/<timestamp>/manifest.json")
+        raise ValueError("Expected archive/raw/<post>/<timestamp>/manifest.json[.gz]")
     output = manifest.parents[3]
-    metadata = json.loads(manifest.read_text(encoding="utf-8"))
+    metadata = read_json(manifest)
     if (
         not isinstance(metadata, dict)
         or metadata.get("schema_version") != 1
@@ -33,17 +36,20 @@ def load_raw_capture(manifest: Path) -> tuple[dict[str, Any], list[str], Path]:
     for page in metadata["pages"]:
         relative = page.get("path") if isinstance(page, dict) else None
         if not isinstance(relative, str) or not re.fullmatch(
-            r"raw/pages/[0-9a-f]{64}\.html", relative
+            r"raw/pages/[0-9a-f]{64}\.html(?:\.gz)?", relative
         ):
             raise ValueError("Invalid raw page path")
         path = output / relative
         if path.is_symlink() or not path.resolve().is_relative_to(output / "raw" / "pages"):
             raise ValueError("Raw page path escapes the capture")
-        content = path.read_bytes()
+        try:
+            content = read_bytes(path)
+        except (OSError, EOFError) as error:
+            raise ValueError(f"Raw page checksum mismatch: {relative}") from error
         digest = hashlib.sha256(content).hexdigest()
         if (
             digest != page.get("bytes_sha256")
-            or path.stem != digest
+            or path.name.removesuffix(".gz").removesuffix(".html") != digest
             or len(content) != page.get("bytes")
         ):
             raise ValueError(f"Raw page checksum mismatch: {relative}")
@@ -55,31 +61,24 @@ def _now() -> datetime:
     return datetime.now(UTC)
 
 
-def _write_json(path: Path, value: dict[str, Any]) -> None:
-    temporary = path.with_suffix(".json.tmp")
-    try:
-        temporary.write_text(
-            json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-        )
-        temporary.replace(path)
-    finally:
-        temporary.unlink(missing_ok=True)
-
-
 def _save_page(path: Path, content: bytes) -> None:
     """Install a complete blob without ever replacing an existing capture."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary: Path | None = None
     try:
         with NamedTemporaryFile(
-            dir=path.parent, prefix=".page-", suffix=".tmp", delete=False
+            dir=path.parent, prefix=".page-", suffix=path.suffix, delete=False
         ) as file:
             temporary = Path(file.name)
-            file.write(content)
+        write_bytes(temporary, content)
         try:
             path.hardlink_to(temporary)
         except FileExistsError:
-            if path.read_bytes() != content:
+            try:
+                existing = read_bytes(path) if not path.is_symlink() else None
+            except (OSError, EOFError):
+                existing = None
+            if existing != content:
                 raise ValueError(f"Raw page does not match its content hash: {path}") from None
     finally:
         if temporary is not None:
@@ -90,7 +89,7 @@ class RawCapture:
     """Capture one fetch attempt, including ordered comment pagination.
 
     Every refresh gets its own manifest. Identical UTF-8 parser inputs share a
-    content-addressed HTML file. A failed attempt keeps pages already captured;
+    content-addressed compressed HTML file. A failed attempt keeps pages already captured;
     a finalized manifest cannot be changed through this object.
     """
 
@@ -118,7 +117,7 @@ class RawCapture:
                 break
             except FileExistsError:
                 captured_at += timedelta(microseconds=1)
-        self._path = directory / "manifest.json"
+        self._path = directory / "manifest.json.gz"
         self._manifest: dict[str, Any] = {
             "schema_version": 1,
             "post_url": post_url,
@@ -128,7 +127,7 @@ class RawCapture:
             "complete": False,
             "pages": [],
         }
-        _write_json(self._path, self._manifest)
+        write_json(self._path, self._manifest)
 
     @property
     def manifest_path(self) -> str:
@@ -151,7 +150,7 @@ class RawCapture:
         self._require_open()
         content = html.encode("utf-8")
         digest = hashlib.sha256(content).hexdigest()
-        relative = f"raw/pages/{digest}.html"
+        relative = f"raw/pages/{digest}.html.gz"
         _save_page(self.output / relative, content)
         self._manifest["pages"].append(
             {
@@ -163,14 +162,14 @@ class RawCapture:
                 "bytes": len(content),
             }
         )
-        _write_json(self._path, self._manifest)
+        write_json(self._path, self._manifest)
 
     def finish(self) -> None:
         """Mark a complete fetch sequence and freeze its manifest."""
         self._require_open()
         self._manifest["complete"] = True
         self._manifest["finished_at"] = _now().isoformat()
-        _write_json(self._path, self._manifest)
+        write_json(self._path, self._manifest)
         self._closed = True
 
     def fail(self, error: str) -> None:
@@ -178,5 +177,5 @@ class RawCapture:
         self._require_open()
         self._manifest["error"] = error
         self._manifest["finished_at"] = _now().isoformat()
-        _write_json(self._path, self._manifest)
+        write_json(self._path, self._manifest)
         self._closed = True

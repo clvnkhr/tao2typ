@@ -68,6 +68,75 @@ def test_rich_html_produces_output_independent_ir() -> None:
     assert "{x^2 + y^2}" in [node.text for node in _kinds(post, "math")]
 
 
+@pytest.mark.parametrize(
+    "source",
+    [
+        "/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif",
+        "https://terrytao.wordpress.com/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif",
+        "https://i0.wp.com/terrytao.wordpress.com/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif",
+    ],
+)
+def test_wordpress_editor_more_marker_preserves_prose_and_anchors(source: str) -> None:
+    html = (
+        '<div class="post-content"><p>Before.</p><p style="text-align:center">'
+        '<a name="introduction"></a>'
+        f'<img id="more" alt="" src="{source}" title="More...">— Introduction —</p>'
+        "<p>After.</p></div>"
+    )
+    post = parse_post(html, URL)
+    assert not _kinds(post, "image")
+    assert [node.attrs["id"] for node in _kinds(post, "anchor")] == ["introduction", "more"]
+    assert [node.text for node in _kinds(post, "text")] == [
+        "Before.",
+        "— Introduction —",
+        "After.",
+    ]
+    assert not post.warnings
+
+
+def test_linked_wordpress_editor_marker_does_not_invent_link_text() -> None:
+    post = parse_post(
+        '<div class="post-content"><p>Before.<a id="more" href="#more">'
+        '<img alt="" title="More..." '
+        'src="/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif"></a>After.</p></div>',
+        URL,
+    )
+    assert not _kinds(post, "image")
+    assert not _kinds(post, "link")
+    assert [node.attrs["id"] for node in _kinds(post, "anchor")] == ["more"]
+    assert [node.text for node in _kinds(post, "text")] == ["Before.", "After."]
+
+
+@pytest.mark.parametrize(
+    ("source", "alternative", "title"),
+    [
+        ("/trans.gif", "", "More..."),
+        ("/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif", "A diagram", "More..."),
+        ("/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif", "", "A transparent image"),
+        (
+            "https://example.org/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif",
+            "",
+            "More...",
+        ),
+        (
+            "https://i0.wp.com/example.org/wp-includes/js/tinymce/plugins/wordpress/img/trans.gif",
+            "",
+            "More...",
+        ),
+    ],
+)
+def test_ordinary_images_remain_required_even_with_similar_editor_metadata(
+    source: str, alternative: str, title: str
+) -> None:
+    post = parse_post(
+        '<div class="post-content"><p>'
+        f'<img src="{source}" alt="{alternative}" title="{title}"></p></div>',
+        URL,
+    )
+    assert len(_kinds(post, "image")) == 1
+    assert _kinds(post, "image")[0].attrs["alt"] == alternative
+
+
 def test_legacy_paragraph_wrapper_preserves_blockquote_statement_and_numbered_display() -> None:
     html = r"""<div class="post-content"><p id="outer">
     Before.<blockquote><b>Lemma 2 (Locating the core)</b><a name="core"></a>

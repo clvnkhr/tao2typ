@@ -6,13 +6,11 @@ from pathlib import Path
 from typing import Any
 
 from tao2typ.source import TaxonomyTerm
+from tao2typ.storage import write_json as _write_json
 
 
 def write_json(path: Path, value: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    _write_json(path, value)
 
 
 @dataclass

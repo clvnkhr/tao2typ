@@ -7,6 +7,7 @@ import pytest
 from bs4 import BeautifulSoup, Tag
 
 from tao2typ.catalogue import generate_site
+from tao2typ.storage import write_bytes
 
 
 def selected(parent: Tag, selector: str) -> Tag:
@@ -93,6 +94,10 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert attribute(selected(soup, "a.ir"), "href") == (
         "https://github.com/clvnkhr/tao2typ/blob/main/archive/ir/einstein-e-mc2.json"
     )
+    assert selected(soup, "header nav a").get_text() == "Tao’s Blog"
+    assert attribute(soup.select("header nav a")[1], "href") == (
+        "https://github.com/clvnkhr/tao2typ"
+    )
     assert soup.select(".post")[0]["data-title"] == "Queued post"
     assert "archive" not in soup.get_text().lower()
     assert selected(soup, ".site-note").get_text() == (
@@ -106,6 +111,46 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert attribute(selected(soup.select(".post")[1], ".availability time"), "datetime") == (
         "2026-10-13"
     )
+
+
+def test_queue_includes_refreshes_in_processing_order_without_diagnostics(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    (archive / "queue.json").write_text(
+        json.dumps(
+            {
+                "updated_at": "2026-10-14T09:00:00+00:00",
+                "posts": [
+                    {"id": 1, "reasons": ["recent-comment"], "error": "PRIVATE-ERROR"},
+                    {"id": 2, "reasons": ["initial", "source-modified"]},
+                    {"id": 1, "reasons": ["birthday"]},
+                    {"id": 999, "reasons": ["initial"]},
+                ],
+            }
+        )
+    )
+    output = tmp_path / "site"
+    counts = generate_site(archive, output)
+    assert counts["queued"] == 2  # A queued refresh can already have a PDF.
+    page = (output / "index.html").read_text()
+    assert "PRIVATE-" not in page
+    soup = BeautifulSoup(page, "html.parser")
+    rows = soup.select(".post")
+    assert rows[0]["data-queue-position"] == "1"
+    assert rows[1]["data-queue-position"] == "0"
+    assert rows[1]["data-queue-status"] == "retry"
+    assert selected(rows[1], ".queue-status").get_text() == "Retry · Recent comments"
+    assert selected(rows[0], ".queue-status").get_text() == "Waiting · First conversion"
+    assert attribute(selected(soup, 'a[data-route="queue"]'), "href") == "#queue"
+    assert "2026-10-14T09:00:00+00:00" in page
+
+
+def test_empty_queue_does_not_list_every_unconverted_post(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    (archive / "queue.json").write_text('{"posts": [], "updated_at": ""}')
+    output = tmp_path / "site"
+    assert generate_site(archive, output)["queued"] == 0
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert all(row["data-queue-position"] == "" for row in soup.select(".post"))
 
 
 @pytest.mark.parametrize(
@@ -203,7 +248,7 @@ def test_parent_category_filter_includes_descendant_posts(tmp_path: Path) -> Non
 
 def test_public_download_base_exports_referenced_documents_only(tmp_path: Path) -> None:
     archive = fixture_archive(tmp_path)
-    (archive / "queue.json").write_text("PRIVATE-QUEUE")
+    (archive / "queue.json").write_text('{"posts": [], "internal": "PRIVATE-QUEUE"}')
     (archive / "jobs").mkdir()
     (archive / "jobs" / "job.json").write_text("PRIVATE-JOB")
     (archive / "failures").mkdir()
@@ -287,3 +332,29 @@ def test_public_export_does_not_follow_artifact_symlinks(tmp_path: Path) -> None
     assert not (output / "pdfs").exists()
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
     assert not soup.select("a.pdf")
+
+
+def test_gzip_sources_keep_repository_links_and_export_native_downloads(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    originals = {}
+    for kind in ("typst", "ir"):
+        relative = state["posts"]["1"][kind]
+        path = archive / relative
+        originals[relative] = path.read_bytes()
+        write_bytes(archive / (relative + ".gz"), originals[relative])
+        path.unlink()
+        state["posts"]["1"][kind] = relative + ".gz"
+    (archive / "state.json").write_text(json.dumps(state))
+    private = tmp_path / "private-site"
+    generate_site(archive, private)
+    soup = BeautifulSoup((private / "index.html").read_text(), "html.parser")
+    assert attribute(selected(soup, "a.typst"), "href").endswith(".typ.gz")
+    assert selected(soup, "a.typst").get_text() == ".typ.gz"
+    public = tmp_path / "public-site"
+    generate_site(archive, public, download_base_url="https://example.com/tao2typ")
+    soup = BeautifulSoup((public / "index.html").read_text(), "html.parser")
+    assert attribute(selected(soup, "a.typst"), "href").endswith(".typ")
+    for relative, original in originals.items():
+        assert (public / relative).read_bytes() == original
+        assert not (public / (relative + ".gz")).exists()

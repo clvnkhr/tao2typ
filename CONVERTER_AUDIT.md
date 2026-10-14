@@ -78,6 +78,14 @@ and block spacing, and bounded character-level justification. Ragged titles,
 headings and comments use optimized line breaking. Comment bodies retain reply
 indentation without adding first-line indents.
 
+Raw captures, IR and Typst support deterministic gzip with checksum-checked
+legacy migration. Migration tests preserve original decoded HTML (including
+line endings), article prose and TeX, PDF bytes, conversion dates and daily quota.
+Public release exports decompress sources to preserve normal Typst usage.
+Request reports now distinguish HTTP rate limits by host from transport failures.
+The website exposes ordered queue membership and readable reasons without
+publishing the diagnostic error text.
+
 Regression tests cover the live markup shapes, numbering, internal references,
 avatar downloads, pagination, page breaks, source recovery and rollback. Rendered
 sample pages were inspected for reply indentation, avatars, equations and theorem
