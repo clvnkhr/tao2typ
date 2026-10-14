@@ -474,7 +474,7 @@ class _Renderer:
         if node.attrs.get("source_error"):
             return (
                 "#block(width: 100%, above: 0.3em, below: 0.3em)["
-                "#set par(justify: false)"
+                "#set par(justify: false)\n"
                 '#text(size: 7pt, fill: rgb("596477"))['
                 f"#link({_string(node.attrs['source_error_url'])})"
                 "[Source formula could not be rendered.] ] "

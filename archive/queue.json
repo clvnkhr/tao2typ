@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T11:32:38.235120+00:00",
+  "updated_at": "2026-10-14T13:22:17.445380+00:00",
   "posts": [
     {
       "id": 8330,
@@ -283,6 +283,95 @@
       "reasons": [
         "initial",
         "previous-failure",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 717,
+      "url": "https://terrytao.wordpress.com/2008/10/14/non-measurable-sets-via-non-standard-analysis/",
+      "title": "Non-measurable sets via non-standard analysis",
+      "reasons": [
+        "birthday"
+      ]
+    },
+    {
+      "id": 7525,
+      "url": "https://terrytao.wordpress.com/2014/06/19/polymath8-wrapping-up/",
+      "title": "Polymath8: wrapping up",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7529,
+      "url": "https://terrytao.wordpress.com/2014/06/20/an-abstract-ergodic-theorem-and-the-mackey-zimmer-theorem/",
+      "title": "An abstract ergodic theorem, and the Mackey-Zimmer theorem",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7550,
+      "url": "https://terrytao.wordpress.com/2014/06/25/lebesgue-measure-as-the-invariant-factor-of-loeb-measure/",
+      "title": "Lebesgue measure as the invariant factor of Loeb measure",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7560,
+      "url": "https://terrytao.wordpress.com/2014/06/28/algebraic-probability-spaces/",
+      "title": "Algebraic probability spaces",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7565,
+      "url": "https://terrytao.wordpress.com/2014/07/07/the-subspace-theorem-approach-to-siegels-theorem-on-integral-points-on-curves-via-nonstandard-analysis/",
+      "title": "The subspace theorem approach to Siegel’s theorem on integral points on curves via nonstandard analysis",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7570,
+      "url": "https://terrytao.wordpress.com/2014/07/08/hilberts-fifth-problem-and-approximate-groups/",
+      "title": "Hilbert’s fifth problem and approximate groups",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7573,
+      "url": "https://terrytao.wordpress.com/2014/07/09/the-parity-problem-obstruction-for-the-binary-goldbach-problem-with-bounded-error/",
+      "title": "The parity problem obstruction for the binary Goldbach problem with bounded error",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7578,
+      "url": "https://terrytao.wordpress.com/2014/07/15/real-analysis-relative-to-a-finite-measure-space/",
+      "title": "Real analysis relative to a finite measure space",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 7584,
+      "url": "https://terrytao.wordpress.com/2014/07/20/variants-of-the-selberg-sieve-and-bounded-intervals-containing-many-primes/",
+      "title": "Variants of the Selberg sieve, and bounded intervals containing many primes",
+      "reasons": [
+        "initial",
         "source-modified"
       ]
     }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-10-14T10:16:44.527057+00:00",
+  "last_discovered_at": "2026-10-14T12:07:29.788493+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -14333,7 +14333,7 @@
       "published_at": "2008-10-14T08:44:50-08:00",
       "modified_at": "2010-12-04T10:30:16-08:00",
       "last_checked_at": "2026-10-14T10:17:53.948400+00:00",
-      "last_attempted_at": "2026-10-14T10:17:41.256759+00:00",
+      "last_attempted_at": "2026-10-14T12:07:42.003588+00:00",
       "converted_at": "2026-10-14T07:04:10.081079+00:00",
       "converted_modified_at": "2010-12-04T10:30:16-08:00",
       "next_check_at": "2027-10-14T08:00:00+00:00",
@@ -14343,7 +14343,7 @@
       "ir": "ir/non-measurable-sets-via-non-standard-analysis.json.gz",
       "typst": "typst/non-measurable-sets-via-non-standard-analysis.typ.gz",
       "source_manifest": "raw/non-measurable-sets-via-non-standard-analysis/20261014T101741.256775Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2008/10/14/non-measurable-sets-via-non-standard-analysis/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -46843,7 +46843,7 @@
       "published_at": "2014-06-19T20:37:32-08:00",
       "modified_at": "2014-06-22T08:58:40-08:00",
       "last_checked_at": "2026-10-14T10:18:08.032002+00:00",
-      "last_attempted_at": "2026-10-14T10:17:54.025375+00:00",
+      "last_attempted_at": "2026-10-14T12:07:42.945397+00:00",
       "converted_at": "2026-10-14T10:18:06.983060+00:00",
       "converted_modified_at": "2014-06-22T08:58:40-08:00",
       "next_check_at": "2027-06-19T08:00:00+00:00",
@@ -46853,7 +46853,7 @@
       "ir": "ir/polymath8-wrapping-up.json.gz",
       "typst": "typst/polymath8-wrapping-up.typ.gz",
       "source_manifest": "raw/polymath8-wrapping-up/20261014T101754.025386Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/06/19/polymath8-wrapping-up/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [],
@@ -46874,7 +46874,7 @@
       "published_at": "2014-06-20T21:10:54-08:00",
       "modified_at": "2019-06-12T11:52:16-08:00",
       "last_checked_at": "2026-10-14T10:18:14.321811+00:00",
-      "last_attempted_at": "2026-10-14T10:18:08.139268+00:00",
+      "last_attempted_at": "2026-10-14T12:07:44.109088+00:00",
       "converted_at": "2026-10-14T10:18:13.591001+00:00",
       "converted_modified_at": "2019-06-12T11:52:16-08:00",
       "next_check_at": "2027-06-20T08:00:00+00:00",
@@ -46884,7 +46884,7 @@
       "ir": "ir/an-abstract-ergodic-theorem-and-the-mackey-zimmer-theorem.json.gz",
       "typst": "typst/an-abstract-ergodic-theorem-and-the-mackey-zimmer-theorem.typ.gz",
       "source_manifest": "raw/an-abstract-ergodic-theorem-and-the-mackey-zimmer-theorem/20261014T101808.139281Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/06/20/an-abstract-ergodic-theorem-and-the-mackey-zimmer-theorem/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -46955,7 +46955,7 @@
       "published_at": "2014-06-25T10:07:34-08:00",
       "modified_at": "2014-06-25T15:29:25-08:00",
       "last_checked_at": "2026-10-14T10:18:19.210541+00:00",
-      "last_attempted_at": "2026-10-14T10:18:14.423138+00:00",
+      "last_attempted_at": "2026-10-14T12:07:44.947739+00:00",
       "converted_at": "2026-10-14T10:18:18.631090+00:00",
       "converted_modified_at": "2014-06-25T15:29:25-08:00",
       "next_check_at": "2027-06-25T08:00:00+00:00",
@@ -46965,7 +46965,7 @@
       "ir": "ir/lebesgue-measure-as-the-invariant-factor-of-loeb-measure.json.gz",
       "typst": "typst/lebesgue-measure-as-the-invariant-factor-of-loeb-measure.typ.gz",
       "source_manifest": "raw/lebesgue-measure-as-the-invariant-factor-of-loeb-measure/20261014T101814.423153Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/06/25/lebesgue-measure-as-the-invariant-factor-of-loeb-measure/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -47036,7 +47036,7 @@
       "published_at": "2014-06-28T22:22:29-08:00",
       "modified_at": "2014-07-07T22:18:20-08:00",
       "last_checked_at": "2026-10-14T10:18:28.375023+00:00",
-      "last_attempted_at": "2026-10-14T10:18:19.323346+00:00",
+      "last_attempted_at": "2026-10-14T12:07:45.948961+00:00",
       "converted_at": "2026-10-14T10:18:27.686991+00:00",
       "converted_modified_at": "2014-07-07T22:18:20-08:00",
       "next_check_at": "2027-06-28T08:00:00+00:00",
@@ -47046,7 +47046,7 @@
       "ir": "ir/algebraic-probability-spaces.json.gz",
       "typst": "typst/algebraic-probability-spaces.typ.gz",
       "source_manifest": "raw/algebraic-probability-spaces/20261014T101819.323353Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/06/28/algebraic-probability-spaces/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -47131,7 +47131,7 @@
       "published_at": "2014-07-07T02:20:25-08:00",
       "modified_at": "2026-08-02T15:09:51-08:00",
       "last_checked_at": "2026-10-14T10:18:34.280757+00:00",
-      "last_attempted_at": "2026-10-14T10:18:28.483684+00:00",
+      "last_attempted_at": "2026-10-14T12:07:46.948400+00:00",
       "converted_at": "2026-10-14T10:18:32.765937+00:00",
       "converted_modified_at": "2026-08-02T15:09:51-08:00",
       "next_check_at": "2027-07-07T08:00:00+00:00",
@@ -47141,7 +47141,7 @@
       "ir": "ir/the-subspace-theorem-approach-to-siegels-theorem-on-integral-points-on-curves-via-nonstandard-analysis.json.gz",
       "typst": "typst/the-subspace-theorem-approach-to-siegels-theorem-on-integral-points-on-curves-via-nonstandard-analysis.typ.gz",
       "source_manifest": "raw/the-subspace-theorem-approach-to-siegels-theorem-on-integral-points-on-curves-via-nonstandard-analysis/20261014T101828.483706Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/07/07/the-subspace-theorem-approach-to-siegels-theorem-on-integral-points-on-curves-via-nonstandard-analysis/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -47205,7 +47205,7 @@
       "published_at": "2014-07-08T11:34:38-08:00",
       "modified_at": "2014-07-08T11:34:38-08:00",
       "last_checked_at": "2026-10-14T10:18:36.849817+00:00",
-      "last_attempted_at": "2026-10-14T10:18:34.370807+00:00",
+      "last_attempted_at": "2026-10-14T12:07:47.947721+00:00",
       "converted_at": "2026-10-14T10:18:36.491802+00:00",
       "converted_modified_at": "2014-07-08T11:34:38-08:00",
       "next_check_at": "2027-07-08T08:00:00+00:00",
@@ -47215,7 +47215,7 @@
       "ir": "ir/hilberts-fifth-problem-and-approximate-groups.json.gz",
       "typst": "typst/hilberts-fifth-problem-and-approximate-groups.typ.gz",
       "source_manifest": "raw/hilberts-fifth-problem-and-approximate-groups/20261014T101834.370821Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/07/08/hilberts-fifth-problem-and-approximate-groups/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [],
@@ -47250,7 +47250,7 @@
       "published_at": "2014-07-09T21:49:15-08:00",
       "modified_at": "2014-07-10T22:37:29-08:00",
       "last_checked_at": "2026-10-14T10:18:54.980065+00:00",
-      "last_attempted_at": "2026-10-14T10:18:36.950343+00:00",
+      "last_attempted_at": "2026-10-14T12:07:48.964212+00:00",
       "converted_at": "2026-10-14T10:18:54.613980+00:00",
       "converted_modified_at": "2014-07-10T22:37:29-08:00",
       "next_check_at": "2027-07-09T08:00:00+00:00",
@@ -47260,7 +47260,7 @@
       "ir": "ir/the-parity-problem-obstruction-for-the-binary-goldbach-problem-with-bounded-error.json.gz",
       "typst": "typst/the-parity-problem-obstruction-for-the-binary-goldbach-problem-with-bounded-error.typ.gz",
       "source_manifest": "raw/the-parity-problem-obstruction-for-the-binary-goldbach-problem-with-bounded-error/20261014T101836.950355Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/07/09/the-parity-problem-obstruction-for-the-binary-goldbach-problem-with-bounded-error/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -47310,7 +47310,7 @@
       "published_at": "2014-07-15T04:22:18-08:00",
       "modified_at": "2015-03-31T18:42:21-08:00",
       "last_checked_at": "2026-10-14T10:19:01.844389+00:00",
-      "last_attempted_at": "2026-10-14T10:18:55.065422+00:00",
+      "last_attempted_at": "2026-10-14T12:07:49.951176+00:00",
       "converted_at": "2026-10-14T10:19:00.765550+00:00",
       "converted_modified_at": "2015-03-31T18:42:21-08:00",
       "next_check_at": "2027-07-15T08:00:00+00:00",
@@ -47320,7 +47320,7 @@
       "ir": "ir/real-analysis-relative-to-a-finite-measure-space.json.gz",
       "typst": "typst/real-analysis-relative-to-a-finite-measure-space.typ.gz",
       "source_manifest": "raw/real-analysis-relative-to-a-finite-measure-space/20261014T101855.065438Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/07/15/real-analysis-relative-to-a-finite-measure-space/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -47412,7 +47412,7 @@
       "published_at": "2014-07-20T21:41:25-08:00",
       "modified_at": "2014-10-06T19:27:07-08:00",
       "last_checked_at": "2026-10-14T10:19:17.401735+00:00",
-      "last_attempted_at": "2026-10-14T10:19:02.025433+00:00",
+      "last_attempted_at": "2026-10-14T12:07:50.959614+00:00",
       "converted_at": "2026-10-14T10:19:16.249326+00:00",
       "converted_modified_at": "2014-10-06T19:27:07-08:00",
       "next_check_at": "2027-07-20T08:00:00+00:00",
@@ -47422,7 +47422,7 @@
       "ir": "ir/variants-of-the-selberg-sieve-and-bounded-intervals-containing-many-primes.json.gz",
       "typst": "typst/variants-of-the-selberg-sieve-and-bounded-intervals-containing-many-primes.typ.gz",
       "source_manifest": "raw/variants-of-the-selberg-sieve-and-bounded-intervals-containing-many-primes/20261014T101902.025444Z/manifest.json.gz",
-      "last_error": null,
+      "last_error": "Client error '403 Forbidden' for url 'https://terrytao.wordpress.com/2014/07/20/variants-of-the-selberg-sieve-and-bounded-intervals-containing-many-primes/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
       "pending_comments": [],
       "seen_comments": [],
       "tags": [
@@ -77752,6 +77752,7 @@
     }
   },
   "daily_attempts": {
-    "2026-10-13": 10
+    "2026-10-13": 10,
+    "2026-10-14": 10
   }
 }
