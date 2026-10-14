@@ -19,6 +19,10 @@ jobs:
       - uses: typst-community/setup-typst@fee4b65b091cc546f02ce3be15fad8760f38a108 # v5
         with:
           typst-version: "0.15.1"
+      - name: Install PDF inspection tools
+        run: |
+          sudo apt-get update --quiet
+          sudo apt-get install --yes --no-install-recommends poppler-utils
       - run: uv sync --locked
       - run: uv run ruff check .
       - run: uv run ruff format --check .

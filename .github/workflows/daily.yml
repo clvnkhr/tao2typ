@@ -38,6 +38,11 @@ jobs:
         if: ${{ inputs.smoke_only != true }}
         with:
           typst-version: "0.15.1"
+      - name: Install PDF inspection tools
+        if: ${{ inputs.smoke_only != true }}
+        run: |
+          sudo apt-get update --quiet
+          sudo apt-get install --yes --no-install-recommends poppler-utils
       - run: uv sync --locked
       - run: uv run ruff check . && uv run ty check
       - name: Check converter tests

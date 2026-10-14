@@ -15,10 +15,12 @@ WordPress HTML + source metadata → structured JSON IR → Typst → PDF
 
 The IR retains paragraphs, rich inline text, original LaTeX mathematics,
 headings, links, named anchors, images, lists, tables, quotations, and threaded
-comments. Maths are typeset through pinned `@preview/mitex:0.2.7`; they are not
-screenshots. PDFs include the source link and publication date, serif text,
+comments. Maths are typeset through pinned `@preview/mitex:0.2.7`. PDFs include
+the source link and publication date, serif text,
 page numbers, and styled theorem quotations. Unknown HTML can produce explicit
-IR warnings. Unsupported TeX or images fail visibly and retain the previous PDF.
+IR warnings. Unavailable images become visible placeholders linked to the original
+image. Reviewed malformed source formulas retain their exact TeX with a source-error
+note. Other unsupported TeX fails visibly and retains the previous PDF.
 
 Each PDF and Typst source has a small `tao2typ` conversion-date line near the
 top. Conversion timestamps are retained in the IR and shown in the catalogue;
@@ -27,7 +29,9 @@ catalogue identifies this as an unofficial personal site.
 
 Replies follow the site's nesting, including its older sibling-list markup.
 Commenter avatars appear beside author metadata and are optional: an unavailable
-avatar is recorded as a warning without discarding the discussion. Equations
+avatar is recorded as a warning without discarding the discussion. Comments follow
+the article on the current page when space permits, without a forced page break.
+Equations
 retain their source labels, including `\tag` and `\tag*`; theorem numbers and
 reference text are preserved rather than assigned new counters.
 
@@ -82,8 +86,26 @@ downloads image assets and follows all comment pagination links. Rerender saved
 IR without fetching or reparsing HTML:
 
 ```sh
-uv run tao2typ render archive/ir/what-are-the-odds.json --output archive/typst/what-are-the-odds.typ --pdf archive/pdfs/what-are-the-odds.pdf
+uv run tao2typ render archive/ir/what-are-the-odds.json.gz --output archive/typst/what-are-the-odds.typ.gz --pdf archive/pdfs/what-are-the-odds.pdf
 ```
+
+Regenerate the whole local collection using the current converter:
+
+```sh
+uv run --frozen tao2typ regenerate --output archive --workers 2
+```
+
+Regeneration reads saved IR for converted posts and verified complete raw captures
+for failed posts. It uses cached image assets, with linked placeholders for
+unavailable images. Each successful regeneration recompiles the PDF and updates its
+conversion date. Source check dates, refresh schedules, pending comment events
+and daily Actions quotas are preserved.
+
+Progress is checkpointed in `archive/jobs/`. Repeating the command resumes the
+newest unfinished regeneration job. Use `--resume JOB` to choose a particular job,
+`--max-posts N` for a bounded inspection run, or `--ids ID [ID …]` to select posts.
+On macOS, prefix the command with `caffeinate -i` to prevent idle sleep. The local
+preview described below shows progress while the job runs.
 
 Use the actual filenames listed in `archive/README.md`. To attempt an entire
 initial archive in one batch, use the default `--max-posts 0`. To refresh the entire archive
@@ -112,6 +134,14 @@ within the queue; posts awaiting a refresh can still link to their existing PDF.
 (06:23 in UK winter, 07:23 in UK summer), and supports manual **Run workflow**.
 Every run scans all WordPress post metadata, retaining the original publication
 and modification timestamps; it fetches full HTML only for posts needing work.
+If WordPress blocks a runner's HTML requests with HTTP 403, the converter uses
+its official public API for rendered content and the complete threaded comments.
+It checks comment totals and pagination before accepting the capture. The Recent
+Comments signal has the same fallback, using stable comment permalinks.
+The **smoke_only** workflow option tests source access and the catalogue without
+making PDFs or consuming the daily quota. Individual failed posts remain queued
+and appear in the job summary; source-wide errors and failed checks still fail
+the workflow.
 
 | Trigger | Refresh policy |
 | --- | --- |
@@ -141,9 +171,10 @@ polls can be missed. Birthday checks still refresh those posts.
 
 Healthy due posts precede failed retries, and failed posts rotate by attempt
 time. Timestamped job reports record all attempted IDs, reasons, errors, start
-and finish times, conversion counts, and the remaining backlog. Failed jobs
-still commit successful outputs and state; their GitHub Actions status remains
-failed so errors are visible. Requests and individual compilations have timeouts.
+and finish times, conversion counts, and the remaining backlog. Individual failures
+appear in the job summary and remain queued; source-wide errors and failed checks
+fail the workflow. Completed outputs and state are committed after partial failure.
+Requests and individual compilations have timeouts.
 
 Generated files are committed directly to this private repository:
 
@@ -157,6 +188,7 @@ archive/
   pdfs/*.pdf        # stable lower kebab case filenames from post permalinks
   assets/*          # image assets addressed by URL + content hashes
   raw/pages/*.html.gz # exact decoded HTML parser input, addressed by SHA-256
+  raw/api/*.json.gz  # exact API responses when HTML requests are blocked
   raw/<post>/<job>/manifest.json.gz # pages, URLs, fetch times, source dates
   failures/*        # diagnostic IR/Typst for failed compilations
   README.md         # chronological PDF index
@@ -173,6 +205,17 @@ file. A failed fetch retains any pages already received, and a parsing or
 compilation failure retains its complete source capture. IR records the manifest
 used to create it. Refreshing raw provenance alone does not recompile an unchanged
 PDF. Older conversions are backfilled as their queued refreshes run.
+API captures also retain every exact JSON response, its source URL, fetch time,
+byte count and checksum, alongside the HTML passed to the parser. Offline replay
+verifies both the retained JSON and the parser input.
+
+Reviewed formulas already broken in original comments keep their exact TeX with
+a small source-error note. The registry matches the post, comment and full source
+formula; corrected formulas and identical text elsewhere are unaffected. A valid
+source-rendered image preserves the unsupported `centerline` formula's layout.
+Unavailable images use a visible placeholder linking to the original image URL;
+the retained IR and job report record the download failure. Missing images do not
+prevent conversion of the article or its comments.
 
 Retained HTML, manifests, IR, Typst, failure diagnostics and completed reports
 use deterministic gzip. PDF bytes and conversion dates are unchanged. Native
@@ -205,6 +248,10 @@ their referenced image assets beside the page. Relative Typst image paths are
 preserved. Queue membership, readable refresh reasons and brief failure reasons
 appear in the page; full state, job reports, diagnostic files and caches are excluded. Public
 release exports decompress Typst and IR to ordinary `.typ` and `.json` files.
+
+Each post has a tiny status dot: green for a clean PDF, amber for source notes,
+original-formula image fallbacks or missing-image placeholders, and red for a
+missing PDF or current failure; optional avatars do not affect its colour.
 
 Build or refresh the site without generating PDFs:
 
@@ -245,8 +292,9 @@ bash scripts/publish-catalogue.sh /path/to/clvnkhr.github.io --public-downloads
 ```
 
 Daily conversion also refreshes `docs/`. Automatic cross-repository publication
-uses an optional `PAGES_PUBLISH_TOKEN` Actions secret: a fine-grained token with
-Contents read/write permission for **clvnkhr.github.io only**. Without that secret,
+uses `PAGES_DEPLOY_KEY`, a write-enabled SSH deploy key scoped to
+**clvnkhr.github.io only**. An optional `PAGES_PUBLISH_TOKEN` with Contents
+read/write permission for that repository remains supported. Without either,
 use the local publish command above. The daily ten-attempt PDF budget still applies.
 For the public release, set the `PAGES_PUBLIC_DOWNLOADS` repository variable to
 `true` so daily publication also updates public PDFs, sources and required assets.
@@ -268,7 +316,9 @@ See [GitHub’s scheduled workflow documentation](https://docs.github.com/en/act
 
 Python dependencies are locked with uv. Ruff handles lint and formatting; ty
 handles type checking. Tests cover scheduling boundaries, HTML/IR fidelity,
-Typst compilation, discovery, comments, and durable batch failures.
+Typst compilation, discovery, comments, and durable batch failures. Install Poppler
+locally to run PDF text and geometry checks. Check and normal Daily workflows
+install `poppler-utils`; the source-only smoke check skips PDF tooling and compilation.
 
 ```sh
 uv run ruff check .

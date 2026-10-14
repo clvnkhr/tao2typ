@@ -83,6 +83,22 @@
       "reason": "Original image preserves the unsupported centerline layout",
       "render_as": "source-image",
       "source_image_url": "https://s0.wp.com/latex.php?latex=%5Ccenterline+k%2C+%5Clangle+%7B%5Cmathcal+D%7D%28f%2Cg%2Ch%29+%5Crangle_%7BL%5E2%7D+%3D+%5Clangle+k%2C+f%2C+g%2C+h+%5Crangle_%7BU%5E2%7D.&bg=ffffff&fg=545454&s=0&c=20201002"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2011/08/10/a-geometric-proof-of-the-impossibility-of-angle-trisection-by-straightedge-and-compass/",
+      "comment_id": "comment-674661",
+      "tex": "\\frac{6 - 4\\sqrt{2}}{3^{8}*2^{6}} + \\frac{6 - 4\\sqrt{2}}{3^{8}*2^{11}} + \\frac{6 - 4\\sqrt{2}}",
+      "tex_sha256": "e0201f73d26bf2419e036daad4ef64cee24a1ad189126bc0544b13ba3b263cf6",
+      "evidence_page": "raw/pages/44afae77c78429e7eda97b4baf17accf6e00931384c78f7bbbf08c144afc934d.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2023/01/26/infinite-partial-sumsets-in-the-primes/",
+      "comment_id": "comment-677763",
+      "tex": "\\ldots a_{(n)}\\in \\mathbf{A}_{(h_m)}\\right)",
+      "tex_sha256": "f5259b5af49f3559b0f095b3a3c9b50f7c4a748e669db1b0a96c7791b97d46ef",
+      "evidence_page": "raw/pages/7d69c5c3d8c9e1e8d5032e61ee30975edc77350f1e4bb3cdff6a673ea6279c20.html.gz",
+      "reason": "Malformed TeX in the original comment"
     }
   ]
 }

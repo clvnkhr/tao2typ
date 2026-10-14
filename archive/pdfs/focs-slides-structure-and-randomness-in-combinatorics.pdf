@@ -1342,12 +1342,12 @@ stream
 endstream
 endobj
 320 0 obj
-<</Title<FEFF0046004F0043005300200073006C0069006400650073003A002000730074007200750063007400750072006500200061006E0064002000720061006E0064006F006D006E00650073007300200069006E00A00063006F006D00620069006E00610074006F0072006900630073>/Author(Terence Tao)/Creator(Typst 0.15.1)/ModDate(D:20261014075253+01'00)/CreationDate(D:20261014075253+01'00)>>
+<</Title<FEFF0046004F0043005300200073006C0069006400650073003A002000730074007200750063007400750072006500200061006E0064002000720061006E0064006F006D006E00650073007300200069006E00A00063006F006D00620069006E00610074006F0072006900630073>/Author(Terence Tao)/Creator(Typst 0.15.1)/ModDate(D:20261014161631+01'00)/CreationDate(D:20261014161631+01'00)>>
 endobj
 321 0 obj
 <</Length 1201/Type/Metadata/Subtype/XML>>
 stream
-<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="xmp-writer"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/"  xmlns:xmp="http://ns.adobe.com/xap/1.0/"  xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"  xmlns:xmpTPg="http://ns.adobe.com/xap/1.0/t/pg/"  xmlns:pdf="http://ns.adobe.com/pdf/1.3/" ><dc:title><rdf:Alt><rdf:li xml:lang="x-default">FOCS slides: structure and randomness in combinatorics</rdf:li></rdf:Alt></dc:title><dc:creator><rdf:Seq><rdf:li>Terence Tao</rdf:li></rdf:Seq></dc:creator><xmp:CreatorTool>Typst 0.15.1</xmp:CreatorTool><dc:language><rdf:Bag><rdf:li>en</rdf:li></rdf:Bag></dc:language><xmp:ModifyDate>2026-10-14T07:52:53+01:00</xmp:ModifyDate><xmp:CreateDate>2026-10-14T07:52:53+01:00</xmp:CreateDate><xmpTPg:NPages>4</xmpTPg:NPages><dc:format>application/pdf</dc:format><xmpMM:InstanceID>NbjUIYncOl/DHj+cGjnIhQ==</xmpMM:InstanceID><xmpMM:DocumentID>EgzqrYMZa57mf6RVG72LWQ==</xmpMM:DocumentID><xmpMM:RenditionClass>proof</xmpMM:RenditionClass><pdf:PDFVersion>1.7</pdf:PDFVersion></rdf:Description></rdf:RDF></x:xmpmeta><?xpacket end="r"?>
+<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="xmp-writer"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/"  xmlns:xmp="http://ns.adobe.com/xap/1.0/"  xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"  xmlns:xmpTPg="http://ns.adobe.com/xap/1.0/t/pg/"  xmlns:pdf="http://ns.adobe.com/pdf/1.3/" ><dc:title><rdf:Alt><rdf:li xml:lang="x-default">FOCS slides: structure and randomness in combinatorics</rdf:li></rdf:Alt></dc:title><dc:creator><rdf:Seq><rdf:li>Terence Tao</rdf:li></rdf:Seq></dc:creator><xmp:CreatorTool>Typst 0.15.1</xmp:CreatorTool><dc:language><rdf:Bag><rdf:li>en</rdf:li></rdf:Bag></dc:language><xmp:ModifyDate>2026-10-14T16:16:31+01:00</xmp:ModifyDate><xmp:CreateDate>2026-10-14T16:16:31+01:00</xmp:CreateDate><xmpTPg:NPages>4</xmpTPg:NPages><dc:format>application/pdf</dc:format><xmpMM:InstanceID>mGQeLmmmDzRTfDZ7fYWrhw==</xmpMM:InstanceID><xmpMM:DocumentID>EgzqrYMZa57mf6RVG72LWQ==</xmpMM:DocumentID><xmpMM:RenditionClass>proof</xmpMM:RenditionClass><pdf:PDFVersion>1.7</pdf:PDFVersion></rdf:Description></rdf:RDF></x:xmpmeta><?xpacket end="r"?>
 endstream
 endobj
 322 0 obj
@@ -1679,7 +1679,7 @@ xref
 0000112229 00000 n
 0000113508 00000 n
 trailer
-<</Size 323/Root 322 0 R/Info 320 0 R/ID[(EgzqrYMZa57mf6RVG72LWQ==)(NbjUIYncOl/DHj+cGjnIhQ==)]>>
+<</Size 323/Root 322 0 R/Info 320 0 R/ID[(EgzqrYMZa57mf6RVG72LWQ==)(mGQeLmmmDzRTfDZ7fYWrhw==)]>>
 startxref
 113710
 %%EOF

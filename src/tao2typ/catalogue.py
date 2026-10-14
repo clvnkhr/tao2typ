@@ -12,6 +12,7 @@ import re
 import shutil
 from collections import Counter
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path, PurePosixPath
 from typing import Any
 from unicodedata import normalize
@@ -174,6 +175,57 @@ def _artifact_path(archive: Path, post: dict[str, Any], kind: str) -> Path | Non
     ):
         return None
     return source
+
+
+def _has_conversion_fallback(value: Any) -> bool:
+    if isinstance(value, dict):
+        attrs = value.get("attrs", {})
+        if isinstance(attrs, dict):
+            if attrs.get("source_error") or attrs.get("source_error_evidence"):
+                return True
+            if value.get("kind") == "image" and (
+                not attrs.get("asset_path")
+                or attrs.get("unavailable")
+                or attrs.get("unavailable_asset")
+            ):
+                return True
+        # Avatars are optional decoration, unlike article/comment illustrations.
+        return any(_has_conversion_fallback(item) for key, item in value.items() if key != "avatar")
+    if isinstance(value, list):
+        return any(_has_conversion_fallback(item) for item in value)
+    return False
+
+
+@lru_cache(maxsize=2048)
+def _cached_ir_fallback(path: str, mtime_ns: int, size: int) -> bool:
+    """Cache only the classification; file changes invalidate the preview's cache."""
+    try:
+        payload = read_json(Path(path))
+    except (OSError, EOFError, ValueError):
+        return False
+    if not isinstance(payload, dict):
+        return False
+    return _has_conversion_fallback(payload.get("body", [])) or _has_conversion_fallback(
+        payload.get("comments", [])
+    )
+
+
+def _conversion_quality(archive: Path, post: dict[str, Any], ready: bool) -> str:
+    if not ready or post.get("last_error"):
+        return "red"
+    path = _artifact_path(archive, post, "ir")
+    if path is not None:
+        stat = path.stat()
+        if _cached_ir_fallback(str(path.resolve()), stat.st_mtime_ns, stat.st_size):
+            return "amber"
+    return "green"
+
+
+_QUALITY_LABELS = {
+    "green": "Clean PDF",
+    "amber": "PDF includes a source note, original formula image, or unavailable image",
+    "red": "PDF missing or current conversion failed",
+}
 
 
 def _asset_path(archive: Path, value: str) -> Path:
@@ -347,6 +399,8 @@ def _post_markup(
         for kind in ("pdf", "typst", "ir")
     }
     ready = downloads["pdf"] is not None
+    quality = _conversion_quality(archive, post, ready)
+    quality_label = _escape(_QUALITY_LABELS[quality])
     title = str(post.get("title") or "Untitled post")
     published = str(post.get("published_at") or "")[:10]
     original = _escape(_public_url(post.get("url")))
@@ -357,6 +411,7 @@ def _post_markup(
         "date": published,
         "search": normalize("NFKC", search).lower(),
         "ready": str(ready).lower(),
+        "quality": quality,
         "failed": str(bool(post.get("last_error"))).lower(),
         "attempted": _attempt_date(post.get("last_attempted_at")),
         "tags": json.dumps([str(term["slug"]) for term in tags], ensure_ascii=False),
@@ -388,7 +443,9 @@ def _post_markup(
         f'<time datetime="{_escape(published)}">{_escape(published)}</time>'
         f'<span class="availability{ready_class}">{availability}</span>'
         f'<span class="queue-status">{_escape(queue_label) if queue_status else ""}</span></div>'
-        f'<h3><a href="{original}">{_escape(title)}</a></h3>'
+        f'<h3><span class="quality-indicator quality-{quality}" role="img" '
+        f'title="{quality_label}" aria-label="{quality_label}"></span>'
+        f'<a href="{original}">{_escape(title)}</a></h3>'
         f'<div class="post-taxonomy">{chips}</div><div class="post-actions">{buttons}'
         f'<a class="original" href="{original}">Original</a></div>'
         f"{_failure_markup(archive, post, stem, diagnostics_base_url)}</li>",
@@ -409,6 +466,7 @@ _QUEUE_REASONS = {
     "missing-typst": "Missing Typst",
     "missing-ir": "Missing IR",
     "forced": "Refresh",
+    "local-regeneration": "Local rebuild",
 }
 
 

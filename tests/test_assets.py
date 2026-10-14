@@ -1,4 +1,4 @@
-"""Asset failures distinguish optional avatars from required article diagrams."""
+"""Unavailable source images retain their URL and an explicit placeholder."""
 
 from pathlib import Path
 
@@ -8,6 +8,7 @@ from tao2typ import pipeline
 from tao2typ.ir import Comment, Node, Post
 from tao2typ.pipeline import asset_extension, resolve_assets
 from tao2typ.source import BlogClient, SourceError
+from tao2typ.typst import render_post
 
 
 class AssetClient(BlogClient):
@@ -68,7 +69,7 @@ def test_avatar_asset_is_materialized_for_nested_replies(tmp_path: Path) -> None
     assert assets[avatar.attrs["url"]] == "../" + avatar.attrs["asset_path"]
 
 
-def test_image_shared_by_avatar_and_prose_remains_required(tmp_path: Path) -> None:
+def test_unavailable_image_shared_by_avatar_and_prose_retains_broken_link(tmp_path: Path) -> None:
     url = "https://example.org/shared"
     avatar = Node("image", attrs={"url": url})
     post = Post(
@@ -77,8 +78,13 @@ def test_image_shared_by_avatar_and_prose_remains_required(tmp_path: Path) -> No
         body=[Node("image", attrs={"url": url})],
         comments=[Comment("p", "Parent", None, "https://example.org/#p", avatar=avatar)],
     )
-    with pytest.raises(SourceError, match="Unavailable"):
-        resolve_assets(post, AssetClient({url: SourceError("Unavailable")}), tmp_path)
+    post.body[0].attrs["asset_path"] = "assets/stale.png"
+    assets = resolve_assets(post, AssetClient({url: SourceError("Unavailable")}), tmp_path)
+    assert not assets and "asset_path" not in post.body[0].attrs
+    assert post.body[0].attrs["unavailable"] == "true"
+    assert len(post.warnings) == 1 and "original link retained" in post.warnings[0]
+    output = render_post(post, assets=assets)
+    assert "Image unavailable" in output and f'#link("{url}")[Original image]' in output
 
 
 def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(

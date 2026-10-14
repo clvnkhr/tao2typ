@@ -46,6 +46,22 @@ def main() -> int:
         "--force", action="store_true", help="Refresh every post, ignoring its schedule"
     )
     batch.add_argument("--interval", type=float, default=1.0, help="Seconds between HTTP requests")
+    regenerate = commands.add_parser(
+        "regenerate", help="Recompile saved posts locally, without HTTP"
+    )
+    regenerate.add_argument("--output", type=Path, default=Path("archive"))
+    regenerate.add_argument("--workers", type=int, default=2, help="Parallel local compilers (1–4)")
+    regenerate.add_argument(
+        "--max-posts", type=int, default=0, help="0 compiles all remaining posts"
+    )
+    regenerate.add_argument(
+        "--ids", type=int, nargs="+", help="Regenerate only these saved post IDs"
+    )
+    regenerate.add_argument("--priority", type=int, nargs="*", default=[5128, 18, 416, 10913])
+    regenerate.add_argument("--resume", type=Path, help="Resume this archive/jobs report")
+    regenerate.add_argument(
+        "--new", action="store_true", help="Start a fresh job instead of resuming"
+    )
     convert = commands.add_parser("convert", help="Convert one URL or a saved HTML file")
     convert.add_argument("source")
     convert.add_argument("--url", help="Canonical source URL for a saved HTML file")
@@ -84,6 +100,20 @@ def main() -> int:
     preview.add_argument("--archive", type=Path, default=Path("archive"))
     preview.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
+    if args.command == "regenerate":
+        from tao2typ.offline import run_offline_regeneration
+
+        report = run_offline_regeneration(
+            args.output,
+            workers=args.workers,
+            max_posts=args.max_posts,
+            post_ids=args.ids,
+            priority=args.priority,
+            resume=args.resume,
+            new=args.new,
+        )
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 1 if report["failed"] else 0
     if args.command == "serve":
         from tao2typ.preview import serve_preview
 

@@ -31,7 +31,8 @@ class Preview:
             stat = path.stat() if path.exists() else None
             signature.append((name, stat.st_mtime_ns if stat else 0, stat.st_size if stat else 0))
         reports = list((self.archive / "jobs").glob("*.json*"))
-        latest = max(reports, key=lambda path: path.stat().st_mtime_ns, default=None)
+        # Job names begin with their UTC timestamp; compression changes mtime.
+        latest = max(reports, key=lambda path: path.name.removesuffix(".gz"), default=None)
         report = read_json(latest) if latest else {}
         if latest:
             stat = latest.stat()

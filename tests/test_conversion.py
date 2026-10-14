@@ -201,7 +201,9 @@ def test_comments_retain_threading_and_deduplicate_paginated_wrappers() -> None:
     assert parent.author == "First Author"
     assert parent.published_at == "2020-03-01T12:00:00+00:00"
     assert [reply.id for reply in parent.replies] == ["comment-2", "comment-3"]
-    assert "Comments (3)" in render_post(post)
+    rendered = render_post(post)
+    assert "Comments (3)" in rendered
+    assert "#pagebreak" not in rendered
 
 
 def test_tex_url_decoding_and_alt_have_distinct_encoding_rules() -> None:

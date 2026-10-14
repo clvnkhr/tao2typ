@@ -1,13 +1,15 @@
 """Metadata builds stay small; explicit public releases export only downloads."""
 
 import json
+import os
 from pathlib import Path
 
 import pytest
 from bs4 import BeautifulSoup, Tag
 
+import tao2typ.catalogue as catalogue
 from tao2typ.catalogue import _failure_summary, generate_site
-from tao2typ.storage import write_bytes
+from tao2typ.storage import write_bytes, write_json
 
 
 def selected(parent: Tag, selector: str) -> Tag:
@@ -124,6 +126,145 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert selected(ready, ".failure-details summary").text == "Failed · Conversion failed"
     assert selected(soup, "#failed")["type"] == "checkbox"
     assert not soup.select('a[data-route="failures"]')
+
+
+def test_catalogue_has_accessible_green_amber_and_red_indicators(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {"body": [{"kind": "math", "text": r"L^p([0,1])", "attrs": {}}]},
+    )
+    (archive / "pdfs/amber.pdf").write_bytes(b"PDF")
+    write_json(
+        archive / "ir/amber.json.gz",
+        {"body": [{"kind": "math", "attrs": {"source_error_evidence": "PRIVATE-NOTE"}}]},
+    )
+    state["posts"]["2"].update(pdf="pdfs/amber.pdf", ir="ir/amber.json.gz")
+    state["posts"]["3"] = {
+        "title": "Unconverted",
+        "published_at": "2026-10-14T12:00:00Z",
+        "url": "https://terrytao.wordpress.com/2026/10/14/unconverted/",
+    }
+    write_json(archive / "state.json", state)
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    page = (output / "index.html").read_text()
+    soup = BeautifulSoup(page, "html.parser")
+    for identifier, color in [("1", "green"), ("2", "amber"), ("3", "red")]:
+        row = selected(soup, f'.post[data-id="{identifier}"]')
+        indicator = selected(row, f".quality-indicator.quality-{color}")
+        assert row["data-quality"] == color
+        assert indicator["role"] == "img"
+        assert indicator["aria-label"] == indicator["title"]
+        assert indicator.get_text() == ""
+    assert "PRIVATE-NOTE" not in page
+    assert selected(soup, "#failed")["type"] == "checkbox"
+    assert not soup.select('a[data-route="failures"]')
+
+
+@pytest.mark.parametrize(
+    "node",
+    [
+        {"kind": "math", "attrs": {"source_error": "true"}},
+        {"kind": "math", "attrs": {"source_error_evidence": "Original formula"}},
+        {
+            "kind": "image",
+            "attrs": {"asset_path": "assets/formula.png", "source_error_evidence": "Original"},
+        },
+        {"kind": "image", "attrs": {"url": "https://example.com/missing.png"}},
+        {"kind": "image", "attrs": {"asset_path": "assets/image.png", "unavailable": "true"}},
+        {
+            "kind": "image",
+            "attrs": {"asset_path": "assets/image.png", "unavailable_asset": "Not cached"},
+        },
+    ],
+)
+def test_fallback_in_a_nested_comment_is_amber(tmp_path: Path, node: dict) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(archive / "state.json", state)
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {"body": [], "comments": [{"body": [], "replies": [{"body": [node]}]}]},
+    )
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert selected(soup, '.post[data-id="1"]')["data-quality"] == "amber"
+
+
+def test_optional_avatar_and_ordinary_math_keep_a_green_indicator(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(archive / "state.json", state)
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {
+            "body": [
+                {"kind": "math", "text": r"\|u\|^2", "attrs": {}},
+                {"kind": "image", "attrs": {"asset_path": "assets/diagram.png"}},
+            ],
+            "comments": [
+                {"body": [], "avatar": {"kind": "image", "attrs": {"unavailable": "true"}}}
+            ],
+            "warnings": ["Comment avatar unavailable"],
+        },
+    )
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert selected(soup, '.post[data-id="1"]')["data-quality"] == "green"
+
+
+def test_current_failure_overrides_amber_even_with_an_older_pdf(tmp_path: Path) -> None:
+    archive = fixture_archive(tmp_path)
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {"body": [{"kind": "image", "attrs": {"unavailable": "true"}}]},
+    )
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    row = selected(soup, '.post[data-id="1"]')
+    assert row["data-quality"] == "red"
+    assert row["data-ready"] == "true"
+    assert selected(row, "a.pdf")
+
+
+def test_quality_classification_is_cached_until_the_ir_changes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(archive / "state.json", state)
+    path = archive / "ir/einstein-e-mc2.json"
+    write_json(path, {"body": []})
+    reads = 0
+    original = catalogue.read_json
+
+    def read_counted(candidate: Path):
+        nonlocal reads
+        if candidate == path:
+            reads += 1
+        return original(candidate)
+
+    monkeypatch.setattr(catalogue, "read_json", read_counted)
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    generate_site(archive, output)
+    assert reads == 1
+    old_mtime = path.stat().st_mtime_ns
+    write_json(path, {"body": [{"kind": "image", "attrs": {}}]})
+    os.utime(path, ns=(old_mtime + 1_000_000, old_mtime + 1_000_000))
+    generate_site(archive, output)
+    assert reads == 2
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert selected(soup, '.post[data-id="1"]')["data-quality"] == "amber"
 
 
 @pytest.mark.parametrize(

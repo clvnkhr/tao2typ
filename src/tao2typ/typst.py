@@ -473,7 +473,7 @@ class _Renderer:
     def math(self, node: Node, *, aligned: bool = False) -> str:
         if node.attrs.get("source_error"):
             return (
-                "#block(width: 100%, above: 0.3em, below: 0.3em)["
+                "#block(width: 100%, above: 12pt, below: 14pt)["
                 "#set par(justify: false)\n"
                 '#text(size: 7pt, fill: rgb("596477"))['
                 f"#link({_string(node.attrs['source_error_url'])})"
@@ -569,10 +569,12 @@ class _Renderer:
             path = _string(self.assets[url])
             alternative = f", alt: {_string(alt)}" if alt else ""
             return f"#image({path}, width: 90%{alternative})"
-        description = alt or "Image from the original post"
+        description = "Image unavailable"
+        caption = f"#text({_string(alt)}) · " if alt else ""
         return (
-            '#box(inset: 6pt, stroke: 0.5pt + rgb("d9dfe8"))['
-            f"#link({_string(url)})[#text(size: 9pt)[#text({_string(description)})]]]"
+            '#box(width: 90%, inset: 6pt, stroke: 0.5pt + rgb("d9dfe8"))['
+            f"#text(size: 9pt)[#text({_string(description)}) · {caption}"
+            f"#link({_string(url)})[Original image]]]"
         )
 
     def table(self, node: Node) -> str:
@@ -688,10 +690,7 @@ def render_post(post: Post, assets: Mapping[str, str] | None = None) -> str:
     result = "\n" + renderer.blocks(post.body) + "\n"
     if post.comments:
         count = sum(1 for _ in _comments(post.comments))
-        result += (
-            "\n#pagebreak(weak: true)\n"
-            f"#heading(level: 1)[#text({_string(f'Comments ({count})')})]\n\n"
-        )
+        result += f"\n#heading(level: 1)[#text({_string(f'Comments ({count})')})]\n\n"
         result += "\n\n".join(renderer.comment(comment) for comment in post.comments)
         result += "\n"
     if renderer.uses_math_helpers:

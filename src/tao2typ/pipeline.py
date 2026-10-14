@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import time
+from collections.abc import Mapping
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -110,8 +111,8 @@ def asset_extension(url: str, data: bytes) -> str:
 
 def resolve_assets(post: Post, client: BlogClient, output: Path) -> dict[str, str]:
     assets: dict[str, str] = {}
-    # Avatars are optional decoration. An unavailable avatar must not prevent
-    # preserving a discussion, while missing article diagrams still fail loudly.
+    # Missing diagrams retain a visible placeholder and their original link.
+    # Avatars are optional decoration and never block a discussion.
     required: set[str] = set()
 
     def require(nodes: list[Node]) -> None:
@@ -136,9 +137,14 @@ def resolve_assets(post: Post, client: BlogClient, output: Path) -> dict[str, st
             data = client.fetch_asset(url)
             suffix = asset_extension(url, data)
         except (httpx.HTTPError, SourceError, ValueError) as error:
+            for node in post.walk():
+                if node.kind == "image" and node.attrs.get("url") == url:
+                    node.attrs.pop("asset_path", None)
+                    node.attrs["unavailable"] = "true"
             if url in required:
-                raise
-            post.warnings.append(f"Comment avatar unavailable: {url}: {error}")
+                post.warnings.append(f"Image unavailable; original link retained: {url}: {error}")
+            else:
+                post.warnings.append(f"Comment avatar unavailable: {url}: {error}")
             continue
         name = hashlib.sha256(url.encode()).hexdigest() + "-" + hashlib.sha256(data).hexdigest()
         relative = Path("assets") / (name + suffix)
@@ -153,6 +159,7 @@ def resolve_assets(post: Post, client: BlogClient, output: Path) -> dict[str, st
         for node in post.walk():
             if node.kind == "image" and node.attrs.get("url") == url:
                 node.attrs["asset_path"] = relative.as_posix()
+                node.attrs.pop("unavailable", None)
     return assets
 
 
@@ -179,6 +186,7 @@ def save_post(
     *,
     previous_digest: str | None = None,
     converted_at: datetime | None = None,
+    assets: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Stage outputs and roll back a failed or interrupted artifact promotion.
 
@@ -206,7 +214,10 @@ def save_post(
         target: target.with_name(target.stem + ".previous" + target.suffix)
         for _, target in promotions
     }
-    assets = resolve_assets(post, client, output) if client else {}
+    if assets is not None:
+        assets = dict(assets)
+    else:
+        assets = resolve_assets(post, client, output) if client else {}
     payload = post.to_dict()
     # Conversion time is provenance, not a content change. Hash a render copy
     # without its date so a fresh check alone cannot regenerate an identical PDF.

@@ -70,6 +70,18 @@ def test_preview_tracks_new_checkpoints_and_finish(tmp_path: Path) -> None:
     assert finished["attempted"] == 2 and finished["failed"] == 1 and not finished["running"]
 
 
+def test_compressing_an_older_report_does_not_replace_latest_progress(tmp_path: Path) -> None:
+    preview = setup_preview(tmp_path)
+    reports = preview.archive / "jobs"
+    (reports / "job.json").rename(reports / "20261014T102000Z.json")
+    write_json(
+        reports / "20261013T102000Z.json.gz",
+        {"started_at": "2026-10-13T10:20:00Z", "results": [{"status": "failed"}]},
+    )
+    snapshot = preview.snapshot()
+    assert snapshot["converted"] == 1 and snapshot["failed"] == 0
+
+
 def test_preview_rejects_escape_paths_and_working_state(tmp_path: Path) -> None:
     preview = setup_preview(tmp_path)
     secret = tmp_path / "secret.pdf"
