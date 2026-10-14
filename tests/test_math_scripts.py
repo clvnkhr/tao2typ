@@ -82,6 +82,15 @@ def flattened_text(tree: Any) -> str:
     return ""
 
 
+@pytest.mark.parametrize("command", ["big", "Big", "bigg", "Bigg"])
+def test_sized_parenthesis_symbols_coexist_with_native_norms(tmp_path: Path, command: str) -> None:
+    source = rf"\|f\| = \{command}l( x \{command}r)^2"
+    tree = compiled_tree(tmp_path, source)
+    text = flattened_text(tree)
+    assert "‖f‖" in text and "(x)" in text
+    assert flattened_text(attachments(tree)[0]["top"]) == "2"
+
+
 @pytest.mark.parametrize(
     ("source", "base", "top", "bottom", "argument"),
     [

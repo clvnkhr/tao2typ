@@ -5,8 +5,11 @@ cd "$(dirname "$0")/.."
 mkdir -p .cache
 export UV_CACHE_DIR="${UV_CACHE_DIR:-$PWD/.cache/uv}"
 batch_status=0
-uv run --frozen tao2typ batch --output archive --max-posts 0 --max-seconds 18000 \
-  > .cache/first-batch.log 2>&1 || batch_status=$?
+batch_command=(uv run --frozen tao2typ batch --output archive --max-posts 0 --max-seconds 18000)
+if command -v caffeinate >/dev/null 2>&1; then
+  batch_command=(caffeinate -i "${batch_command[@]}")
+fi
+"${batch_command[@]}" > .cache/first-batch.log 2>&1 || batch_status=$?
 git add -- archive docs
 if ! git diff --cached --quiet; then
   git commit --quiet -m "Seed PDFs locally $(date -u +%Y-%m-%dT%H:%M:%SZ)" || exit 1

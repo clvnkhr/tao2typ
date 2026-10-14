@@ -31,7 +31,7 @@ DELIMITER_HELPERS = r"""
 }
 #let tao-big(body, size) = {
   // Preserve MiTeX's fixed \big/\Big/\bigg/\Bigg heights for a paired atom.
-  if body.func() == math.lr and body.has("body") {
+  if type(body) == content and body.func() == math.lr and body.has("body") {
     let children = if body.body.has("children") { body.body.children } else { (body.body,) }
     if children.len() >= 2 {
       let first = children.first()

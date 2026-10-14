@@ -69,6 +69,7 @@ For the first local batch, `bash scripts/first-batch.sh` also commits and pushes
 the generated archive when it finishes. Progress is checkpointed after each
 post in `archive/state.json`; the final command report is in
 `.cache/first-batch.log`. Re-running resumes posts that still need work.
+On macOS the script prevents idle system sleep for the duration of the batch.
 
 Convert saved HTML (source attribution is required):
 
