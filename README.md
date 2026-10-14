@@ -176,7 +176,7 @@ appear in the job summary and remain queued; source-wide errors and failed check
 fail the workflow. Completed outputs and state are committed after partial failure.
 Requests and individual compilations have timeouts.
 
-Generated files are committed directly to this private repository:
+Generated files are committed directly to this repository:
 
 ```text
 archive/
@@ -240,9 +240,9 @@ plain when that is how the site presents it.
 The catalogue is hosted at [clvnkhr.github.io/tao2typ/](https://clvnkhr.github.io/tao2typ/).
 Original WordPress tags and categories are stored separately, including category
 parent IDs. Filters preserve these names and category hierarchies. The page
-contains post metadata and links to PDFs and `.typ` sources. The repository is
-private during development; the intended release provides public downloads.
-Default builds contain metadata and GitHub file links. Public release builds use
+contains post metadata and links to PDFs and `.typ` sources. With a public
+repository, the default GitHub file links are accessible without signing in.
+Default builds contain metadata and GitHub file links. Optional download exports use
 `--download-base-url` to export existing PDFs, `.typ` sources, IR JSON and only
 their referenced image assets beside the page. Relative Typst image paths are
 preserved. Queue membership, readable refresh reasons and brief failure reasons
@@ -296,8 +296,9 @@ uses `PAGES_DEPLOY_KEY`, a write-enabled SSH deploy key scoped to
 **clvnkhr.github.io only**. An optional `PAGES_PUBLISH_TOKEN` with Contents
 read/write permission for that repository remains supported. Without either,
 use the local publish command above. The daily ten-attempt PDF budget still applies.
-For the public release, set the `PAGES_PUBLIC_DOWNLOADS` repository variable to
-`true` so daily publication also updates public PDFs, sources and required assets.
+Set the `PAGES_PUBLIC_DOWNLOADS` repository variable to `true` to also host PDFs,
+sources and required assets on the personal site. This is optional when the
+catalogue links directly to files in the public repository.
 
 An unchanged IR and rendered Typst reuse existing files, reducing binary history
 growth. Images are re-fetched on each due refresh to detect replacements at the
@@ -307,9 +308,11 @@ serializes archive jobs and rebases its commit over concurrent source edits.
 
 The workflow needs `contents: write` and must be on the default branch. Repository
 or organization policies may need to permit Actions and bot pushes. It uses the
-normal `GITHUB_TOKEN`, with no custom secret. GitHub schedules can be delayed;
+normal `GITHUB_TOKEN` for archive commits; the separate site publisher uses the
+encrypted Actions secret described above. Only the secret reference appears in
+the workflow, and its private key is not stored in Git. GitHub schedules can be delayed;
 manual dispatch catches up. Public repositories’ schedules can be disabled after
-60 days without activity; this repository is private during development.
+60 days without activity.
 See [GitHub’s scheduled workflow documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 
 ## Development

@@ -17,6 +17,7 @@
   const search = document.getElementById("search");
   const ready = document.getElementById("ready");
   const failed = document.getElementById("failed");
+  const failureFilter = failed.closest("label");
   const sort = document.getElementById("sort");
   const title = document.getElementById("collection-title");
   const queueUpdated = document.getElementById("queue-updated");
@@ -61,6 +62,7 @@
     catch { slug = ""; }
     const filtering = separator > 0 && ["tag", "category"].includes(kind);
     const isQueue = route === "queue";
+    failureFilter.hidden = !isQueue;
     const key = filtering ? `${kind}=${slug}` : isQueue ? "queue" : "all";
     const term = terms.get(key) || slug;
     const query = search.value.normalize("NFKC").toLowerCase().trim();
@@ -80,7 +82,7 @@
     for (const post of posts) {
       const matches = (!query || post.search.includes(query))
         && (!ready.checked || post.ready)
-        && (!failed.checked || post.failed)
+        && (!isQueue || !failed.checked || post.failed)
         && (!isQueue || post.queuePosition !== null)
         && (!filtering || (kind === "tag" ? post.tags : post.categories).includes(slug));
       post.element.hidden = !matches;
