@@ -2,11 +2,13 @@
 
 import hashlib
 import re
+from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
 
+from tao2typ.source import ApiPayload
 from tao2typ.storage import read_bytes, read_json, write_bytes, write_json
 
 
@@ -33,6 +35,29 @@ def load_raw_capture(manifest: Path) -> tuple[dict[str, Any], list[str], Path]:
     ):
         raise ValueError("Raw capture must be complete and contain ordered pages")
     pages = []
+    payloads = metadata.get("api_payloads", [])
+    if not isinstance(payloads, list):
+        raise ValueError("Invalid raw API payload records")
+    for payload in payloads:
+        relative = payload.get("path") if isinstance(payload, dict) else None
+        if not isinstance(relative, str) or not re.fullmatch(
+            r"raw/api/[0-9a-f]{64}\.json\.gz", relative
+        ):
+            raise ValueError("Invalid raw API payload path")
+        path = output / relative
+        if path.is_symlink() or not path.resolve().is_relative_to(output / "raw" / "api"):
+            raise ValueError("Raw API payload path escapes the capture")
+        try:
+            content = read_bytes(path)
+        except (OSError, EOFError) as error:
+            raise ValueError(f"Raw API payload checksum mismatch: {relative}") from error
+        digest = hashlib.sha256(content).hexdigest()
+        if (
+            digest != payload.get("bytes_sha256")
+            or path.name.removesuffix(".json.gz") != digest
+            or len(content) != payload.get("bytes")
+        ):
+            raise ValueError(f"Raw API payload checksum mismatch: {relative}")
     for page in metadata["pages"]:
         relative = page.get("path") if isinstance(page, dict) else None
         if not isinstance(relative, str) or not re.fullmatch(
@@ -106,6 +131,7 @@ class RawCapture:
             raise ValueError("Raw capture stem must be a simple filename")
         self.output = output
         self._closed = False
+        self._api_payload_keys: set[tuple[str, str, str]] = set()
         captured_at = _now()
         captures = output / "raw" / stem
         captures.mkdir(parents=True, exist_ok=True)
@@ -145,9 +171,12 @@ class RawCapture:
         *,
         requested_url: str | None = None,
         fetched_at: str | None = None,
+        api_payloads: Sequence[ApiPayload] = (),
     ) -> None:
         """Save one parser input before parsing it, preserving its exact text."""
         self._require_open()
+        for payload in api_payloads:
+            self.add_api_payload(payload)
         content = html.encode("utf-8")
         digest = hashlib.sha256(content).hexdigest()
         relative = f"raw/pages/{digest}.html.gz"
@@ -160,8 +189,31 @@ class RawCapture:
                 "path": relative,
                 "bytes_sha256": digest,
                 "bytes": len(content),
+                **({"source": "wordpress-public-api"} if api_payloads else {}),
             }
         )
+        write_json(self._path, self._manifest)
+
+    def add_api_payload(self, payload: ApiPayload) -> None:
+        """Retain an exact JSON response immediately, including partial attempts."""
+        self._require_open()
+        digest = hashlib.sha256(payload.content).hexdigest()
+        key = (payload.url, payload.fetched_at, digest)
+        if key in self._api_payload_keys:
+            return
+        relative = f"raw/api/{digest}.json.gz"
+        _save_page(self.output / relative, payload.content)
+        self._manifest.setdefault("api_payloads", []).append(
+            {
+                "url": payload.url,
+                "requested_url": payload.requested_url,
+                "fetched_at": payload.fetched_at,
+                "path": relative,
+                "bytes_sha256": digest,
+                "bytes": len(payload.content),
+            }
+        )
+        self._api_payload_keys.add(key)
         write_json(self._path, self._manifest)
 
     def finish(self) -> None:

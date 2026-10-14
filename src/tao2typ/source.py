@@ -1,12 +1,15 @@
 """Polite WordPress discovery and fetching, independent of document conversion.
 
 The public API supplies publication dates; dates in URL paths are never treated
-as creation timestamps. HTML is fetched from the actual site so the converter
-can retain the post's maths markup and the complete paginated discussion.
+as creation timestamps. Prefer the actual site's HTML; its official public API
+provides rendered content and complete discussion when the site returns 403.
 """
 
 from __future__ import annotations
 
+import base64
+import binascii
+import html as html_module
 import re
 import time
 from collections import OrderedDict, deque
@@ -15,7 +18,16 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
 from types import TracebackType
-from urllib.parse import parse_qs, parse_qsl, quote, urlencode, urljoin, urlsplit, urlunsplit
+from urllib.parse import (
+    parse_qs,
+    parse_qsl,
+    quote,
+    unquote,
+    urlencode,
+    urljoin,
+    urlsplit,
+    urlunsplit,
+)
 
 import httpx
 from bs4 import BeautifulSoup
@@ -23,6 +35,7 @@ from bs4 import BeautifulSoup
 SITE_HOST = "terrytao.wordpress.com"
 SITE_URL = f"https://{SITE_HOST}/"
 POSTS_API = f"https://public-api.wordpress.com/rest/v1.1/sites/{SITE_HOST}/posts/"
+COMMENTS_API = f"https://public-api.wordpress.com/rest/v1.1/sites/{SITE_HOST}/comments/"
 METADATA_FIELDS = "ID,URL,title,date,modified,tags,categories"
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
 MAX_CACHED_ASSET_BYTES = 64 * 1024 * 1024
@@ -37,6 +50,48 @@ _WIKIMEDIA_THUMB = re.compile(r"^(/wikipedia/[^/]+)/thumb/([0-9a-f]/[0-9a-f]{2}/
 _PROXY_PARAMETERS = frozenset(
     {"crop", "fit", "h", "lb", "quality", "resize", "ssl", "strip", "w", "zoom"}
 )
+# Verified zero-change Git rename (blob ca3b37b0d8f687accb4ffe5f1ef3a5ca88fa9e7c).
+# Pin the moved file to its original repository commit, rather than replacing it.
+_VERIFIED_ASSET_MOVES = {
+    "https://raw.githubusercontent.com/km-git-acc/dbn_upper_bound/master/"
+    "python/H_t%20zero%20trajectory%20plot.png": "https://raw.githubusercontent.com/km-git-acc/dbn_upper_bound/"
+    "a76b3aaee1b3601c81d95fdf66808cec5d586d71/"
+    "dbn_upper_bound/python/H_t%20zero%20trajectory%20plot.png"
+}
+
+
+def _embedded_asset(url: str) -> bytes | None:
+    if not url.startswith("data:"):
+        return None
+    match = re.fullmatch(r"data:image/[A-Za-z0-9.+-]+;base64,(.*)", url, flags=re.DOTALL)
+    if match is None:
+        raise ValueError("Embedded image must use a base64 image data URI")
+    payload = unquote(match[1])
+    if len(payload) > 4 * ((MAX_RESPONSE_BYTES + 2) // 3):
+        raise SourceError("Embedded image exceeds the response size limit")
+    try:
+        content = base64.b64decode(payload, validate=True)
+    except (binascii.Error, ValueError) as error:
+        raise ValueError("Invalid base64 embedded image") from error
+    if len(content) > MAX_RESPONSE_BYTES:
+        raise SourceError("Embedded image exceeds the response size limit")
+    return content
+
+
+def _asset_wrapper(url: str) -> str | None:
+    """Resolve a source-encoded file view, without choosing a replacement image."""
+    parts = urlsplit(url)
+    if parts.hostname == "github.com":
+        path = parts.path.split("/")
+        if len(path) >= 6 and path[3] == "blob" and all(path[1:]):
+            return "https://raw.githubusercontent.com/" + "/".join(path[1:3] + path[4:])
+    if re.fullmatch(r"[a-z-]+\.wikipedia\.org", parts.hostname or "") and parts.fragment.startswith(
+        "/media/File:"
+    ):
+        filename = unquote(parts.fragment[len("/media/File:") :])
+        if filename and "/" not in filename and "\\" not in filename:
+            return f"https://{parts.hostname}/wiki/Special:Redirect/file/{quote(filename, safe='')}"
+    return None
 
 
 class SourceError(RuntimeError):
@@ -50,6 +105,8 @@ def _original_asset(url: str) -> str | None:
     rejects historical thumbnail widths while keeping the original file. Each
     transformation removes one service layer; downloads retain normal limits.
     """
+    if url in _VERIFIED_ASSET_MOVES:
+        return _VERIFIED_ASSET_MOVES[url]
     parts = urlsplit(url)
     if _PROXY_IMAGE_HOST.fullmatch(parts.hostname or ""):
         original = urlsplit("https://" + parts.path.lstrip("/"))
@@ -100,13 +157,160 @@ class RecentComment:
 
 
 @dataclass(frozen=True)
+class ApiPayload:
+    """Exact public API response bytes, retained independently of render HTML."""
+
+    content: bytes
+    url: str
+    requested_url: str
+    fetched_at: str
+
+
+@dataclass(frozen=True)
 class FetchedPage:
-    """The exact decoded HTML passed to the parser, with HTTP provenance."""
+    """Exact parser input, with HTTP or official API response provenance."""
 
     html: str
     url: str
     requested_url: str
     fetched_at: str
+    api_payloads: tuple[ApiPayload, ...] = ()
+
+
+def _api_comments(data: object) -> tuple[int, list[dict[str, object]]]:
+    if not isinstance(data, dict) or not isinstance(data.get("comments"), list):
+        raise SourceError("WordPress API returned an invalid comments listing")
+    found = data.get("found")
+    if not isinstance(found, int) or isinstance(found, bool) or found < 0:
+        raise SourceError("WordPress API returned an invalid total comment count")
+    comments = data["comments"]
+    if len(comments) > 100 or any(not isinstance(item, dict) for item in comments):
+        raise SourceError("WordPress API returned invalid comment records")
+    return found, comments
+
+
+def _api_json(response: httpx.Response) -> object:
+    try:
+        return response.json()
+    except ValueError as error:
+        raise SourceError("WordPress API returned invalid JSON") from error
+
+
+def _comment_identity(comment: Mapping[str, object]) -> tuple[int, str, str]:
+    identifier, url = comment.get("ID"), comment.get("URL")
+    if (
+        not isinstance(identifier, int)
+        or isinstance(identifier, bool)
+        or identifier <= 0
+        or not isinstance(url, str)
+        or urlsplit(url).fragment != f"comment-{identifier}"
+    ):
+        raise SourceError("WordPress API returned an invalid comment ID or permalink")
+    try:
+        canonical = canonical_post_url(url)
+    except ValueError as error:
+        raise SourceError("WordPress API comment permalink is not a Tao blog post") from error
+    return identifier, canonical, url
+
+
+def _api_html(post: Mapping[str, object], comments: list[dict[str, object]]) -> str:
+    """Wrap the API's rendered HTML verbatim in parser-compatible structure."""
+    metadata = _metadata(post)
+    content = post.get("content")
+    if not isinstance(content, str):
+        raise SourceError("WordPress API post is missing rendered HTML content")
+    children: dict[int | None, list[int]] = {}
+    records: dict[int, str] = {}
+    parents: dict[int, int | None] = {}
+    for comment in comments:
+        identifier, canonical, url = _comment_identity(comment)
+        linked_post = comment.get("post")
+        if (
+            canonical != metadata.url
+            or not isinstance(linked_post, dict)
+            or linked_post.get("ID") != metadata.id
+        ):
+            raise SourceError("WordPress API returned a comment for another post")
+        if identifier in records:
+            raise SourceError("WordPress API repeated a comment")
+        author, body = comment.get("author"), comment.get("content")
+        if (
+            not isinstance(author, dict)
+            or not isinstance(author.get("name"), str)
+            or not isinstance(body, str)
+            or comment.get("status") != "approved"
+        ):
+            raise SourceError("WordPress API returned an invalid public comment")
+        timestamp = _aware_datetime(comment.get("date"), "comment date").isoformat()
+        parent = comment.get("parent")
+        parent_id = parent.get("ID") if isinstance(parent, dict) else None
+        if parent not in (None, False) and (
+            not isinstance(parent, dict)
+            or not isinstance(parent_id, int)
+            or isinstance(parent_id, bool)
+            or parent_id <= 0
+        ):
+            raise SourceError("WordPress API returned an invalid comment parent")
+        parents[identifier] = parent_id
+        children.setdefault(parent_id, []).append(identifier)
+        name = BeautifulSoup(author["name"], "html.parser").get_text(" ", strip=True)
+        avatar = author.get("avatar_URL")
+        avatar_html = (
+            '<img class="avatar" width="48" height="48" src="'
+            + html_module.escape(avatar, quote=True)
+            + '" alt="">'
+            if isinstance(avatar, str) and avatar
+            else ""
+        )
+        records[identifier] = (
+            f'<li id="comment-{identifier}" class="comment">'
+            f'<div class="comment-author">{avatar_html}<cite class="fn">'
+            + html_module.escape(name)
+            + '</cite></div><div class="comment-meta"><a class="comment-permalink" href="'
+            + html_module.escape(url, quote=True)
+            + '"><time datetime="'
+            + html_module.escape(timestamp, quote=True)
+            + '">'
+            + html_module.escape(timestamp)
+            + f'</time></a></div><div class="comment-content">{body}</div>'
+        )
+    for identifier, parent in parents.items():
+        ancestors = {identifier}
+        while parent is not None:
+            if parent not in parents:
+                raise SourceError("WordPress API omitted a parent comment")
+            if parent in ancestors:
+                raise SourceError("WordPress API returned cyclic comment ancestry")
+            ancestors.add(parent)
+            parent = parents[parent]
+    pieces = [
+        '<!doctype html><html><head><meta property="article:published_time" content="',
+        html_module.escape(metadata.published_at.isoformat(), quote=True),
+        '"><meta property="article:modified_time" content="',
+        html_module.escape(metadata.modified_at.isoformat(), quote=True),
+        '"></head><body><article><h1 class="entry-title">',
+        str(post["title"]),
+        '</h1><div class="entry-content">',
+        content,
+        '</div></article><section id="comments"><ol class="commentlist">',
+    ]
+    # Iteration avoids Python's recursion limit for deeply nested public threads.
+    stack: list[int | str] = list(reversed(children.get(None, [])))
+    while stack:
+        item = stack.pop()
+        if isinstance(item, str):
+            pieces.append(item)
+            continue
+        pieces.append(records[item])
+        replies = children.get(item, [])
+        if replies:
+            pieces.append('<ol class="children">')
+            stack.append("</ol></li>")
+            stack.extend(reversed(replies))
+        else:
+            pieces.append("</li>")
+    pieces.append("</ol></section></body></html>")
+    return "".join(pieces)
 
 
 def canonical_post_url(url: str) -> str:
@@ -336,6 +540,7 @@ class BlogClient:
         # client revalidates remote bytes during the next scheduled refresh.
         self._asset_cache: OrderedDict[str, bytes] = OrderedDict()
         self._asset_cache_bytes = 0
+        self._post_ids: dict[str, int] = {}
         self._owns_client = http_client is None
         self._client = http_client or httpx.Client(
             timeout=httpx.Timeout(timeout),
@@ -481,6 +686,7 @@ class BlogClient:
                 post = _metadata(item)
                 if post.id not in seen_ids:
                     seen_ids.add(post.id)
+                    self._post_ids[post.url] = post.id
                     yield post
             if len(seen_ids) == previous_count:
                 raise SourceError("WordPress pagination repeated posts without advancing")
@@ -513,19 +719,140 @@ class BlogClient:
         post = _metadata(self._request(endpoint, params={"fields": METADATA_FIELDS}).json())
         if post.url != canonical:
             raise SourceError(f"WordPress slug lookup returned another post: {post.url}")
+        self._post_ids[post.url] = post.id
         return post
 
     def recent_comments(self) -> list[RecentComment]:
-        return extract_recent_comments(self._request(SITE_URL).text)
+        try:
+            return extract_recent_comments(self._request(SITE_URL).text)
+        except httpx.HTTPStatusError as error:
+            if error.response.status_code != 403:
+                raise
+        response = self._request(
+            COMMENTS_API, params={"number": 100, "order": "DESC", "status": "approved"}
+        )
+        found, comments = _api_comments(_api_json(response))
+        if len(comments) != min(found, 100):
+            raise SourceError("WordPress API recent comments listing is incomplete")
+        events: dict[str, RecentComment] = {}
+        seen: set[int] = set()
+        for comment in comments:
+            # Public page comments are not dated blog posts, just as the HTML
+            # Recent Comments reader ignores unrelated/page links.
+            url = comment.get("URL")
+            if not isinstance(url, str):
+                raise SourceError("WordPress API recent comment has no permalink")
+            try:
+                canonical_post_url(url)
+            except ValueError:
+                continue
+            identifier, post_url, _ = _comment_identity(comment)
+            if identifier in seen:
+                raise SourceError("WordPress API repeated a recent comment")
+            seen.add(identifier)
+            event_url = f"{post_url}#comment-{identifier}"
+            events[event_url] = RecentComment(event_url, post_url)
+        return list(events.values())
+
+    def _api_post_pages(
+        self,
+        canonical: str,
+        *,
+        on_page: Callable[[FetchedPage], None] | None,
+        on_api_payload: Callable[[ApiPayload], None] | None,
+    ) -> list[str]:
+        payloads: list[ApiPayload] = []
+
+        def request(url: str, params: Mapping[str, str | int]) -> object:
+            response = self._request(url, params=params)
+            payload = ApiPayload(
+                response.content,
+                str(response.url),
+                str(httpx.Request("GET", url, params=params).url),
+                datetime.now(UTC).isoformat(),
+            )
+            payloads.append(payload)
+            if on_api_payload is not None:
+                on_api_payload(payload)
+            return _api_json(response)
+
+        identifier = self._post_ids.get(canonical)
+        slug = urlsplit(canonical).path.rstrip("/").rsplit("/", 1)[-1]
+        endpoint = POSTS_API + (
+            f"{identifier}/" if identifier is not None else f"slug:{quote(slug, safe='%')}/"
+        )
+        data = request(endpoint, {"context": "display"})
+        metadata = _metadata(data)
+        if metadata.url != canonical:
+            raise SourceError("WordPress API fallback returned another post")
+        assert isinstance(data, dict)
+        if (
+            data.get("status") != "publish"
+            or data.get("has_password") is True
+            or not isinstance(data.get("content"), str)
+        ):
+            raise SourceError("WordPress API fallback did not return a public rendered post")
+        discussion = data.get("discussion")
+        expected = discussion.get("comment_count") if isinstance(discussion, dict) else None
+        if not isinstance(expected, int) or isinstance(expected, bool) or expected < 0:
+            raise SourceError("WordPress API post has an invalid total comment count")
+        comments: list[dict[str, object]] = []
+        seen: set[int] = set()
+        page = 0
+        while True:
+            if page >= self.max_comment_pages:
+                raise SourceError(f"API comment pagination exceeds {self.max_comment_pages} pages")
+            listing = request(
+                f"{POSTS_API}{metadata.id}/replies/",
+                {
+                    "context": "display",
+                    "number": 100,
+                    "offset": len(comments),
+                    "hierarchical": "false",
+                    "order": "ASC",
+                    "status": "approved",
+                    "type": "any",
+                },
+            )
+            page += 1
+            found, records = _api_comments(listing)
+            if found != expected:
+                raise SourceError("WordPress API comment counts changed or disagree during fetch")
+            if not records and len(comments) < expected:
+                raise SourceError("WordPress API returned an empty page before comments completed")
+            for record in records:
+                comment_id, post_url, _ = _comment_identity(record)
+                if post_url != canonical:
+                    raise SourceError("WordPress API returned a comment for another post")
+                if comment_id in seen:
+                    raise SourceError("WordPress API pagination repeated a comment")
+                seen.add(comment_id)
+                comments.append(record)
+            if len(comments) > expected:
+                raise SourceError("WordPress API returned more comments than its total count")
+            if len(comments) == expected:
+                break
+        html = _api_html(data, comments)
+        fetched = FetchedPage(
+            html, canonical, canonical, datetime.now(UTC).isoformat(), tuple(payloads)
+        )
+        if on_page is not None:
+            on_page(fetched)
+        return [html]
 
     def fetch_post_pages(
-        self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+        self,
+        url: str,
+        *,
+        on_page: Callable[[FetchedPage], None] | None = None,
+        on_api_payload: Callable[[ApiPayload], None] | None = None,
     ) -> list[str]:
         """Fetch the post and every reachable comment page, with cycle protection.
 
         Follow only explicit pagination links for this same dated post, including
         both pretty permalinks and older ``?cpage=N`` links. Repeated post bodies
-        and overlapping comments are deduplicated by the document parser.
+        and overlapping comments are deduplicated by the document parser. Only
+        HTTP 403 switches to the site's official public rendered-content API.
         """
         canonical = canonical_post_url(url)
         pending = deque([canonical])
@@ -538,7 +865,14 @@ class BlogClient:
             if len(seen) >= self.max_comment_pages:
                 raise SourceError(f"Comment pagination exceeds {self.max_comment_pages} pages")
             seen.add(current)
-            response = self._request(current)
+            try:
+                response = self._request(current)
+            except httpx.HTTPStatusError as error:
+                if error.response.status_code != 403:
+                    raise
+                return pages + self._api_post_pages(
+                    canonical, on_page=on_page, on_api_payload=on_api_payload
+                )
             html = response.text
             if on_page is not None:
                 on_page(
@@ -574,6 +908,9 @@ class BlogClient:
         All requests retain the normal delay, retries and 20 MiB download cap.
         Successful bytes are reused only for this client's lifetime.
         """
+        if (embedded := _embedded_asset(url)) is not None:
+            return embedded
+        url = _asset_wrapper(url) or url
         parts = urlsplit(url)
         if parts.scheme not in {"http", "https"} or not parts.hostname:
             raise ValueError(f"Asset URL must use HTTP or HTTPS: {url}")
@@ -585,7 +922,15 @@ class BlogClient:
             return self._asset_cache[cache_key]
         for attempt in range(3):
             try:
-                data = self._request(url).content
+                response = self._request(url)
+                if (
+                    response.headers.get("content-type", "").lower().startswith("text/html")
+                    and (original := _original_asset(url))
+                    and attempt < 2
+                ):
+                    url = original
+                    continue
+                data = response.content
                 if len(data) <= MAX_CACHED_ASSET_BYTES:
                     while self._asset_cache_bytes + len(data) > MAX_CACHED_ASSET_BYTES:
                         _, evicted = self._asset_cache.popitem(last=False)

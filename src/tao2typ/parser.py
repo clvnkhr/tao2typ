@@ -252,7 +252,12 @@ class _Parser:
                 Node(
                     "image",
                     attrs={
-                        "url": urljoin(self.url, src),
+                        "url": (
+                            "data:" + src
+                            if re.fullmatch(r"image/[A-Za-z0-9.+-]+;base64,[A-Za-z0-9+/=]+", src)
+                            else urljoin(self.url, src)
+                        ),
+                        **({"original_src": src} if src.startswith("image/") else {}),
                         "alt": _attr(element, "alt"),
                         "width": _attr(element, "width"),
                         "height": _attr(element, "height"),
@@ -649,4 +654,7 @@ def parse_post(
         target = seen.get(parents.get(identifier, ""))
         (target.replies if target is not None else post.comments).append(comment)
     post.warnings = parser.warnings
+    from tao2typ.source_errors import mark_source_errors
+
+    mark_source_errors(post)
     return post

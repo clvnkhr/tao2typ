@@ -17,6 +17,76 @@ from tao2typ.typst import render_post
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
+        (
+            r"\bigg \lceil \left|\frac{\partial f}{\partial z}\right| \bigg\rceil",
+            r"\bigg{\left\lceil \left|\frac{\partial f}{\partial z}\right| \right\rceil}",
+        ),
+        (r"\Bigl\lfloor |x|\Bigr\rfloor", r"\Big{\left\lfloor \left|x\right|\right\rfloor}"),
+        (r"\bigl[0,1\bigr)", r"\big{\left[0,1\right)}"),
+        (r"\bigl(|x|\big)", r"\bigl(\left|x\right|\big)"),
+        (r"\bigl\lceil x\Bigl\rceil", r"\bigl\lceil x\Bigl\rceil"),
+        (
+            r"\begin{tabular}[t]{|c|c|} |x| & y \\ |z| & q\end{tabular}",
+            r"\begin{tabular}[t]{|c|c|} \left|x\right| & y \\ \left|z\right| & q\end{tabular}",
+        ),
+        (
+            r"\begin{array}{|c|c|} \multicolumn{2}{|c|}{|x|} \end{array}",
+            r"\begin{array}{|c|c|} \multicolumn{2}{|c|}{\left|x\right|} \end{array}",
+        ),
+        (
+            r"\begin{tabular*}{5cm}[t]{|c|c|} |x| & y\end{tabular*}",
+            r"\begin{tabular*}{5cm}[t]{|c|c|} \left|x\right| & y\end{tabular*}",
+        ),
+        (
+            "\\begin% structural comment\n{tabular}{|c|} |x|\\end{tabular}",
+            "\\begin% structural comment\n{tabular}{|c|} \\left|x\\right|\\end{tabular}",
+        ),
+    ],
+)
+def test_fixed_delimiters_and_structural_table_arguments(source: str, expected: str) -> None:
+    assert normalize_delimiters(source) == expected
+    assert normalize_delimiters(expected) == expected
+
+
+def test_sized_ceiling_with_nested_absolute_value_compiles_as_one_fixed_atom(
+    tmp_path: Path,
+) -> None:
+    compiler = shutil.which("typst")
+    if compiler is None:
+        pytest.skip("Typst is required for native fixed delimiter verification")
+    latex = r"\bigg \lceil \left|\frac{\partial f}{\partial z}\right| \bigg\rceil^2"
+    source = tmp_path / "ceiling.typ"
+    source.write_text(
+        '#import "@preview/mitex:0.2.7": mitex-convert, mitex-scope\n'
+        + DELIMITER_HELPERS
+        + "\n#let input="
+        + json.dumps(normalize_delimiters(latex))
+        + '\n#metadata(eval("$" + mitex-convert(input) + "$", scope:mitex-scope + '
+        + "(lr:tao-lr, bigg:body=>tao-big(body,2.4em))))",
+        encoding="utf-8",
+    )
+    result = subprocess.run(
+        [compiler, "query", str(source), "metadata", "--field", "value"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stderr
+    attachments = [
+        item for item in _contents(json.loads(result.stdout)) if item.get("func") == "attach"
+    ]
+    base = attachments[0]["base"]
+    assert isinstance(base, dict)
+    assert base["func"] == "lr"
+    assert base["size"] == "0% + 2.4em"
+    assert base["body"]["children"][0]["text"] == "⌈"
+    assert base["body"]["children"][-1]["text"] == "⌉"
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
         ("|x+y|", r"\left|x+y\right|"),
         (r"\|x+y\|", r"\left\|x+y\right\|"),
         (r"\Vert x\Vert", r"\left\| x\right\|"),

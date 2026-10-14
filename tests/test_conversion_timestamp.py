@@ -11,7 +11,7 @@ import pytest
 
 from tao2typ import pipeline
 from tao2typ.ir import Node, Post
-from tao2typ.source import BlogClient, FetchedPage, PostMetadata, RecentComment
+from tao2typ.source import ApiPayload, BlogClient, FetchedPage, PostMetadata, RecentComment
 from tao2typ.state import ArchiveState
 from tao2typ.storage import read_json, read_text
 from tao2typ.typst import render_post
@@ -154,7 +154,11 @@ class RefreshClient(BlogClient):
         return []
 
     def fetch_post_pages(
-        self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+        self,
+        url: str,
+        *,
+        on_page: Callable[[FetchedPage], None] | None = None,
+        on_api_payload: Callable[[ApiPayload], None] | None = None,
     ) -> list[str]:
         html = (
             '<h1 class="entry-title">Conversion date</h1>'

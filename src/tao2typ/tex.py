@@ -40,6 +40,13 @@ DELIMITER_HELPERS = r"""
         if first.text == "|" or first.text == "‖" { return tao-lr(body.body, size: size) }
       }
     }
+    // Unicode ceil/floor glyphs introduce their own automatic Typst lr group
+    // inside MiTeX's explicit lr. Resize the glyph-bearing pair itself.
+    let paired = body.body
+    while type(paired) == content and paired.func() == math.lr and paired.has("body") {
+      paired = paired.body
+    }
+    return math.lr(paired, size: size)
   }
   math.lr(body, size: size)
 }
@@ -72,6 +79,7 @@ class _Scope:
     explicit: _Token | None = None
     script_argument: bool = False
     function_operand: bool = False
+    sized: _Token | None = None
 
 
 _TOKEN = re.compile(r"\\[A-Za-z]+|\\[^\n]|%[^\n]*(?:\n|$)|\s+|.", re.DOTALL)
@@ -89,6 +97,8 @@ _TEXT_COMMANDS = frozenset(
         r"\operatorname*",
         r"\begin",
         r"\end",
+        r"\multicolumn",
+        r"\cline",
     }
 )
 _SPACE_COMMANDS = frozenset(
@@ -96,6 +106,7 @@ _SPACE_COMMANDS = frozenset(
 )
 _OPERATORS = frozenset(
     {
+        r"\\",
         r"\le",
         r"\leq",
         r"\ge",
@@ -243,6 +254,32 @@ _SIZES = frozenset(
 )
 
 
+def _argument_end(
+    tokens: list[_Token], start: int, opening: str = "{", closing: str = "}"
+) -> int | None:
+    """Return the end of an opaque TeX argument, including nested brace groups."""
+    while start < len(tokens) and (
+        tokens[start].text.isspace() or tokens[start].text.startswith("%")
+    ):
+        start += 1
+    if start == len(tokens) or tokens[start].text != opening:
+        return None
+    depth, braces = 1, 0
+    end = start + 1
+    while end < len(tokens):
+        text = tokens[end].text
+        if opening == "[" and text == "{":
+            braces += 1
+        elif opening == "[" and text == "}" and braces:
+            braces -= 1
+        elif not braces:
+            depth += (text == opening) - (text == closing)
+            if depth == 0:
+                return end + 1
+        end += 1
+    return None
+
+
 def _tokens(source: str) -> list[_Token]:
     raw = [_Token(match[0], match.start(), match.end()) for match in _TOKEN.finditer(source)]
     result: list[_Token] = []
@@ -260,24 +297,29 @@ def _tokens(source: str) -> list[_Token]:
             index += 1
             continue
         if token.text in _TEXT_COMMANDS:
-            end = command_end
-            while end < len(raw) and raw[end].text.isspace():
-                end += 1
-            if end < len(raw) and raw[end].text == "{":
-                depth = 1
-                end += 1
-                while end < len(raw) and depth:
-                    depth += (raw[end].text == "{") - (raw[end].text == "}")
-                    end += 1
-                # An unclosed source group stays untouched and is left to MiTeX.
-                if depth == 0:
-                    result.append(
-                        _Token(
-                            source[token.start : raw[end - 1].end], token.start, raw[end - 1].end
-                        )
-                    )
-                    index = end
-                    continue
+            end = _argument_end(raw, command_end)
+            # An unclosed source group stays untouched and is left to MiTeX.
+            if end is not None:
+                if token.text == r"\begin":
+                    argument = command_end
+                    while raw[argument].text.isspace() or raw[argument].text.startswith("%"):
+                        argument += 1
+                    name = source[raw[argument].end : raw[end - 1].start].strip()
+                    if name in {"tabular", "array", "tabular*", "tabularx"}:
+                        # Width and column specifications are TeX syntax, not
+                        # mathematical absolute values. The actual cells remain
+                        # separate tokens and still receive fence normalization.
+                        if name in {"tabular*", "tabularx"}:
+                            end = _argument_end(raw, end) or end
+                        end = _argument_end(raw, end, "[", "]") or end
+                        end = _argument_end(raw, end) or end
+                elif token.text == r"\multicolumn":
+                    end = _argument_end(raw, end) or end
+                result.append(
+                    _Token(source[token.start : raw[end - 1].end], token.start, raw[end - 1].end)
+                )
+                index = end
+                continue
         if token.text in {r"\left", r"\right", r"\middle"} | _SIZES:
             end = index + 1
             while end < len(raw) and raw[end].text.isspace():
@@ -526,7 +568,13 @@ def _normalize_delimiters_once(source: str) -> str:
                 scope.expects_operand = True
             continue
         if token.text in _OPEN:
-            scopes.append(_Scope(_OPEN[token.text], script_argument=previous in {"^", "_"}))
+            scopes.append(
+                _Scope(
+                    _OPEN[token.text],
+                    script_argument=previous in {"^", "_"},
+                    sized=token if token.size and token.direction != "middle" else None,
+                )
+            )
         elif (
             token.text in _CLOSE
             and len(scopes) > 1
@@ -537,6 +585,22 @@ def _normalize_delimiters_once(source: str) -> str:
                 and _CLOSE_ALIASES.get(token.text, token.text) in {")", "]"}
             )
         ):
+            opening = scope.sized
+            if (
+                opening is not None
+                and opening.size == token.size
+                and (opening.direction, token.direction)
+                in {("", ""), ("sized-left", "sized-right")}
+            ):
+                # MiTeX emits isolated Unicode floor/ceil glyphs for \bigl etc.,
+                # which Typst cannot parse as stand-alone function arguments.
+                # A single paired atom preserves the original fixed height.
+                replacements.extend(
+                    [
+                        (opening.start, opening.end, opening.size + "{" + r"\left" + opening.text),
+                        (token.start, token.end, r"\right" + token.text + "}"),
+                    ]
+                )
             scopes.pop()
             parent = scopes[-1]
             parent.expects_operand = parent.function_operand if scope.script_argument else False
@@ -544,6 +608,9 @@ def _normalize_delimiters_once(source: str) -> str:
                 parent.function_operand = False
         elif token.text in _SPACE_COMMANDS:
             continue
+        elif token.text.startswith(r"\begin"):
+            scope.expects_operand = True
+            scope.function_operand = False
         elif previous in {"^", "_"}:
             # A bare +, -, * etc. in a script is its one-token argument,
             # not a binary operator in the enclosing absolute value.

@@ -13,7 +13,14 @@ import pytest
 
 from tao2typ import pipeline
 from tao2typ.ir import Node, Post
-from tao2typ.source import BlogClient, FetchedPage, PostMetadata, RecentComment, SourceError
+from tao2typ.source import (
+    ApiPayload,
+    BlogClient,
+    FetchedPage,
+    PostMetadata,
+    RecentComment,
+    SourceError,
+)
 from tao2typ.state import ArchiveState
 from tao2typ.storage import read_bytes, read_json, read_text
 
@@ -95,7 +102,11 @@ class FakeBlogClient(BlogClient):
         return self.events
 
     def fetch_post_pages(
-        self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+        self,
+        url: str,
+        *,
+        on_page: Callable[[FetchedPage], None] | None = None,
+        on_api_payload: Callable[[ApiPayload], None] | None = None,
     ) -> list[str]:
         self.fetched.append(url)
         pages = [self.html, "Comment page"]
@@ -309,7 +320,11 @@ def test_partial_fetch_failure_retains_received_raw_pages(
 ) -> None:
     class PartialClient(FakeBlogClient):
         def fetch_post_pages(
-            self, url: str, *, on_page: Callable[[FetchedPage], None] | None = None
+            self,
+            url: str,
+            *,
+            on_page: Callable[[FetchedPage], None] | None = None,
+            on_api_payload: Callable[[ApiPayload], None] | None = None,
         ) -> list[str]:
             assert on_page is not None
             on_page(FetchedPage("First page α\r\n", url, url, instant(2026, 10, 13).isoformat()))

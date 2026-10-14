@@ -89,12 +89,17 @@ def test_fetching_and_asset_pipeline_fixes_invalidate_existing_outputs(
         "parser.py",
         "typst.py",
         "tex.py",
+        "tex_compat.py",
+        "tex_tables.py",
+        "source_errors.py",
+        "data/source-errors.json",
         "alignment.py",
         "pipeline.py",
         "source.py",
         "raw.py",
         "storage.py",
     ):
+        (tmp_path / name).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / name).write_text(name)
     monkeypatch.setattr(pipeline, "__file__", str(tmp_path / "pipeline.py"))
     original = pipeline.converter_fingerprint()

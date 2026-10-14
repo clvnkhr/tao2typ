@@ -11,6 +11,8 @@ from urllib.parse import unquote
 from tao2typ.alignment import alignment_pivot, with_alignment
 from tao2typ.ir import Comment, Node, Post
 from tao2typ.tex import DELIMITER_HELPERS, normalize_delimiters, normalize_scripts
+from tao2typ.tex_compat import normalize_tex_compat
+from tao2typ.tex_tables import render_tex_table
 
 MITEX_VERSION = "0.2.7"
 EQUATE_VERSION = "0.3.3"
@@ -150,6 +152,7 @@ def _legacy_tex(source: str) -> str:
     ``\\sqrt(n)`` becomes ``\\sqrt{(}n)``, not a newly invented radicand ``n``.
     Original source remains untouched in the IR.
     """
+    source = normalize_tex_compat(source)
     # A font declaration affects only the remainder of its group. In an empty
     # group it has no glyphs to style, while MiTeX's greedy font handler errors.
     # Keep the empty group: it may be a fraction, script or accent argument.
@@ -314,7 +317,7 @@ class _Renderer:
     @staticmethod
     def display_row(node: Node) -> Node | None:
         if node.kind == "math" and node.attrs.get("display") == "true":
-            return node
+            return None if node.attrs.get("source_error") else node
         if node.kind != "paragraph":
             return None
         significant = [
@@ -326,6 +329,7 @@ class _Renderer:
             len(significant) == 1
             and significant[0].kind == "math"
             and significant[0].attrs.get("display") == "true"
+            and not significant[0].attrs.get("source_error")
         ):
             return significant[0]
         return None
@@ -467,8 +471,22 @@ class _Renderer:
         raise ValueError(f"Cannot render unknown IR node kind: {kind}")
 
     def math(self, node: Node, *, aligned: bool = False) -> str:
+        if node.attrs.get("source_error"):
+            return (
+                "#block(width: 100%, above: 0.3em, below: 0.3em)["
+                "#set par(justify: false)"
+                '#text(size: 7pt, fill: rgb("596477"))['
+                f"#link({_string(node.attrs['source_error_url'])})"
+                "[Source formula could not be rendered.] ] "
+                f'#text(font: "DejaVu Sans Mono", size: 7.5pt, {_string(node.text)})]'
+            )
         display = node.attrs.get("display") == "true"
         source = _legacy_tex(node.text.strip())
+        table = render_tex_table(source, lambda cell: self.math(Node("math", cell)))
+        if table is not None:
+            if node.attrs.get("number") or _tags(source):
+                raise ValueError("Numbered TeX tabular diagrams require explicit layout support")
+            return f"#align(center)[{table}]" if display else table
         number = node.attrs.get("number")
         tags = _tags(source)
         # MiTeX ignores \tag. Keep each explicit source label, including tagged

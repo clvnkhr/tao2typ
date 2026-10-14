@@ -38,6 +38,11 @@ def main() -> int:
     batch.add_argument("--max-seconds", type=float, default=18_000, help="Soft batch time limit")
     batch.add_argument("--daily-limit", type=int, help="Durable attempt budget per UTC day")
     batch.add_argument(
+        "--allow-post-failures",
+        action="store_true",
+        help="Keep failed posts queued without failing the job; fatal errors still fail",
+    )
+    batch.add_argument(
         "--force", action="store_true", help="Refresh every post, ignoring its schedule"
     )
     batch.add_argument("--interval", type=float, default=1.0, help="Seconds between HTTP requests")
@@ -228,7 +233,7 @@ def main() -> int:
         compress_completed_reports(args.output)
         generate_site(args.output, args.output.parent / "docs")
     print(json.dumps(report, ensure_ascii=False, indent=2))
-    return 1 if report["failed"] or report["errors"] else 0
+    return 1 if report["errors"] or report["failed"] and not args.allow_post_failures else 0
 
 
 if __name__ == "__main__":

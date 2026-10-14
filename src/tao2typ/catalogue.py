@@ -97,7 +97,7 @@ def _failure_markup(
     attempted = _attempt_date(post.get("last_attempted_at"))
     timestamp = (
         f'<p>Last attempt <time datetime="{attempted}">'
-        f'{attempted[:16].replace("T", " ")}</time> UTC</p>'
+        f"{attempted[:16].replace('T', ' ')}</time> UTC</p>"
         if attempted
         else ""
     )

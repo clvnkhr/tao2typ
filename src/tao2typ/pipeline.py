@@ -41,6 +41,10 @@ def converter_fingerprint() -> str:
         "parser.py",
         "typst.py",
         "tex.py",
+        "tex_compat.py",
+        "tex_tables.py",
+        "source_errors.py",
+        "data/source-errors.json",
         "alignment.py",
         "pipeline.py",
         "source.py",
@@ -56,11 +60,15 @@ def fetch_raw_pages(client: BlogClient, url: str, capture: RawCapture) -> list[s
 
     def record(page: FetchedPage) -> None:
         capture.add(
-            page.html, page.url, requested_url=page.requested_url, fetched_at=page.fetched_at
+            page.html,
+            page.url,
+            requested_url=page.requested_url,
+            fetched_at=page.fetched_at,
+            api_payloads=page.api_payloads,
         )
 
     try:
-        pages = client.fetch_post_pages(url, on_page=record)
+        pages = client.fetch_post_pages(url, on_page=record, on_api_payload=capture.add_api_payload)
         capture.finish()
         return pages
     except BaseException as error:

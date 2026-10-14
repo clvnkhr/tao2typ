@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "formulas": [
+    {
+      "post_url": "https://terrytao.wordpress.com/2008/06/18/the-strong-law-of-large-numbers/",
+      "comment_id": "comment-567646",
+      "tex": "\\displaystyle E |X_{>N}|N}}_n -E X_{>N}| \\le \\sqrt{E|\\overline{X_{\\le N}}_n - E X_{\\le N}|^2} + 2E|X_{>N}|",
+      "tex_sha256": "e09b680d3e4dbfac5f7cd8cfa598cd39efafe8153a7fec6b687fdf5661c053c7",
+      "evidence_page": "raw/pages/aecd335c80b72deb91064915ff0ea08a2e9ee0a91d70684c0d64ca42da684fea.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2010/01/18/254a-notes-3b-brownian-motion-and-dyson-brownian-motion/",
+      "comment_id": "comment-49956",
+      "tex": "(W_t)_{t\\in[0,\\infity)}",
+      "tex_sha256": "380e58e26b576e735be1b97042d74a2bd09306678806261d8274a130a05258af",
+      "evidence_page": "raw/pages/bc6ae4ded7a912792a943cdebc6a9db00a9ce50c0c11d5dff3bf8258ea544063.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2010/01/18/254a-notes-3b-brownian-motion-and-dyson-brownian-motion/",
+      "comment_id": "comment-49956",
+      "tex": "(W_t)_{t\\in(-\\infty,\\infity)}",
+      "tex_sha256": "e69449ae1581dcd60a5fdc0ec65fbb0d831bfb57c1ca5238b1944147ed940b4a",
+      "evidence_page": "raw/pages/bc6ae4ded7a912792a943cdebc6a9db00a9ce50c0c11d5dff3bf8258ea544063.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2011/08/10/a-geometric-proof-of-the-impossibility-of-angle-trisection-by-straightedge-and-compass/",
+      "comment_id": "comment-672471",
+      "tex": "cos\\frac{60}{3} = \\frac{(\\frac{k_{1}p)^{2} + (mp)^{2} - (\\frac{k_{1}m}{3})^{2}}{2[k_{1}p * mp]}",
+      "tex_sha256": "b97bf46c134c33433243ee545f177c5b7138d83fa85c640800264a159793ea96",
+      "evidence_page": "raw/pages/44afae77c78429e7eda97b4baf17accf6e00931384c78f7bbbf08c144afc934d.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2012/12/29/a-mathematical-formalisation-of-dimensional-analysis/",
+      "comment_id": "comment-468840",
+      "tex": "\\text{CH}_4 + \\color{blue}{2}\\;\\text{O}_2 \\longrightarrow \\color{blue}{2}\\;\\t ext{CO}_2 + \\text{H}_2\\text{O}",
+      "tex_sha256": "a90f284b06a1f433251bc2c9a2aecd3b8a94d2bcd6dc9d69fc81f992157d38b5",
+      "evidence_page": "raw/pages/0bee83f8af38b938a7bc8281f2df43240925f7dc5d891a3219b11061a4e37381.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2013/11/19/polymath8b-bounded-intervals-with-many-primes-after-maynard/",
+      "comment_id": "comment-467153",
+      "tex": "E_2=\\left{x\\in \\mathbb{N}|\\Omega(x)=2\\right}=\\left{q_{n}}_{n=1}^{\\infty}",
+      "tex_sha256": "eef3dc85dd7e55cbb33603d0467dee4486df9b3cabc2f459d6fc71a50c38ecf6",
+      "evidence_page": "raw/pages/244461885e07f1b15dcd0095c21eb56b4ed419e488b3ac64d3473f1331bd3262.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2015/08/26/heath-browns-theorem-on-prime-twins-and-siegel-zeroes/",
+      "comment_id": "comment-677775",
+      "tex": "T \\rightarow \\infty",
+      "tex_sha256": "b74591475dfeb95d115b1a325910f32cbdbef6f7c7338d6b6cddecee5fb558e7",
+      "evidence_page": "raw/pages/296257d92359d670cd514c7b991168b408287ca884571b8d9b1f3557a9e2c42b.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2019/09/10/almost-all-collatz-orbits-attain-almost-bounded-values/",
+      "comment_id": "comment-534090",
+      "tex": "{frac\\{log m}{log 4/3}}",
+      "tex_sha256": "75446673c161770aef004a0a197739c8f2f608556a7a7861b3ee626a02cd8210",
+      "evidence_page": "raw/pages/963aad9edbc8c74e8059b802f7877c45ce319129b8c1083048e13abd11a18fda.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2023/01/26/infinite-partial-sumsets-in-the-primes/",
+      "comment_id": "comment-677763",
+      "tex": "\\left(a_{(m)}\\in \\mathbf{A}_{(h_m)}",
+      "tex_sha256": "2a9f4745bb09c34c3d3bb8b94e6c4048d7c9458df8919dca5e3bcf8f977cfd80",
+      "evidence_page": "raw/pages/7d69c5c3d8c9e1e8d5032e61ee30975edc77350f1e4bb3cdff6a673ea6279c20.html.gz",
+      "reason": "Malformed TeX in the original comment"
+    },
+    {
+      "post_url": "https://terrytao.wordpress.com/2010/05/19/higher-order-hilbert-spaces/",
+      "comment_id": "comment-640762",
+      "context": "comment",
+      "tex": "\\centerline k, \\langle {\\mathcal D}(f,g,h) \\rangle_{L^2} = \\langle k, f, g, h \\rangle_{U^2}.",
+      "tex_sha256": "6ee0127f0c1ab10b4d9cb4b3e2178690e4b58f3185cfa8aecba412c8f73f9cde",
+      "evidence_page": "raw/pages/1c178492b9d4e42bf53dd623ee01958aa354bbe147b9c0ba3e2b165901a964b0.html.gz",
+      "reason": "Original image preserves the unsupported centerline layout",
+      "render_as": "source-image",
+      "source_image_url": "https://s0.wp.com/latex.php?latex=%5Ccenterline+k%2C+%5Clangle+%7B%5Cmathcal+D%7D%28f%2Cg%2Ch%29+%5Crangle_%7BL%5E2%7D+%3D+%5Clangle+k%2C+f%2C+g%2C+h+%5Crangle_%7BU%5E2%7D.&bg=ffffff&fg=545454&s=0&c=20201002"
+    }
+  ]
+}
