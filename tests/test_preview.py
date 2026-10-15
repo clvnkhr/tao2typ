@@ -37,7 +37,9 @@ def test_preview_links_local_artifacts_without_copying_them(tmp_path: Path) -> N
     preview = setup_preview(tmp_path)
     original_state = (preview.archive / "state.json").read_bytes()
     page = preview.index().decode()
-    assert 'href="http://127.0.0.1:8765/pdfs/a-post.pdf"' in page
+    assert 'data-download-url="http://127.0.0.1:8765/pdfs/a-post.pdf"' in page
+    assert 'data-filename="a-post.pdf"' in page
+    assert 'href="http://127.0.0.1:8765/pdfs/a-post.pdf"' not in page
     assert 'href="http://127.0.0.1:8765/typst/a-post.typ"' in page
     assert 'href="https://github.com/clvnkhr/tao2typ"' in page
     assert not (preview.output / "pdfs").exists()

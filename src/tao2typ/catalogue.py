@@ -146,6 +146,24 @@ def _download(
     if download_base_url is not None:
         relative = relative.removesuffix(".gz")
         return f"{download_base_url}/{quote(relative, safe='/')}"
+    repository = urlsplit(repo_url)
+    parts = repository.path.strip("/").split("/")
+    if (
+        kind == "pdf"
+        and repository.hostname == "github.com"
+        and len(parts) == 2
+        and all(parts)
+        and not repository.username
+        and not repository.password
+        and not repository.query
+        and not repository.fragment
+    ):
+        owner, name = parts
+        name = name.removesuffix(".git")
+        return (
+            f"https://raw.githubusercontent.com/{quote(owner, safe='')}/{quote(name, safe='')}/"
+            f"{quote(branch, safe='')}/{quote('archive/' + relative, safe='/')}"
+        )
     return f"{repo_url}/blob/{quote(branch, safe='')}/{quote('archive/' + relative, safe='/')}"
 
 
@@ -429,9 +447,17 @@ def _post_markup(
         for kind, terms in (("category", categories), ("tag", tags))
         for term in terms
     )
-    buttons = "".join(
+    pdf_path = _artifact_path(archive, post, "pdf")
+    buttons = (
+        f'<button class="pdf" type="button" aria-haspopup="dialog" '
+        f'data-download-url="{_escape(downloads["pdf"])}" '
+        f'data-filename="{_escape(pdf_path.name)}">PDF</button>'
+        if downloads["pdf"] and pdf_path
+        else ""
+    )
+    buttons += "".join(
         f'<a class="{kind}" href="{_escape(url)}">{label}{".gz" if url.endswith(".gz") else ""}</a>'
-        for kind, label in (("pdf", "PDF"), ("typst", ".typ"), ("ir", "JSON"))
+        for kind, label in (("typst", ".typ"), ("ir", "JSON"))
         if (url := downloads[kind])
     )
     converted = _conversion_date(post.get("converted_at")) if ready else ""

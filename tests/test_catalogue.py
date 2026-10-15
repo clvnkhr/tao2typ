@@ -96,9 +96,17 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert "PRIVATE-" not in page
     assert "pending_comments" not in page and "last_error" not in page
     soup = BeautifulSoup(page, "html.parser")
-    assert attribute(selected(soup, "a.pdf"), "href") == (
-        "https://github.com/clvnkhr/tao2typ/blob/main/archive/pdfs/einstein-e-mc2.pdf"
+    pdf = selected(soup, "button.pdf")
+    assert attribute(pdf, "data-download-url") == (
+        "https://raw.githubusercontent.com/clvnkhr/tao2typ/main/archive/pdfs/einstein-e-mc2.pdf"
     )
+    assert attribute(pdf, "data-filename") == "einstein-e-mc2.pdf"
+    assert attribute(pdf, "type") == "button"
+    assert attribute(pdf, "aria-haspopup") == "dialog"
+    assert not pdf.has_attr("href")
+    assert not soup.select("a.pdf, a[href$='.pdf']")
+    dialog = selected(soup, "dialog#pdf-dialog")
+    assert not selected(dialog, "input[type='password']").get("value")
     assert attribute(selected(soup, "a.typst"), "href") == (
         "https://github.com/clvnkhr/tao2typ/blob/main/archive/typst/einstein-e-mc2.typ"
     )
@@ -113,8 +121,9 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert "archive" not in soup.get_text().lower()
     assert selected(soup, ".site-note").get_text() == (
         "An unofficial personal site converting Terence Tao’s blog posts to PDFs with Typst."
+        " PDF downloads require a password to discourage mass distribution."
     )
-    assert selected(soup, "a.pdf").get_text() == "PDF"
+    assert pdf.get_text() == "PDF"
     assert selected(soup, "a.typst").get_text() == ".typ"
     assert "Pending" not in soup.get_text()
     assert selected(soup.select(".post")[0], ".availability").get_text() == ""
@@ -272,7 +281,7 @@ def test_current_failure_overrides_amber_even_with_an_older_pdf(tmp_path: Path) 
     row = selected(soup, '.post[data-id="1"]')
     assert row["data-quality"] == "red"
     assert row["data-ready"] == "true"
-    assert selected(row, "a.pdf")
+    assert selected(row, "button.pdf")
 
 
 def test_quality_classification_is_cached_until_the_ir_changes(
@@ -430,7 +439,7 @@ def test_titles_and_taxonomy_are_escaped_and_original_names_retained(tmp_path: P
 
 def test_paths_are_encoded_and_missing_or_unsafe_documents_not_linked(tmp_path: Path) -> None:
     archive = fixture_archive(tmp_path)
-    filename = "space & symbol#.pdf"
+    filename = 'space & "symbol"#.pdf'
     (archive / "pdfs" / filename).write_bytes(b"PRIVATE-PDF")
     raw = json.loads((archive / "state.json").read_text())
     raw["posts"]["1"]["pdf"] = f"pdfs/{filename}"
@@ -441,17 +450,34 @@ def test_paths_are_encoded_and_missing_or_unsafe_documents_not_linked(tmp_path: 
     output = tmp_path / "site"
     generate_site(archive, output, repo_url="https://github.com/example/repo/", branch="pages/test")
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
-    assert attribute(selected(soup, "a.pdf"), "href") == (
-        "https://github.com/example/repo/blob/pages%2Ftest/archive/pdfs/space%20%26%20symbol%23.pdf"
+    pdf = selected(soup, "button.pdf")
+    assert attribute(pdf, "data-download-url") == (
+        "https://raw.githubusercontent.com/example/repo/pages%2Ftest/archive/pdfs/"
+        "space%20%26%20%22symbol%22%23.pdf"
     )
+    assert attribute(pdf, "data-filename") == filename
+    assert not pdf.has_attr("href")
     assert not soup.select("a.typst")
     assert attribute(selected(soup.select(".post")[0], "a.original"), "href") == "#"
-    assert len(soup.select("a.pdf")) == 1
+    assert len(soup.select("button.pdf")) == 1
+    assert not soup.select("a.pdf, a[href$='.pdf']")
 
 
 def test_invalid_repository_url_rejected(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Repository URL"):
         generate_site(fixture_archive(tmp_path), tmp_path / "site", repo_url="javascript:alert(1)")
+
+
+@pytest.mark.parametrize(
+    "repo_url", ["https://github.com/example/repo.git", "https://github.com/example/repo.git/"]
+)
+def test_pdf_download_url_normalizes_github_clone_suffix(tmp_path: Path, repo_url: str) -> None:
+    output = tmp_path / "site"
+    generate_site(fixture_archive(tmp_path), output, repo_url=repo_url)
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert attribute(selected(soup, "button.pdf"), "data-download-url") == (
+        "https://raw.githubusercontent.com/example/repo/main/archive/pdfs/einstein-e-mc2.pdf"
+    )
 
 
 def test_taxonomy_route_encodes_special_characters(tmp_path: Path) -> None:
@@ -497,9 +523,10 @@ def test_public_download_base_exports_referenced_documents_only(tmp_path: Path) 
     output = tmp_path / "site"
     result = generate_site(archive, output, download_base_url="https://clvnkhr.github.io/tao2typ/")
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
-    assert attribute(selected(soup, "a.pdf"), "href") == (
+    assert attribute(selected(soup, "button.pdf"), "data-download-url") == (
         "https://clvnkhr.github.io/tao2typ/pdfs/einstein-e-mc2.pdf"
     )
+    assert not soup.select("a.pdf, a[href$='.pdf']")
     assert attribute(selected(soup, "a.typst"), "href") == (
         "https://clvnkhr.github.io/tao2typ/typst/einstein-e-mc2.typ"
     )
@@ -571,7 +598,7 @@ def test_public_export_does_not_follow_artifact_symlinks(tmp_path: Path) -> None
     assert result["converted"] == 0
     assert not (output / "pdfs").exists()
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
-    assert not soup.select("a.pdf")
+    assert not soup.select("button.pdf, a.pdf")
 
 
 def test_gzip_sources_keep_repository_links_and_export_native_downloads(tmp_path: Path) -> None:

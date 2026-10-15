@@ -288,6 +288,10 @@ The FAQ also has an **Edit this page** link to that file on GitHub.
 For a local preview, save the Markdown and reload `http://127.0.0.1:8765/faq.html`.
 The catalogue and FAQ follow the system's light or dark colour preference.
 
+PDF buttons ask for a password before starting a download. This is a simple
+browser-side deterrent to mass distribution; it does not restrict direct access
+to files in the public repository. The prompt is implemented in `web/app.js`.
+
 Prepare a public release without fetching or converting posts:
 
 ```sh
