@@ -1,76 +1,20 @@
 {
-  "updated_at": "2026-10-14T17:17:28.103654+00:00",
+  "updated_at": "2026-10-15T08:37:21.835013+00:00",
   "posts": [
     {
-      "id": 11075,
-      "url": "https://terrytao.wordpress.com/2019/04/30/11075/",
-      "title": "Effective approximation of heat flow evolution of the Riemann xi function, and a new upper bound for the de Bruijn-Newman constant",
+      "id": 5380,
+      "url": "https://terrytao.wordpress.com/2011/10/15/254a-notes-6-ultraproducts-as-a-bridge-between-hard-analysis-and-soft-analysis/",
+      "title": "254A, Notes 6: Ultraproducts as a bridge between hard analysis and soft analysis",
       "reasons": [
-        "recent-comment"
+        "birthday"
       ]
     },
     {
-      "id": 15871,
-      "url": "https://terrytao.wordpress.com/2025/11/24/call-for-industry-sponsors-for-ipams-rips-program/",
-      "title": "Call for industry sponsors for IPAM’s RIPS program",
+      "id": 7074,
+      "url": "https://terrytao.wordpress.com/2013/10/15/polymath8-writing-the-paper-iv/",
+      "title": "Polymath8: Writing the paper, IV",
       "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18389,
-      "url": "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/",
-      "title": "AHM Statement on OpenAI’s October 6 Release of Mathematical Documents",
-      "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18384,
-      "url": "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/",
-      "title": "What should we tell our students?",
-      "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18348,
-      "url": "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/",
-      "title": "What mathematicians should know about the Lean Theorem Prover: questions of reliability and AI",
-      "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18405,
-      "url": "https://terrytao.wordpress.com/2026/10/10/math-2-0/",
-      "title": "Math 2.0",
-      "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18399,
-      "url": "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/",
-      "title": "Illustration beyond Proof",
-      "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18335,
-      "url": "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/",
-      "title": "Additional recent pieces on math and AI",
-      "reasons": [
-        "recent-comment"
-      ]
-    },
-    {
-      "id": 18421,
-      "url": "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/",
-      "title": "This is normal bad work",
-      "reasons": [
-        "recent-comment"
+        "birthday"
       ]
     },
     {
@@ -82,9 +26,26 @@
       ]
     },
     {
+      "id": 18364,
+      "url": "https://terrytao.wordpress.com/2026/10/07/the-barriers-of-perception/",
+      "title": "The barriers of perception",
+      "reasons": [
+        "one-week"
+      ]
+    },
+    {
       "id": 18435,
       "url": "https://terrytao.wordpress.com/2026/10/14/first-proof-third-batch-webinar/",
       "title": "First Proof, Third Batch webinar",
+      "reasons": [
+        "initial",
+        "source-modified"
+      ]
+    },
+    {
+      "id": 18432,
+      "url": "https://terrytao.wordpress.com/2026/10/14/call-for-stories-human-ai-collaboration-in-recent-mathematics/",
+      "title": "Call for stories: human–AI collaboration in recent mathematics",
       "reasons": [
         "initial",
         "source-modified"

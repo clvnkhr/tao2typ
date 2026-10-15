@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-10-14T17:17:28.103654+00:00",
+  "last_discovered_at": "2026-10-15T08:34:24.085566+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -23676,17 +23676,17 @@
       "title": "Reading seminar: “Stable group theory and approximate subgroups”, by Ehud Hrushovski",
       "published_at": "2009-10-15T19:49:20-08:00",
       "modified_at": "2009-10-29T09:58:25-08:00",
-      "last_checked_at": "2026-10-14T11:29:22.921339+00:00",
-      "last_attempted_at": "2026-10-14T16:35:54.381643+00:00",
-      "converted_at": "2026-10-14T16:35:54.537974+00:00",
+      "last_checked_at": "2026-10-15T08:37:21.771521+00:00",
+      "last_attempted_at": "2026-10-15T08:37:08.722397+00:00",
+      "converted_at": "2026-10-15T08:37:21.523234+00:00",
       "converted_modified_at": "2009-10-29T09:58:25-08:00",
-      "next_check_at": "2026-10-15T08:00:00+00:00",
-      "content_sha256": "8fa4edc3e2595137c251303c6bba6b0219a259855bdccf813055dc1c798f835b",
+      "next_check_at": "2027-10-15T08:00:00+00:00",
+      "content_sha256": "cb46aca570a2690126addaae48be7ecb02951a4819affa1b6255d91b76220122",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/reading-seminar-stable-group-theory-and-approximate-subgroups-by-ehud-hrushovski.pdf",
       "ir": "ir/reading-seminar-stable-group-theory-and-approximate-subgroups-by-ehud-hrushovski.json.gz",
       "typst": "typst/reading-seminar-stable-group-theory-and-approximate-subgroups-by-ehud-hrushovski.typ.gz",
-      "source_manifest": "raw/reading-seminar-stable-group-theory-and-approximate-subgroups-by-ehud-hrushovski/20261014T112917.084816Z/manifest.json.gz",
+      "source_manifest": "raw/reading-seminar-stable-group-theory-and-approximate-subgroups-by-ehud-hrushovski/20261015T083708.783691Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -60536,23 +60536,23 @@
       "title": "Effective approximation of heat flow evolution of the Riemann xi function, and a new upper bound for the de Bruijn-Newman constant",
       "published_at": "2019-04-30T16:30:31-08:00",
       "modified_at": "2019-05-03T16:13:43-08:00",
-      "last_checked_at": "2026-10-14T10:51:20.835850+00:00",
-      "last_attempted_at": "2026-10-14T16:38:32.657016+00:00",
-      "converted_at": "2026-10-14T16:38:32.721429+00:00",
+      "last_checked_at": "2026-10-15T08:34:53.964701+00:00",
+      "last_attempted_at": "2026-10-15T08:34:38.301420+00:00",
+      "converted_at": "2026-10-15T08:34:53.466666+00:00",
       "converted_modified_at": "2019-05-03T16:13:43-08:00",
       "next_check_at": "2027-04-30T08:00:00+00:00",
-      "content_sha256": "dbe08fca400cdddd517cd7d6ae6006932b6e53c4a3d7ead3b6bbd6b745589d1c",
+      "content_sha256": "d4e8a3835fd4f763c48518e6e39a3fae3bb2f21fd75d0230255ad0868a568fae",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/11075.pdf",
       "ir": "ir/11075.json.gz",
       "typst": "typst/11075.typ.gz",
-      "source_manifest": "raw/11075/20261014T105119.307405Z/manifest.json.gz",
+      "source_manifest": "raw/11075/20261015T083438.363391Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
         "https://terrytao.wordpress.com/2019/04/30/11075/#comment-697792",
         "https://terrytao.wordpress.com/2019/04/30/11075/#comment-697784"
       ],
-      "seen_comments": [],
       "tags": [
         {
           "id": 603967522,
@@ -72128,22 +72128,22 @@
       "title": "Call for industry sponsors for IPAM’s RIPS program",
       "published_at": "2025-11-24T20:00:58-08:00",
       "modified_at": "2025-11-24T20:06:56-08:00",
-      "last_checked_at": "2026-10-14T11:15:02.989347+00:00",
-      "last_attempted_at": "2026-10-14T16:39:20.056198+00:00",
-      "converted_at": "2026-10-14T16:39:20.180693+00:00",
+      "last_checked_at": "2026-10-15T08:34:58.497089+00:00",
+      "last_attempted_at": "2026-10-15T08:34:54.044511+00:00",
+      "converted_at": "2026-10-15T08:34:58.439252+00:00",
       "converted_modified_at": "2025-11-24T20:06:56-08:00",
       "next_check_at": "2026-11-24T08:00:00+00:00",
-      "content_sha256": "7f0f3570bb5ca2c0265cf8973d5a5c1e284bd2d845c663f40e4e0e8e1f822737",
+      "content_sha256": "2e7efcedbd7cdcdf806275b5b71220774e73568e9484915413ea93b9972a46f7",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/call-for-industry-sponsors-for-ipams-rips-program.pdf",
       "ir": "ir/call-for-industry-sponsors-for-ipams-rips-program.json.gz",
       "typst": "typst/call-for-industry-sponsors-for-ipams-rips-program.typ.gz",
-      "source_manifest": "raw/call-for-industry-sponsors-for-ipams-rips-program/20261014T111501.133636Z/manifest.json.gz",
+      "source_manifest": "raw/call-for-industry-sponsors-for-ipams-rips-program/20261015T083454.105675Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
         "https://terrytao.wordpress.com/2025/11/24/call-for-industry-sponsors-for-ipams-rips-program/#comment-697776"
       ],
-      "seen_comments": [],
       "tags": [
         {
           "id": 696247,
@@ -77323,25 +77323,24 @@
       "title": "AHM Statement on OpenAI’s October 6 Release of Mathematical Documents",
       "published_at": "2026-10-07T16:02:51-08:00",
       "modified_at": "2026-10-07T16:02:51-08:00",
-      "last_checked_at": "2026-10-14T11:21:55.552436+00:00",
-      "last_attempted_at": "2026-10-14T16:39:37.598954+00:00",
-      "converted_at": "2026-10-14T16:39:37.911667+00:00",
+      "last_checked_at": "2026-10-15T08:35:31.187545+00:00",
+      "last_attempted_at": "2026-10-15T08:34:58.573657+00:00",
+      "converted_at": "2026-10-15T08:35:30.738505+00:00",
       "converted_modified_at": "2026-10-07T16:02:51-08:00",
-      "next_check_at": "2026-10-15T00:02:51+00:00",
-      "content_sha256": "e45d95aaf766b93c09e65debd293ad98fd82a54adbcdf30bfe8e53387a7fe056",
+      "next_check_at": "2026-11-08T00:02:51+00:00",
+      "content_sha256": "82137ce0c49fd3ed399a17a6305a27e70a003728f4bfd3af09a4682a8e1ef6b7",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/ahm-statement-on-openais-october-6-release-of-mathematical-documents.pdf",
       "ir": "ir/ahm-statement-on-openais-october-6-release-of-mathematical-documents.json.gz",
       "typst": "typst/ahm-statement-on-openais-october-6-release-of-mathematical-documents.typ.gz",
-      "source_manifest": "raw/ahm-statement-on-openais-october-6-release-of-mathematical-documents/20261014T112135.243481Z/manifest.json.gz",
+      "source_manifest": "raw/ahm-statement-on-openais-october-6-release-of-mathematical-documents/20261015T083458.634265Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/#comment-697846",
         "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/#comment-697886",
         "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/#comment-697885",
         "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/#comment-697804"
-      ],
-      "seen_comments": [
-        "https://terrytao.wordpress.com/2026/10/07/ahm-statement-on-openais-october-6-release-of-mathematical-documents/#comment-697846"
       ],
       "tags": [
         {
@@ -77382,28 +77381,27 @@
       "title": "What should we tell our students?",
       "published_at": "2026-10-08T06:43:35-08:00",
       "modified_at": "2026-10-08T11:10:11-08:00",
-      "last_checked_at": "2026-10-14T10:17:25.542105+00:00",
-      "last_attempted_at": "2026-10-14T16:39:37.765400+00:00",
-      "converted_at": "2026-10-14T16:39:38.254463+00:00",
+      "last_checked_at": "2026-10-15T08:35:55.973362+00:00",
+      "last_attempted_at": "2026-10-15T08:35:31.260450+00:00",
+      "converted_at": "2026-10-15T08:35:55.501204+00:00",
       "converted_modified_at": "2026-10-08T11:10:11-08:00",
       "next_check_at": "2026-10-15T14:43:35+00:00",
-      "content_sha256": "e23d7877be588f6706ae73a971beaf3ca3cafa87f9b4f0319d1e860abee0a683",
+      "content_sha256": "c8a13414f5cf605b0ef224cb5b6df42f64d40194ff030432f934bcbeb5a9938a",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/what-should-we-tell-our-students.pdf",
       "ir": "ir/what-should-we-tell-our-students.json.gz",
       "typst": "typst/what-should-we-tell-our-students.typ.gz",
-      "source_manifest": "raw/what-should-we-tell-our-students/20261014T101657.088597Z/manifest.json.gz",
+      "source_manifest": "raw/what-should-we-tell-our-students/20261015T083531.323824Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697852",
+        "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697943",
+        "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697984",
         "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697917",
         "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697824",
         "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697767",
         "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697754"
-      ],
-      "seen_comments": [
-        "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697852",
-        "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697943",
-        "https://terrytao.wordpress.com/2026/10/08/what-should-we-tell-our-students/#comment-697984"
       ],
       "tags": [
         {
@@ -77451,29 +77449,28 @@
       "title": "What mathematicians should know about the Lean Theorem Prover: questions of reliability and AI",
       "published_at": "2026-10-09T08:35:03-08:00",
       "modified_at": "2026-10-09T15:41:06-08:00",
-      "last_checked_at": "2026-10-14T11:22:07.398951+00:00",
-      "last_attempted_at": "2026-10-14T16:39:38.088110+00:00",
-      "converted_at": "2026-10-14T16:39:38.325873+00:00",
+      "last_checked_at": "2026-10-15T08:36:12.631741+00:00",
+      "last_attempted_at": "2026-10-15T08:35:56.046427+00:00",
+      "converted_at": "2026-10-15T08:36:12.452349+00:00",
       "converted_modified_at": "2026-10-09T15:41:06-08:00",
       "next_check_at": "2026-10-16T16:35:03+00:00",
-      "content_sha256": "dd7cca1e1d7af4499eee4248752f87093257456dc373fcd22ff6f33acdd27e5b",
+      "content_sha256": "e684a3099c771f8676000563e62334fc72365bec2650171451411230d82fa4d6",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai.pdf",
       "ir": "ir/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai.json.gz",
       "typst": "typst/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai.typ.gz",
-      "source_manifest": "raw/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/20261014T112155.689354Z/manifest.json.gz",
+      "source_manifest": "raw/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/20261015T083556.106852Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697853",
+        "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697815",
         "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697988",
         "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697985",
         "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697913",
         "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697765",
         "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697763",
         "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697751"
-      ],
-      "seen_comments": [
-        "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697853",
-        "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/#comment-697815"
       ],
       "tags": [
         {
@@ -77521,19 +77518,22 @@
       "title": "Math 2.0",
       "published_at": "2026-10-10T08:16:02-08:00",
       "modified_at": "2026-10-10T08:16:02-08:00",
-      "last_checked_at": "2026-10-14T06:56:41.076504+00:00",
-      "last_attempted_at": "2026-10-14T16:39:38.210684+00:00",
-      "converted_at": "2026-10-14T16:39:38.352976+00:00",
+      "last_checked_at": "2026-10-15T08:36:29.625855+00:00",
+      "last_attempted_at": "2026-10-15T08:36:12.707325+00:00",
+      "converted_at": "2026-10-15T08:36:29.453247+00:00",
       "converted_modified_at": "2026-10-10T08:16:02-08:00",
       "next_check_at": "2026-10-17T16:16:02+00:00",
-      "content_sha256": "1a85d053fba2d8751d7421867e6be43174a30454fd06ab212d16f8b5a9235310",
+      "content_sha256": "9a557a51164c4b6a167ba6a56252be78161f725556e7409885f8f3db2137b23a",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/math-2-0.pdf",
       "ir": "ir/math-2-0.json.gz",
       "typst": "typst/math-2-0.typ.gz",
-      "source_manifest": "raw/math-2-0/20261014T065626.160636Z/manifest.json.gz",
+      "source_manifest": "raw/math-2-0/20261015T083612.779249Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697966",
+        "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697963",
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697894",
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697871",
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697817",
@@ -77545,10 +77545,6 @@
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697770",
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697769",
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697762"
-      ],
-      "seen_comments": [
-        "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697966",
-        "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697963"
       ],
       "tags": [],
       "categories": [
@@ -77574,19 +77570,21 @@
       "title": "Illustration beyond Proof",
       "published_at": "2026-10-11T15:21:07-08:00",
       "modified_at": "2026-10-11T16:49:07-08:00",
-      "last_checked_at": "2026-10-14T11:22:14.742989+00:00",
-      "last_attempted_at": "2026-10-14T16:39:38.688411+00:00",
-      "converted_at": "2026-10-14T16:39:38.960994+00:00",
+      "last_checked_at": "2026-10-15T08:36:40.580095+00:00",
+      "last_attempted_at": "2026-10-15T08:36:29.700430+00:00",
+      "converted_at": "2026-10-15T08:36:40.475119+00:00",
       "converted_modified_at": "2026-10-11T16:49:07-08:00",
       "next_check_at": "2026-10-18T23:21:07+00:00",
-      "content_sha256": "85228e01200e9db9991ca6dda292fd4e9a244570219c196fa7c400b4fdf26553",
+      "content_sha256": "3cb665c43992c3766824063a09b91b72170f94d0e3b1a3d7745c93adc3a71990",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/illustration-beyond-proof.pdf",
       "ir": "ir/illustration-beyond-proof.json.gz",
       "typst": "typst/illustration-beyond-proof.typ.gz",
-      "source_manifest": "raw/illustration-beyond-proof/20261014T112207.513938Z/manifest.json.gz",
+      "source_manifest": "raw/illustration-beyond-proof/20261015T083629.760193Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697813",
         "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697906",
         "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697903",
         "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697791",
@@ -77594,9 +77592,6 @@
         "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697777",
         "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697768",
         "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697753"
-      ],
-      "seen_comments": [
-        "https://terrytao.wordpress.com/2026/10/11/illustration-beyond-proof/#comment-697813"
       ],
       "tags": [],
       "categories": [
@@ -77622,27 +77617,19 @@
       "title": "Additional recent pieces on math and AI",
       "published_at": "2026-10-12T06:19:10-08:00",
       "modified_at": "2026-10-12T06:24:43-08:00",
-      "last_checked_at": "2026-10-14T11:22:21.508529+00:00",
-      "last_attempted_at": "2026-10-14T16:39:38.960030+00:00",
-      "converted_at": "2026-10-14T16:39:39.120434+00:00",
+      "last_checked_at": "2026-10-15T08:36:54.525040+00:00",
+      "last_attempted_at": "2026-10-15T08:36:40.647671+00:00",
+      "converted_at": "2026-10-15T08:36:54.452304+00:00",
       "converted_modified_at": "2026-10-12T06:24:43-08:00",
       "next_check_at": "2026-10-19T14:19:10+00:00",
-      "content_sha256": "fa12ac9e94e339530c3a9ae6a2d941035a68e8d6bc3d62883bfbc5a57b603f6d",
+      "content_sha256": "bb182a7f92e766a73a8235a087693f1f201239e47c6e769d86eb8e10df6dc616",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/additional-recent-pieces-on-math-and-ai.pdf",
       "ir": "ir/additional-recent-pieces-on-math-and-ai.json.gz",
       "typst": "typst/additional-recent-pieces-on-math-and-ai.typ.gz",
-      "source_manifest": "raw/additional-recent-pieces-on-math-and-ai/20261014T112214.875481Z/manifest.json.gz",
+      "source_manifest": "raw/additional-recent-pieces-on-math-and-ai/20261015T083640.716253Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697992",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697928",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697912",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697872",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697809",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697801",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697796"
-      ],
+      "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697865",
         "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697856",
@@ -77652,7 +77639,16 @@
         "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697828",
         "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697827",
         "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697820",
-        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697967"
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697967",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697992",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697928",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697912",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697872",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697809",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697801",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-697796",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-698029",
+        "https://terrytao.wordpress.com/2026/10/12/additional-recent-pieces-on-math-and-ai/#comment-698004"
       ],
       "tags": [
         {
@@ -77679,35 +77675,19 @@
       "title": "This is normal bad work",
       "published_at": "2026-10-12T19:14:00-08:00",
       "modified_at": "2026-10-12T07:16:12-08:00",
-      "last_checked_at": "2026-10-14T10:17:41.175172+00:00",
-      "last_attempted_at": "2026-10-14T16:39:38.960075+00:00",
-      "converted_at": "2026-10-14T16:39:39.169105+00:00",
+      "last_checked_at": "2026-10-15T08:37:08.647389+00:00",
+      "last_attempted_at": "2026-10-15T08:36:54.607479+00:00",
+      "converted_at": "2026-10-15T08:37:08.457052+00:00",
       "converted_modified_at": "2026-10-12T07:16:12-08:00",
       "next_check_at": "2026-10-20T03:14:00+00:00",
-      "content_sha256": "77476805b856b8b87b3979d9deb900d400d8e02755e0032f07769263d4a69169",
+      "content_sha256": "22bc22aae5320db3d928f54d1316e846b41eb414e92a4b89bddcc9592e2324ba",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/this-is-normal-bad-work.pdf",
       "ir": "ir/this-is-normal-bad-work.json.gz",
       "typst": "typst/this-is-normal-bad-work.typ.gz",
-      "source_manifest": "raw/this-is-normal-bad-work/20261014T101725.623763Z/manifest.json.gz",
+      "source_manifest": "raw/this-is-normal-bad-work/20261015T083654.667199Z/manifest.json.gz",
       "last_error": null,
-      "pending_comments": [
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697930",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697923",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697921",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697919",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697914",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697911",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697909",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697908",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697905",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697901",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697899",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697890",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697875",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697874",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697867"
-      ],
+      "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697866",
         "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697862",
@@ -77731,7 +77711,28 @@
         "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697982",
         "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697981",
         "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697975",
-        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697971"
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697971",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697930",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697923",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697921",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697919",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697914",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697911",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697909",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697908",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697905",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697901",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697899",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697890",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697875",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697874",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-697867",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-698071",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-698062",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-698040",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-698024",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-698012",
+        "https://terrytao.wordpress.com/2026/10/12/this-is-normal-bad-work/#comment-698009"
       ],
       "tags": [
         {
@@ -77860,10 +77861,56 @@
           "parent_id": 0
         }
       ]
+    },
+    "18432": {
+      "id": 18432,
+      "url": "https://terrytao.wordpress.com/2026/10/14/call-for-stories-human-ai-collaboration-in-recent-mathematics/",
+      "title": "Call for stories: human–AI collaboration in recent mathematics",
+      "published_at": "2026-10-14T17:25:45-08:00",
+      "modified_at": "2026-10-13T17:30:56-08:00",
+      "last_checked_at": null,
+      "last_attempted_at": null,
+      "converted_at": null,
+      "converted_modified_at": null,
+      "next_check_at": "2026-10-15T01:25:45+00:00",
+      "content_sha256": null,
+      "converter_fingerprint": null,
+      "pdf": null,
+      "ir": null,
+      "typst": null,
+      "source_manifest": null,
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [],
+      "tags": [],
+      "categories": [
+        {
+          "id": 521,
+          "name": "advertising",
+          "slug": "advertising",
+          "url": "https://terrytao.wordpress.com/?cat=521",
+          "parent_id": 47932
+        },
+        {
+          "id": 279350,
+          "name": "guest blog",
+          "slug": "guest-blog",
+          "url": "https://terrytao.wordpress.com/?cat=279350",
+          "parent_id": 0
+        },
+        {
+          "id": 1440153,
+          "name": "math.HO",
+          "slug": "math-ho",
+          "url": "https://terrytao.wordpress.com/?cat=1440153",
+          "parent_id": 3582
+        }
+      ]
     }
   },
   "daily_attempts": {
     "2026-10-13": 10,
-    "2026-10-14": 10
+    "2026-10-14": 10,
+    "2026-10-15": 10
   }
 }
