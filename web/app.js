@@ -30,105 +30,123 @@
   let selectedOrder = sort.value;
   const links = Array.from(document.querySelectorAll(".taxonomy a[data-route]"));
   const terms = new Map(links.map(link => [link.dataset.route, link.dataset.name]));
-  const pdfDialog = document.getElementById("pdf-dialog");
-  const pdfForm = document.getElementById("pdf-form");
-  const pdfPassword = document.getElementById("pdf-password");
-  const pdfError = document.getElementById("pdf-password-error");
-  const pdfStatus = document.getElementById("pdf-download-status");
-  const pdfSubmit = document.getElementById("pdf-download-submit");
-  const pdfCancel = document.getElementById("pdf-download-cancel");
-  let pdfSelection = null;
-  let pdfRequest = null;
+  const downloadMediaTypes = {
+    pdf: "application/pdf",
+    gzip: "application/gzip",
+    typst: "text/plain; charset=utf-8",
+    json: "application/json",
+    text: "text/plain; charset=utf-8",
+  };
+  const downloadDialog = document.getElementById("download-dialog");
+  const downloadForm = document.getElementById("download-form");
+  const downloadPassword = document.getElementById("download-password");
+  const downloadError = document.getElementById("download-password-error");
+  const downloadStatus = document.getElementById("download-status");
+  const downloadSubmit = document.getElementById("download-submit");
+  const downloadCancel = document.getElementById("download-cancel");
+  let downloadSelection = null;
+  let downloadRequest = null;
 
-  function clearPdfState() {
-    const button = pdfSelection?.button;
-    pdfRequest?.abort();
-    pdfRequest = null;
-    pdfSelection = null;
+  function clearDownloadState() {
+    const button = downloadSelection?.button;
+    downloadRequest?.abort();
+    downloadRequest = null;
+    downloadSelection = null;
     if (button) button.disabled = false;
-    pdfForm.reset();
-    pdfPassword.disabled = false;
-    pdfPassword.removeAttribute("aria-invalid");
-    pdfSubmit.disabled = false;
-    pdfSubmit.removeAttribute("aria-busy");
-    pdfError.textContent = "";
-    pdfError.hidden = true;
-    pdfStatus.textContent = "";
-    pdfStatus.hidden = true;
+    downloadForm.reset();
+    downloadPassword.disabled = false;
+    downloadPassword.removeAttribute("aria-invalid");
+    downloadSubmit.disabled = false;
+    downloadSubmit.removeAttribute("aria-busy");
+    downloadError.textContent = "";
+    downloadError.hidden = true;
+    downloadStatus.textContent = "";
+    downloadStatus.hidden = true;
     return button;
   }
 
-  function closePdfDialog() {
-    const button = clearPdfState();
-    if (pdfDialog.open) pdfDialog.close();
+  function closeDownloadDialog() {
+    const button = clearDownloadState();
+    if (downloadDialog.open) downloadDialog.close();
     if (button?.isConnected) button.focus({ preventScroll: true });
   }
 
   list.addEventListener("click", event => {
-    const button = event.target instanceof Element ? event.target.closest("button.pdf") : null;
-    if (!button || !list.contains(button) || button.disabled || pdfDialog.open) return;
+    const button = event.target instanceof Element ? event.target.closest("button.download") : null;
+    if (!button || !list.contains(button) || button.disabled || downloadDialog.open) return;
     event.preventDefault();
     const url = button.dataset.downloadUrl;
     if (!url) return;
-    clearPdfState();
-    pdfSelection = { button, url, filename: button.dataset.filename || "tao2typ.pdf" };
-    pdfDialog.showModal();
-    pdfPassword.focus();
+    clearDownloadState();
+    downloadSelection = {
+      button, url,
+      filename: button.dataset.filename || "tao2typ.txt",
+      format: button.dataset.downloadFormat || "text",
+    };
+    downloadDialog.showModal();
+    downloadPassword.focus();
   });
-  pdfCancel.addEventListener("click", closePdfDialog);
-  pdfDialog.addEventListener("cancel", event => {
+  downloadCancel.addEventListener("click", closeDownloadDialog);
+  downloadDialog.addEventListener("cancel", event => {
     event.preventDefault();
-    closePdfDialog();
+    closeDownloadDialog();
   });
-  pdfDialog.addEventListener("close", () => {
+  downloadDialog.addEventListener("close", () => {
     // A delayed close event must not reset a newly opened download prompt.
-    if (!pdfDialog.open) {
-      const button = clearPdfState();
+    if (!downloadDialog.open) {
+      const button = clearDownloadState();
       if (button?.isConnected) button.focus({ preventScroll: true });
     }
   });
-  pdfPassword.addEventListener("input", () => {
-    pdfPassword.removeAttribute("aria-invalid");
-    pdfError.textContent = "";
-    pdfError.hidden = true;
+  downloadPassword.addEventListener("input", () => {
+    downloadPassword.removeAttribute("aria-invalid");
+    downloadError.textContent = "";
+    downloadError.hidden = true;
   });
-  pdfForm.addEventListener("submit", async event => {
+  downloadForm.addEventListener("submit", async event => {
     event.preventDefault();
-    if (!pdfSelection || pdfRequest) return;
-    if (pdfPassword.value !== "clvnkhr") {
-      pdfPassword.value = "";
-      pdfPassword.setAttribute("aria-invalid", "true");
-      pdfError.textContent = "Incorrect password. Try again.";
-      pdfError.hidden = false;
-      pdfPassword.focus();
+    if (!downloadSelection || downloadRequest) return;
+    if (downloadPassword.value !== "clvnkhr") {
+      downloadPassword.value = "";
+      downloadPassword.setAttribute("aria-invalid", "true");
+      downloadError.textContent = "Incorrect password. Try again.";
+      downloadError.hidden = false;
+      downloadPassword.focus();
       return;
     }
-    const selection = pdfSelection;
+    const selection = downloadSelection;
     const request = new AbortController();
-    pdfRequest = request;
-    pdfPassword.value = "";
-    pdfPassword.removeAttribute("aria-invalid");
-    pdfPassword.disabled = true;
-    pdfError.textContent = "";
-    pdfError.hidden = true;
-    pdfSubmit.disabled = true;
-    pdfSubmit.setAttribute("aria-busy", "true");
+    downloadRequest = request;
+    downloadPassword.value = "";
+    downloadPassword.removeAttribute("aria-invalid");
+    downloadPassword.disabled = true;
+    downloadError.textContent = "";
+    downloadError.hidden = true;
+    downloadSubmit.disabled = true;
+    downloadSubmit.setAttribute("aria-busy", "true");
     selection.button.disabled = true;
-    pdfStatus.textContent = "Downloading…";
-    pdfStatus.hidden = false;
+    downloadStatus.textContent = "Downloading…";
+    downloadStatus.hidden = false;
     try {
       const response = await fetch(selection.url, { signal: request.signal });
-      if (pdfRequest !== request || !pdfDialog.open) return;
+      if (downloadRequest !== request || !downloadDialog.open) return;
       if (!response.ok) throw new Error("Download failed");
       const blob = await response.blob();
-      if (pdfRequest !== request || !pdfDialog.open) return;
-      // Static hosts may use a generic MIME type; verify the PDF bytes instead.
-      const signature = new Uint8Array(await blob.slice(0, 5).arrayBuffer());
-      if (pdfRequest !== request || request.signal.aborted || !pdfDialog.open) return;
-      if (signature.length !== 5 || ![37, 80, 68, 70, 45].every((byte, i) => signature[i] === byte)) {
+      if (downloadRequest !== request || !downloadDialog.open) return;
+      // Static hosts may use generic MIME types; check binary signatures when available.
+      const expected = { pdf: [37, 80, 68, 70, 45], gzip: [31, 139, 8] }[selection.format];
+      if (expected) {
+        const signature = new Uint8Array(await blob.slice(0, expected.length).arrayBuffer());
+        if (signature.length !== expected.length || !expected.every((byte, i) => signature[i] === byte)) {
+          throw new Error("Download failed");
+        }
+      } else if (blob.type.split(";")[0] === "text/html") {
         throw new Error("Download failed");
       }
-      const objectUrl = URL.createObjectURL(new Blob([blob], { type: "application/pdf" }));
+      if (downloadRequest !== request || request.signal.aborted || !downloadDialog.open) return;
+      const objectUrl = URL.createObjectURL(new Blob([blob], {
+        type: downloadMediaTypes[selection.format] || downloadMediaTypes.text,
+      }));
       const link = document.createElement("a");
       link.href = objectUrl;
       link.download = selection.filename;
@@ -138,21 +156,21 @@
         link.remove();
         window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
       }
-      closePdfDialog();
+      closeDownloadDialog();
     } catch {
-      if (pdfRequest !== request || request.signal.aborted) return;
-      pdfError.textContent = "Download failed. Please try again.";
-      pdfError.hidden = false;
+      if (downloadRequest !== request || request.signal.aborted) return;
+      downloadError.textContent = "Download failed. Please try again.";
+      downloadError.hidden = false;
     } finally {
-      if (pdfRequest === request) {
-        pdfRequest = null;
+      if (downloadRequest === request) {
+        downloadRequest = null;
         selection.button.disabled = false;
-        pdfPassword.disabled = false;
-        pdfSubmit.disabled = false;
-        pdfSubmit.removeAttribute("aria-busy");
-        pdfStatus.textContent = "";
-        pdfStatus.hidden = true;
-        pdfPassword.focus();
+        downloadPassword.disabled = false;
+        downloadSubmit.disabled = false;
+        downloadSubmit.removeAttribute("aria-busy");
+        downloadStatus.textContent = "";
+        downloadStatus.hidden = true;
+        downloadPassword.focus();
       }
     }
   });

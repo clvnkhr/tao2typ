@@ -6,6 +6,7 @@ state, job reports and failure files are never exported. The page includes
 the ordered queue and brief failure reasons. Local previews can expose diagnostics.
 """
 
+import hashlib
 import html
 import json
 import re
@@ -107,14 +108,17 @@ def _failure_markup(
     extra = ""
     if diagnostics_base_url is not None:
         links = []
-        for key in failure_artifacts(archive, post, stem):
+        for key, path in failure_artifacts(archive, post, stem).items():
             label = {"typst": "Failed .typ", "ir": "Failed JSON", "capture": "Capture"}.get(key)
             if key.startswith("html/"):
                 label = f"HTML {int(key.split('/')[1]) + 1}"
             url = (
                 f"{diagnostics_base_url}/__tao2typ_failure/{quote(str(post['id']), safe='')}/{key}"
             )
-            links.append(f'<a href="{_escape(url)}">{_escape(label)}</a>')
+            file_format = {"typst": "typst", "ir": "json", "capture": "json"}.get(key, "text")
+            links.append(
+                _download_button(url, path.name.removesuffix(".gz"), str(label), file_format)
+            )
         extra = f'<pre>{_escape(error)}</pre><div class="failure-actions">{"".join(links)}</div>'
     return (
         '<details class="failure-details">'
@@ -129,6 +133,15 @@ def _terms(post: dict[str, Any], kind: str) -> list[dict[str, Any]]:
         for term in post.get(kind, [])
         if isinstance(term, dict) and term.get("name") and term.get("slug")
     ]
+
+
+def _download_button(url: str, filename: str, label: str, kind: str) -> str:
+    file_format = "gzip" if filename.endswith(".gz") else "json" if kind == "ir" else kind
+    return (
+        f'<button class="download {kind}" type="button" aria-haspopup="dialog" '
+        f'data-download-url="{_escape(url)}" data-filename="{_escape(filename)}" '
+        f'data-download-format="{_escape(file_format)}">{_escape(label)}</button>'
+    )
 
 
 def _download(
@@ -149,8 +162,7 @@ def _download(
     repository = urlsplit(repo_url)
     parts = repository.path.strip("/").split("/")
     if (
-        kind == "pdf"
-        and repository.hostname == "github.com"
+        repository.hostname == "github.com"
         and len(parts) == 2
         and all(parts)
         and not repository.username
@@ -448,19 +460,15 @@ def _post_markup(
         for kind, terms in (("category", categories), ("tag", tags))
         for term in terms
     )
-    pdf_path = _artifact_path(archive, post, "pdf")
-    buttons = (
-        f'<button class="pdf" type="button" aria-haspopup="dialog" '
-        f'data-download-url="{_escape(downloads["pdf"])}" '
-        f'data-filename="{_escape(pdf_path.name)}">PDF</button>'
-        if downloads["pdf"] and pdf_path
-        else ""
-    )
-    buttons += "".join(
-        f'<a class="{kind}" href="{_escape(url)}">{label}{".gz" if url.endswith(".gz") else ""}</a>'
-        for kind, label in (("typst", ".typ"), ("ir", "JSON"))
-        if (url := downloads[kind])
-    )
+    buttons = ""
+    for kind, label in (("pdf", "PDF"), ("typst", ".typ"), ("ir", "JSON")):
+        path = _artifact_path(archive, post, kind)
+        if not (url := downloads[kind]) or path is None:
+            continue
+        filename = path.name.removesuffix(".gz") if download_base_url is not None else path.name
+        if filename.endswith(".gz"):
+            label += ".gz"
+        buttons += _download_button(url, filename, label, kind)
     converted = _conversion_date(post.get("converted_at")) if ready else ""
     availability = f'Converted <time datetime="{converted}">{converted}</time>' if converted else ""
     ready_class = " ready" if ready else ""
@@ -600,6 +608,8 @@ def generate_site(
     if download_base_url is not None and copy_downloads:
         counts["exported_files"] = _export_downloads(archive, output, posts)
     replacements = {
+        "STYLE_VERSION": hashlib.sha256((_ASSETS / "style.css").read_bytes()).hexdigest()[:12],
+        "SCRIPT_VERSION": hashlib.sha256((_ASSETS / "app.js").read_bytes()).hexdigest()[:12],
         "REPO_URL": _escape(repo_url),
         "TOTAL": f"{counts['total']:,}",
         "CONVERTED": f"{counts['converted']:,}",
@@ -624,7 +634,7 @@ def generate_site(
     faq = faq.replace("@@HEADER@@", faq_header).replace(
         "@@EDIT_FAQ_URL@@", _escape(f"{repo_url}/edit/{quote(branch, safe='')}/web/faq.md")
     )
-    faq = faq.replace(
+    faq = faq.replace("@@STYLE_VERSION@@", replacements["STYLE_VERSION"]).replace(
         "@@FAQ_CONTENT@@",
         MarkdownIt("commonmark", {"html": False}).render(
             (_ASSETS / "faq.md").read_text(encoding="utf-8")

@@ -267,9 +267,9 @@ bash scripts/publish-catalogue.sh /path/to/clvnkhr.github.io
 
 Watch a running local batch with `uv run tao2typ serve`, then open
 [the local queue](http://127.0.0.1:8765/#queue). It refreshes every 15 seconds
-when the checkpoint changes, preserving search and filters. PDF and source links
-open the local files immediately. The preview reads checkpoints without changing
-batch state or generating PDFs; public Pages remains a published snapshot.
+when the checkpoint changes, preserving search and filters. PDF and source buttons
+use the same password prompt as the public catalogue. The preview reads checkpoints
+without changing batch state or generating PDFs; public Pages remains a published snapshot.
 Use the **Failures only** checkbox in [the queue](http://127.0.0.1:8765/#queue)
 to filter posts with an unresolved error, including failed refreshes with an older
 PDF. Expand a failure for its reason and last attempt. The local preview also
@@ -288,8 +288,9 @@ The FAQ also has an **Edit this page** link to that file on GitHub.
 For a local preview, save the Markdown and reload `http://127.0.0.1:8765/faq.html`.
 The catalogue and FAQ follow the system's light or dark colour preference.
 
-PDF buttons ask for a password before starting a download. This is a simple
-browser-side deterrent to mass distribution; it does not restrict direct access
+PDF, Typst, JSON and local diagnostic download buttons ask for a password before
+starting a download. This is a simple browser-side deterrent to mass distribution;
+it does not restrict direct access
 to files in the public repository. The prompt is implemented in `web/app.js`.
 
 Prepare a public release without fetching or converting posts:

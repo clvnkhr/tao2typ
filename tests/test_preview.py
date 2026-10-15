@@ -1,9 +1,11 @@
 """The live preview reads local artifacts without exporting or mutating the batch."""
 
+import hashlib
 import shutil
 from pathlib import Path
 
 import pytest
+from bs4 import BeautifulSoup
 
 import tao2typ.catalogue as catalogue
 import tao2typ.preview as preview_module
@@ -40,7 +42,20 @@ def test_preview_links_local_artifacts_without_copying_them(tmp_path: Path) -> N
     assert 'data-download-url="http://127.0.0.1:8765/pdfs/a-post.pdf"' in page
     assert 'data-filename="a-post.pdf"' in page
     assert 'href="http://127.0.0.1:8765/pdfs/a-post.pdf"' not in page
-    assert 'href="http://127.0.0.1:8765/typst/a-post.typ"' in page
+    soup = BeautifulSoup(page, "html.parser")
+    assert not soup.select(".post-actions a:not(.original)")
+    for kind, folder, extension, download_format in (
+        ("pdf", "pdfs", "pdf", "pdf"),
+        ("typst", "typst", "typ", "typst"),
+        ("ir", "ir", "json", "json"),
+    ):
+        button = soup.select_one(f"button.download.{kind}")
+        assert button is not None
+        assert button["data-download-url"] == (f"http://127.0.0.1:8765/{folder}/a-post.{extension}")
+        assert button["data-filename"] == f"a-post.{extension}"
+        assert button["data-download-format"] == download_format
+        assert button["type"] == "button" and button["aria-haspopup"] == "dialog"
+    assert soup.select_one("dialog#download-dialog") is not None
     assert 'href="https://github.com/clvnkhr/tao2typ"' in page
     assert not (preview.output / "pdfs").exists()
     assert not (preview.output / "typst").exists()
@@ -128,13 +143,47 @@ def test_local_failure_downloads_are_plain_text_and_read_only(tmp_path: Path) ->
     state = ArchiveState.load(preview.archive / "state.json")
     state.posts["9"].last_error = "Typst compilation failed: unknown command: \\badcommand"
     state.posts["9"].last_attempted_at = "2026-10-14T11:00:00Z"
+    html = b"<script>alert('raw')</script>"
+    digest = hashlib.sha256(html).hexdigest()
+    html_path = f"raw/pages/{digest}.html.gz"
+    write_bytes(preview.archive / html_path, html)
+    manifest_path = "raw/post/job/manifest.json.gz"
+    write_json(
+        preview.archive / manifest_path,
+        {
+            "schema_version": 1,
+            "complete": True,
+            "post_url": state.posts["9"].url,
+            "pages": [{"path": html_path, "bytes_sha256": digest, "bytes": len(html)}],
+        },
+    )
+    state.posts["9"].source_manifest = manifest_path
     state.save(preview.archive / "state.json")
     write_text(preview.archive / "failures/post.typ.gz", "Failed source")
+    write_json(preview.archive / "failures/post.json.gz", {"title": "Failed post"})
     original_state = (preview.archive / "state.json").read_bytes()
     original_queue = (preview.archive / "queue.json").read_bytes()
     page = preview.index().decode()
     assert 'data-failed="true"' in page and "Unrecognized TeX command" in page
     assert "/__tao2typ_failure/9/typst" in page
+    soup = BeautifulSoup(page, "html.parser")
+    assert not soup.select(".failure-actions a")
+    actions = soup.select(".failure-actions button.download")
+    assert len(actions) == 4
+    for key, filename, download_format in (
+        ("typst", "post.typ", "typst"),
+        ("ir", "post.json", "json"),
+        ("capture", "manifest.json", "json"),
+        ("html/0", f"{digest}.html", "text"),
+    ):
+        button = soup.select_one(
+            f'.failure-actions button[data-download-url$="/__tao2typ_failure/9/{key}"]'
+        )
+        assert button is not None
+        assert button["data-filename"] == filename
+        assert button["data-download-format"] == download_format
+        assert button["type"] == "button" and button["aria-haspopup"] == "dialog"
+        assert not button.has_attr("href")
     assert preview.diagnostic("/__tao2typ_failure/9/typst") == (
         b"Failed source",
         "text/plain; charset=utf-8",

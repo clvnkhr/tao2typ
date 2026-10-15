@@ -6,9 +6,9 @@ This site is by [Calvin Khor](https://clvnkhr.github.io/), **not Terence Tao**.
 It is an unofficial project. The original posts and comments are on
 [Tao’s blog](https://terrytao.wordpress.com/).
 
-## Why do PDF downloads ask for a password?
+## Why do downloads ask for a password?
 
-PDF downloads require a password to discourage mass distribution.
+Downloads require a password to discourage mass distribution.
 
 ## How are posts downloaded and queued?
 

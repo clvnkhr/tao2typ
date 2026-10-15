@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>tao2typ</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=@@STYLE_VERSION@@">
+  <script src="app.js?v=@@SCRIPT_VERSION@@" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#posts">Skip to posts</a>
   @@HEADER@@
-  <p class="site-note">An unofficial personal site converting Terence Tao’s blog posts to PDFs with Typst. PDF downloads require a password to discourage mass distribution.</p>
+  <p class="site-note">An unofficial personal site converting Terence Tao’s blog posts to PDFs with Typst. Downloads require a password to discourage mass distribution.</p>
   <main>
     <aside class="taxonomy">
       <a class="all-posts" href="#" data-route="all">All posts <span>@@TOTAL@@</span></a>
@@ -29,20 +29,20 @@
       </form>
       <ol id="posts" class="post-list" tabindex="-1">@@POSTS@@</ol>
       <p id="empty" hidden>No matches.</p>
-      <noscript><p>Search, filters and PDF downloads need JavaScript.</p></noscript>
+      <noscript><p>Search, filters and downloads need JavaScript.</p></noscript>
     </section>
   </main>
-  <dialog id="pdf-dialog" class="pdf-dialog" aria-labelledby="pdf-dialog-title" aria-describedby="pdf-dialog-description">
-    <form id="pdf-form" autocomplete="off">
-      <h2 id="pdf-dialog-title">Download PDF</h2>
-      <p id="pdf-dialog-description">Enter the password to download this PDF.</p>
-      <label for="pdf-password">Password</label>
-      <input id="pdf-password" name="pdf-download-password" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="pdf-password-error" required>
-      <p id="pdf-password-error" class="dialog-error" role="alert" hidden></p>
-      <p id="pdf-download-status" class="dialog-status" role="status" aria-live="polite" hidden></p>
+  <dialog id="download-dialog" class="download-dialog" aria-labelledby="download-dialog-title" aria-describedby="download-dialog-description">
+    <form id="download-form" autocomplete="off">
+      <h2 id="download-dialog-title">Download file</h2>
+      <p id="download-dialog-description">Enter the password to download this file.</p>
+      <label for="download-password">Password</label>
+      <input id="download-password" name="download-password" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="download-password-error" required>
+      <p id="download-password-error" class="dialog-error" role="alert" hidden></p>
+      <p id="download-status" class="dialog-status" role="status" aria-live="polite" hidden></p>
       <div class="dialog-actions">
-        <button id="pdf-download-cancel" type="button">Cancel</button>
-        <button id="pdf-download-submit" type="submit">Download</button>
+        <button id="download-cancel" type="button">Cancel</button>
+        <button id="download-submit" type="submit">Download</button>
       </div>
     </form>
   </dialog>
