@@ -18,6 +18,8 @@ from typing import Any
 from unicodedata import normalize
 from urllib.parse import quote, urlsplit
 
+from markdown_it import MarkdownIt
+
 from tao2typ.diagnostics import failure_artifacts, failure_stems
 from tao2typ.storage import read_bytes, read_json, read_text
 
@@ -583,11 +585,25 @@ def generate_site(
         "CATEGORY_LINKS": _taxonomy_links(categories, category_counts, "category"),
         "POSTS": "\n".join(markup for markup, _ in rendered),
     }
-    page = (_ASSETS / "index.html").read_text(encoding="utf-8")
+    header = (_ASSETS / "header.html").read_text(encoding="utf-8")
+    header = header.replace("@@REPO_URL@@", _escape(repo_url))
+    page = (_ASSETS / "index.html").read_text(encoding="utf-8").replace("@@HEADER@@", header)
     for name, value in replacements.items():
         page = page.replace(f"@@{name}@@", value)
     output.mkdir(parents=True, exist_ok=True)
     (output / "index.html").write_text(page, encoding="utf-8")
+    faq_header = header.replace('href="faq.html"', 'href="faq.html" aria-current="page"')
+    faq = (_ASSETS / "faq.html").read_text(encoding="utf-8")
+    faq = faq.replace("@@HEADER@@", faq_header).replace(
+        "@@EDIT_FAQ_URL@@", _escape(f"{repo_url}/edit/{quote(branch, safe='')}/web/faq.md")
+    )
+    faq = faq.replace(
+        "@@FAQ_CONTENT@@",
+        MarkdownIt("commonmark", {"html": False}).render(
+            (_ASSETS / "faq.md").read_text(encoding="utf-8")
+        ),
+    )
+    (output / "faq.html").write_text(faq, encoding="utf-8")
     for filename in ("style.css", "app.js"):
         (output / filename).write_text((_ASSETS / filename).read_text(encoding="utf-8"))
     (output / ".nojekyll").touch()

@@ -31,7 +31,7 @@ fi
 uv run --frozen tao2typ "${site_args[@]}"
 mkdir -p "$site_checkout/public/tao2typ"
 # Development publishes only the page. The explicit release flag adds downloads.
-for site_asset in index.html style.css app.js .nojekyll; do
+for site_asset in index.html faq.html style.css app.js .nojekyll; do
   cp "$site_output/$site_asset" "$site_checkout/public/tao2typ/$site_asset"
 done
 if [[ "$publish_downloads" == "--public-downloads" ]]; then

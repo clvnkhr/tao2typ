@@ -1,7 +1,12 @@
 """The live preview reads local artifacts without exporting or mutating the batch."""
 
+import shutil
 from pathlib import Path
 
+import pytest
+
+import tao2typ.catalogue as catalogue
+import tao2typ.preview as preview_module
 from tao2typ.preview import Preview
 from tao2typ.state import ArchiveState, PostState
 from tao2typ.storage import write_bytes, write_json, write_text
@@ -68,6 +73,23 @@ def test_preview_tracks_new_checkpoints_and_finish(tmp_path: Path) -> None:
     )
     finished = preview.snapshot()
     assert finished["attempted"] == 2 and finished["failed"] == 1 and not finished["running"]
+
+
+def test_preview_rebuilds_faq_after_markdown_edits(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assets = tmp_path / "web"
+    shutil.copytree(catalogue._ASSETS, assets)
+    monkeypatch.setattr(catalogue, "_ASSETS", assets)
+    monkeypatch.setattr(preview_module, "_ASSETS", assets)
+    preview = setup_preview(tmp_path)
+    before = preview.snapshot()["revision"]
+    preview.index()
+    assert (preview.output / "faq.html").is_file()
+    (assets / "faq.md").write_text("# FAQ\n\nWords I edited myself.\n", encoding="utf-8")
+    assert preview.snapshot()["revision"] != before
+    preview.index()
+    assert "Words I edited myself." in (preview.output / "faq.html").read_text()
 
 
 def test_compressing_an_older_report_does_not_replace_latest_progress(tmp_path: Path) -> None:

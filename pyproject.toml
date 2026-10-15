@@ -5,7 +5,11 @@ description = "Terence Tao's WordPress blog through a structured intermediate re
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{name = "Calvin Khor"}]
-dependencies = ["beautifulsoup4>=4.14,<5", "httpx>=0.28,<1"]
+dependencies = [
+    "beautifulsoup4>=4.14,<5",
+    "httpx>=0.28,<1",
+    "markdown-it-py>=4,<5",
+]
 
 [project.scripts]
 tao2typ = "tao2typ.cli:main"

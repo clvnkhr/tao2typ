@@ -6,7 +6,7 @@ if [[ ! -f archive/state.json ]]; then
   echo "::notice::Run bash scripts/first-batch.sh locally to seed the archive first."
   exit 0
 fi
-args=(batch --output archive --max-posts 10 --daily-limit 10 --max-seconds 600 --allow-post-failures)
+args=(batch --output archive --max-posts 20 --daily-limit 20 --max-seconds 600 --allow-post-failures)
 if [[ "${FORCE:-false}" == "true" ]]; then args+=(--force); fi
 report_path="${RUNNER_TEMP:-.cache}/tao2typ-daily-report.json"
 mkdir -p "$(dirname "$report_path")"

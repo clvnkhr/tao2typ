@@ -69,6 +69,23 @@ def test_failed_attempt_consumes_daily_budget_but_local_batch_is_unrestricted(
     assert archive(tmp_path).daily_attempts == {"2026-10-13": 1}
 
 
+def test_raising_daily_limit_to_twenty_retains_ten_attempts_already_used(
+    tmp_path: Path, compiler: "FakeCompiler"
+) -> None:
+    client = FakeBlogClient([metadata(i, instant(2026, 10, 1)) for i in range(1, 23)])
+    now = instant(2026, 10, 15)
+    earlier = pipeline.run_batch(tmp_path, client, now=now, max_posts=10, daily_limit=10)
+    assert earlier["converted"] == 10 and earlier["remaining"] == 12
+    raised = pipeline.run_batch(tmp_path, client, now=now, max_posts=20, daily_limit=20)
+    assert raised["converted"] == 10 and raised["remaining"] == 2
+    assert archive(tmp_path).daily_attempts == {"2026-10-15": 20}
+    assert compiler.calls == len(client.fetched) == 20
+    assert {entry["id"] for entry in read_json(tmp_path / "queue.json")["posts"]} == {21, 22}
+    repeat = pipeline.run_batch(tmp_path, client, now=now, max_posts=20, daily_limit=20)
+    assert repeat["results"] == [] and repeat["remaining"] == 2
+    assert compiler.calls == len(client.fetched) == 20
+
+
 def metadata(identifier: int, published: datetime) -> PostMetadata:
     # Deliberately use another URL date: WordPress metadata is the source of truth.
     return PostMetadata(

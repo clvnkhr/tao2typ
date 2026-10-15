@@ -1,0 +1,55 @@
+name: Publish catalogue
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - "src/tao2typ/catalogue.py"
+      - "scripts/publish-catalogue.sh"
+      - ".github/workflows/catalogue.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+# Serialize with the daily publisher so an older archive cannot replace a newer page.
+concurrency:
+  group: daily-pdf-archive
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PAGES_PUBLISH_ENABLED: ${{ secrets.PAGES_DEPLOY_KEY != '' || secrets.PAGES_PUBLISH_TOKEN != '' }}
+      PAGES_PUBLIC_DOWNLOADS: ${{ vars.PAGES_PUBLIC_DOWNLOADS || 'false' }}
+    steps:
+      - name: Require catalogue publication credentials
+        if: ${{ env.PAGES_PUBLISH_ENABLED != 'true' }}
+        run: |
+          echo "::error::Configure PAGES_DEPLOY_KEY or PAGES_PUBLISH_TOKEN to publish the catalogue."
+          exit 1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: "0.12.18"
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Check out catalogue hosting repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: clvnkhr/clvnkhr.github.io
+          ref: master
+          path: .cache/pages
+          ssh-key: ${{ secrets.PAGES_DEPLOY_KEY }}
+          token: ${{ secrets.PAGES_PUBLISH_TOKEN || github.token }}
+      - name: Publish updated catalogue and FAQ
+        shell: bash
+        run: |
+          git -C .cache/pages config user.name "github-actions[bot]"
+          git -C .cache/pages config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          publish_args=(.cache/pages)
+          if [[ "$PAGES_PUBLIC_DOWNLOADS" == "true" ]]; then
+            publish_args+=(--public-downloads)
+          fi
+          bash scripts/publish-catalogue.sh "${publish_args[@]}"

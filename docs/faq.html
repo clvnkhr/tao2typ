@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>FAQ · tao2typ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#faq">Skip to FAQ</a>
+  <header>
+  <a class="wordmark" href="./">tao2typ</a>
+  <nav aria-label="Links">
+    <a href="https://terrytao.wordpress.com/">Tao’s Blog<svg class="external-icon" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 2.5h4.5V7M13.5 2.5l-7 7M6.5 3.5h-3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3"/></svg></a>
+    <a href="https://github.com/clvnkhr/tao2typ">GitHub<svg class="external-icon" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 2.5h4.5V7M13.5 2.5l-7 7M6.5 3.5h-3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3"/></svg></a>
+    <a href="faq.html" aria-current="page">FAQ</a>
+  </nav>
+</header>
+
+  <main class="faq-page">
+    <article class="faq-content" id="faq" tabindex="-1">
+      <h1>FAQ</h1>
+<h2>Who made this?</h2>
+<p>This site is by <a href="https://clvnkhr.github.io/">Calvin Khor</a>, <strong>not Terence Tao</strong>.
+It is an unofficial project. The original posts and comments are on
+<a href="https://terrytao.wordpress.com/">Tao’s blog</a>.</p>
+<h2>How are posts downloaded and queued?</h2>
+<p>A daily GitHub Actions job checks the blog for new or edited posts and looks at
+Recent Comments for discussions that need refreshing. It downloads the article
+and its comment pages, and keeps compressed copies of the input it parsed.</p>
+<p>Posts are checked a week and a calendar month after publication, then on their
+annual birthdays. Older posts join that same timeline. These dates put a post
+in the queue; a busy queue can delay its check.</p>
+<p>There is a limit of <strong>20 post attempts per UTC day</strong>, shared by scheduled and
+manual runs. Failed attempts count too. Work left after the daily limit or the
+job’s time limit stays in the <a href="./#queue">queue</a>. A queued post can already have a
+PDF: it may just be due for an update.</p>
+<h2>What does the parser do?</h2>
+<p>The Python parser reads the HTML and builds an intermediate representation:
+paragraphs, headings, lists, figures, maths, and comments with their replies.
+Original LaTeX formulas and equation numbers are kept in this representation.
+Each post’s JSON download contains it.</p>
+<p>Keeping this step separate from typesetting means the PDF layout can change
+without downloading the blog again or rewriting the HTML parser.</p>
+<h2>Is there a Typst template?</h2>
+<p>The layout is written in
+<a href="https://github.com/clvnkhr/tao2typ/blob/main/src/tao2typ/typst.py"><code>src/tao2typ/typst.py</code></a>.
+It generates a complete Typst document for each post, rather than using a
+separate template package. You can download that source from the <code>.typ.gz</code> link.</p>
+<p>The documents use A4 pages, 12-point Libertinus Serif text, justified paragraphs
+and first-line indents. The renderer lays out headings, figures, numbered
+statements and threaded comments. MiTeX converts the LaTeX maths; equate helps
+with aligned displays. Typst then compiles the result to PDF.</p>
+<h2>What do the coloured dots mean?</h2>
+<ul>
+<li><strong>Green:</strong> a PDF was produced without a recorded source issue.</li>
+<li><strong>Amber:</strong> the PDF needed a fallback, such as a missing-image placeholder or a
+note preserving a broken formula from the source.</li>
+<li><strong>Red:</strong> the PDF is missing, or its latest conversion failed.</li>
+</ul>
+<p>The conversion is imperfect. If something looks wrong, compare it with the
+original post.</p>
+
+      <p class="faq-edit"><a href="https://github.com/clvnkhr/tao2typ/edit/main/web/faq.md">Edit this page</a></p>
+    </article>
+  </main>
+</body>
+</html>

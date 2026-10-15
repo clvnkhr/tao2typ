@@ -115,7 +115,7 @@ Use the actual filenames listed in `archive/README.md`. To attempt an entire
 initial archive in one batch, use the default `--max-posts 0`. To refresh the entire archive
 regardless of schedule, add `--force`. Run the full first batch locally to avoid
 using Actions minutes for the initial archive. Local batches have a five-hour soft
-time limit and checkpoint after each post. The daily workflow is limited to ten
+time limit and checkpoint after each post. The daily workflow is limited to twenty
 PDF attempts per UTC day or ten minutes, with a fifteen-minute job timeout; any remaining backlog
 resumes on the next run. Use `--max-posts` or `--max-seconds` to adjust a local
 batch. The converter waits one second between requests and
@@ -277,9 +277,16 @@ shows the complete error and links to available failed Typst, IR and captured
 HTML. Open errors survive automatic refreshes. Captured HTML is served as plain
 text; these diagnostic files are never included in public exports.
 
-Only four allowlisted files are published under the personal site's
-`public/tao2typ/` directory: HTML, CSS, JavaScript and `.nojekyll`. The existing
+Only five allowlisted files are published under the personal site's
+`public/tao2typ/` directory: `index.html`, `faq.html`, `style.css`, `app.js` and `.nojekyll`. The existing
 website's build copies that directory to GitHub Pages.
+
+The FAQ's text lives in **`web/faq.md`**, an ordinary Markdown file. Edit that file,
+not the generated `docs/faq.html`. Pushing a change to it automatically publishes
+the catalogue without running PDF conversions or using the daily PDF allowance.
+The FAQ also has an **Edit this page** link to that file on GitHub.
+For a local preview, save the Markdown and reload `http://127.0.0.1:8765/faq.html`.
+The catalogue and FAQ follow the system's light or dark colour preference.
 
 Prepare a public release without fetching or converting posts:
 
@@ -299,7 +306,7 @@ Daily conversion also refreshes `docs/`. Automatic cross-repository publication
 uses `PAGES_DEPLOY_KEY`, a write-enabled SSH deploy key scoped to
 **clvnkhr.github.io only**. An optional `PAGES_PUBLISH_TOKEN` with Contents
 read/write permission for that repository remains supported. Without either,
-use the local publish command above. The daily ten-attempt PDF budget still applies.
+use the local publish command above. The daily twenty-attempt PDF budget still applies.
 Set the `PAGES_PUBLIC_DOWNLOADS` repository variable to `true` to also host PDFs,
 sources and required assets on the personal site. This is optional when the
 catalogue links directly to files in the public repository.

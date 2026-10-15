@@ -10,7 +10,7 @@ from tempfile import TemporaryDirectory
 from typing import Any
 from urllib.parse import unquote, urlsplit
 
-from tao2typ.catalogue import generate_site
+from tao2typ.catalogue import _ASSETS, generate_site
 from tao2typ.diagnostics import failure_stems, read_failure_artifact
 from tao2typ.storage import read_bytes, read_json
 
@@ -30,6 +30,10 @@ class Preview:
             path = self.archive / name
             stat = path.stat() if path.exists() else None
             signature.append((name, stat.st_mtime_ns if stat else 0, stat.st_size if stat else 0))
+        for path in sorted(_ASSETS.iterdir()):
+            if path.is_file():
+                stat = path.stat()
+                signature.append((path.name, stat.st_mtime_ns, stat.st_size))
         reports = list((self.archive / "jobs").glob("*.json*"))
         # Job names begin with their UTC timestamp; compression changes mtime.
         latest = max(reports, key=lambda path: path.name.removesuffix(".gz"), default=None)
@@ -135,10 +139,14 @@ def serve_preview(archive: Path, port: int = 8765) -> None:
                     elif path == "/__tao2typ_progress":
                         data = json.dumps(preview.snapshot()).encode()
                         media_type = "application/json"
-                    elif path in {"/app.js", "/style.css"}:
+                    elif path in {"/app.js", "/style.css", "/faq.html"}:
                         preview.index()
                         data = (preview.output / path[1:]).read_bytes()
-                        media_type = "text/javascript" if path.endswith(".js") else "text/css"
+                        media_type = {
+                            ".js": "text/javascript",
+                            ".css": "text/css",
+                            ".html": "text/html; charset=utf-8",
+                        }[Path(path).suffix]
                     elif (artifact := preview.artifact(path)) is not None:
                         data, media_type = artifact
                     elif (diagnostic := preview.diagnostic(path)) is not None:

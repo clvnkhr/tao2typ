@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 from pathlib import Path
 
 import pytest
@@ -86,6 +87,7 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     }
     assert {file.name for file in output.iterdir()} == {
         "index.html",
+        "faq.html",
         "style.css",
         "app.js",
         ".nojekyll",
@@ -128,6 +130,42 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert soup.select_one("#ready") is None
     assert "PDFs only" not in soup.get_text()
     assert not soup.select('a[data-route="failures"]')
+
+
+def test_faq_uses_shared_navigation_and_editable_markdown(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    archive = fixture_archive(tmp_path)
+    assets = tmp_path / "web"
+    shutil.copytree(catalogue._ASSETS, assets)
+    (assets / "faq.md").write_text(
+        "# FAQ\n\n## A question I rewrote\n\nMy **own words** and [a link](./#queue).\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(catalogue, "_ASSETS", assets)
+    output = tmp_path / "site"
+    generate_site(archive, output, repo_url="https://github.com/example/project", branch="my-edit")
+    faq = BeautifulSoup((output / "faq.html").read_text(), "html.parser")
+    index = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert selected(faq, "h2").get_text() == "A question I rewrote"
+    assert selected(faq, ".faq-content strong").get_text() == "own words"
+    assert selected(faq, ".faq-edit a")["href"] == (
+        "https://github.com/example/project/edit/my-edit/web/faq.md"
+    )
+    assert selected(faq, "header a[aria-current='page']")["href"] == "faq.html"
+    assert not index.select("header a[aria-current='page']")
+    for page in (index, faq):
+        links = page.select("header nav a")
+        assert [link.get_text(strip=True) for link in links] == ["Tao’s Blog", "GitHub", "FAQ"]
+        assert [link["href"] for link in links] == [
+            "https://terrytao.wordpress.com/",
+            "https://github.com/example/project",
+            "faq.html",
+        ]
+        assert len(page.select("header svg[aria-hidden='true']")) == 2
+        assert selected(page, 'meta[name="color-scheme"]')["content"] == "light dark"
+        assert "@@" not in str(page)
+    assert not faq.select("script")
 
 
 def test_catalogue_has_accessible_green_amber_and_red_indicators(tmp_path: Path) -> None:
