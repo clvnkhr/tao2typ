@@ -5,6 +5,7 @@
     element,
     title: element.dataset.title,
     date: element.dataset.date,
+    updated: Date.parse(element.dataset.updated),
     search: element.dataset.search,
     failed: element.dataset.failed === "true",
     id: element.dataset.id,
@@ -200,6 +201,10 @@
       ? (a.queuePosition ?? Infinity) - (b.queuePosition ?? Infinity)
       : sort.value === "title"
       ? a.title.localeCompare(b.title)
+      : sort.value === "updated"
+      ? (Number.isFinite(b.updated) ? b.updated : -Infinity)
+        - (Number.isFinite(a.updated) ? a.updated : -Infinity)
+        || b.date.localeCompare(a.date) || a.id.localeCompare(b.id)
       : sort.value === "oldest" ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
     const fragment = document.createDocumentFragment();
     for (const post of posts) {

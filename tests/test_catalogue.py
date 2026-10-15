@@ -118,6 +118,9 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
         "https://github.com/clvnkhr/tao2typ"
     )
     assert soup.select(".post")[0]["data-title"] == "Queued post"
+    assert soup.select(".post")[0]["data-updated"] == ""
+    assert soup.select(".post")[1]["data-updated"] == "2026-10-13T23:15:00+00:00"
+    assert selected(soup, '#sort option[value="updated"]').get_text() == "Updated"
     assert "archive" not in soup.get_text().lower()
     assert selected(soup, ".site-note").get_text() == (
         "An unofficial personal site converting Terence Tao’s blog posts to PDFs with Typst."
@@ -417,6 +420,7 @@ def test_missing_or_invalid_conversion_date_stays_blank(
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
     ready_post = selected(soup, '.post[data-ready="true"]')
     assert selected(ready_post, ".availability").get_text() == ""
+    assert ready_post["data-updated"] == ""
     assert selected(ready_post, ".post-meta > time").get_text() == "2007-12-28"
 
 

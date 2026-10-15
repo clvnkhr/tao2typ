@@ -429,6 +429,7 @@ def _post_markup(
         "id": post.get("id", ""),
         "title": title,
         "date": published,
+        "updated": _attempt_date(post.get("converted_at")) if ready else "",
         "search": normalize("NFKC", search).lower(),
         "ready": str(ready).lower(),
         "quality": quality,
