@@ -439,6 +439,90 @@ def test_pending_comment_events_survive_limits_and_are_deduplicated(
     assert len(client.fetched) == 4
 
 
+@pytest.mark.parametrize(
+    ("milestone", "checked", "due"),
+    [
+        ("one-week", instant(2025, 10, 1), instant(2025, 10, 8)),
+        ("one-month", instant(2025, 10, 8), instant(2025, 11, 1)),
+        ("birthday", instant(2025, 11, 1), instant(2026, 10, 1)),
+    ],
+)
+def test_overlapping_refresh_reasons_share_one_queued_attempt_and_quota_unit(
+    tmp_path: Path,
+    compiler: FakeCompiler,
+    milestone: str,
+    checked: datetime,
+    due: datetime,
+) -> None:
+    published = instant(2025, 10, 1)
+    client = FakeBlogClient([metadata(1, published)])
+    pipeline.run_batch(tmp_path, client, now=published)
+    state = archive(tmp_path)
+    row = state.posts["1"]
+    row.last_checked_at = checked.isoformat()
+    row.last_error = "Earlier refresh failed"
+    row.converter_fingerprint = "old converter"
+    for path in (row.pdf, row.ir, row.typst, row.source_manifest):
+        assert path is not None
+        (tmp_path / path).unlink()
+    state.save(tmp_path / "state.json")
+    # Discovery and the sidebar can repeat records; two new comments still
+    # trigger one post refresh alongside its scheduled check and repair work.
+    updated = replace(client.posts[0], modified_at=due)
+    client.posts = [updated, updated]
+    first = RecentComment(updated.url + "#comment-101", updated.url)
+    second = RecentComment(updated.url + "#comment-102", updated.url)
+    client.events = [first, first, second, second]
+    client.html = "Updated article and discussion"
+    compiler.fail = True
+    failed = pipeline.run_batch(tmp_path, client, now=due, force=True, daily_limit=1)
+    reasons = [
+        milestone,
+        "recent-comment",
+        "previous-failure",
+        "source-modified",
+        "missing-pdf",
+        "missing-raw-source",
+        "missing-typst",
+        "missing-ir",
+        "converter-changed",
+        "forced",
+    ]
+    assert failed["due"] == failed["failed"] == failed["remaining"] == 1
+    assert len(failed["results"]) == 1
+    assert failed["results"][0]["reasons"] == reasons
+    queued = read_json(tmp_path / "queue.json")["posts"]
+    assert [(entry["id"], entry["reasons"]) for entry in queued] == [(1, reasons)]
+    assert archive(tmp_path).daily_attempts == {due.date().isoformat(): 1}
+    assert archive(tmp_path).posts["1"].pending_comments == [first.event_url, second.event_url]
+    assert compiler.calls == len(client.fetched) == 2
+
+    # A same-day rerun rebuilds one queue entry but cannot spend another slot.
+    repeated = pipeline.run_batch(tmp_path, client, now=due, daily_limit=1)
+    assert repeated["results"] == [] and repeated["remaining"] == 1
+    assert len(read_json(tmp_path / "queue.json")["posts"]) == 1
+    assert compiler.calls == len(client.fetched) == 2
+
+    compiler.fail = False
+    tomorrow = due + timedelta(days=1)
+    retried = pipeline.run_batch(tmp_path, client, now=tomorrow, daily_limit=1)
+    assert retried["due"] == retried["converted"] == 1
+    assert len(retried["results"]) == 1 and retried["remaining"] == 0
+    assert {milestone, "recent-comment", "previous-failure", "source-modified"}.issubset(
+        retried["results"][0]["reasons"]
+    )
+    current = archive(tmp_path)
+    assert current.daily_attempts == {
+        due.date().isoformat(): 1,
+        tomorrow.date().isoformat(): 1,
+    }
+    assert current.posts["1"].pending_comments == []
+    assert current.posts["1"].seen_comments == [first.event_url, second.event_url]
+    assert read_json(tmp_path / "queue.json")["posts"] == []
+    assert compiler.calls == len(client.fetched) == 3
+    assert pipeline.run_batch(tmp_path, client, now=tomorrow, daily_limit=1)["due"] == 0
+
+
 def test_compile_failure_preserves_outputs_check_dates_and_comment_retry(
     tmp_path: Path, compiler: FakeCompiler
 ) -> None:

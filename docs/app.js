@@ -8,6 +8,7 @@
     updated: Date.parse(element.dataset.updated),
     search: element.dataset.search,
     failed: element.dataset.failed === "true",
+    quality: element.dataset.quality,
     id: element.dataset.id,
     queuePosition: element.dataset.queuePosition !== undefined && element.dataset.queuePosition !== ""
       && Number.isFinite(Number(element.dataset.queuePosition)) ? Number(element.dataset.queuePosition) : null,
@@ -16,6 +17,8 @@
   }));
   const search = document.getElementById("search");
   const failed = document.getElementById("failed");
+  const amber = document.getElementById("amber");
+  const amberFilter = amber.closest("label");
   const failureFilter = failed.closest("label");
   const sort = document.getElementById("sort");
   const title = document.getElementById("collection-title");
@@ -209,6 +212,7 @@
       sessionStorage.removeItem(previewStateKey);
       if (saved && typeof saved.search === "string") search.value = saved.search;
       if (saved && typeof saved.failed === "boolean") failed.checked = saved.failed;
+      if (saved && typeof saved.amber === "boolean") amber.checked = saved.amber;
       if (saved && Array.from(sort.options).some(option => option.value === saved.order && option.value !== "queue")) {
         selectedOrder = saved.order;
       }
@@ -231,7 +235,9 @@
     catch { slug = ""; }
     const filtering = separator > 0 && ["tag", "category"].includes(kind);
     const isQueue = route === "queue";
-    failureFilter.hidden = !isQueue;
+    amberFilter.hidden = isQueue;
+    document.getElementById("failed-label").textContent = isQueue ? "Failures only" : "Failures";
+    failureFilter.title = isQueue ? "Failed conversions" : "Missing PDFs or failed conversions";
     const key = filtering ? `${kind}=${slug}` : isQueue ? "queue" : "all";
     const term = terms.get(key) || slug;
     const query = search.value.normalize("NFKC").toLowerCase().trim();
@@ -253,8 +259,13 @@
       : sort.value === "oldest" ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
     const fragment = document.createDocumentFragment();
     for (const post of posts) {
+      const matchesStatus = isQueue
+        ? !failed.checked || post.failed
+        : !amber.checked && !failed.checked
+          || amber.checked && post.quality === "amber"
+          || failed.checked && post.quality === "red";
       const matches = (!query || post.search.includes(query))
-        && (!isQueue || !failed.checked || post.failed)
+        && matchesStatus
         && (!isQueue || post.queuePosition !== null)
         && (!filtering || (kind === "tag" ? post.tags : post.categories).includes(slug));
       post.element.hidden = !matches;
@@ -276,6 +287,7 @@
   search.addEventListener("input", render);
   document.querySelector("form.controls").addEventListener("submit", event => event.preventDefault());
   failed.addEventListener("change", render);
+  amber.addEventListener("change", render);
   sort.addEventListener("change", () => {
     if (!sort.disabled) selectedOrder = sort.value;
     render();
@@ -313,6 +325,7 @@
           sessionStorage.setItem(previewStateKey, JSON.stringify({
             search: search.value,
             failed: failed.checked,
+            amber: amber.checked,
             order: selectedOrder,
             openFailures: posts.filter(post => post.element.querySelector(".failure-details")?.open).map(post => post.id),
           }));

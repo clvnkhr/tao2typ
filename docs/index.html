@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>tao2typ</title>
-  <link rel="stylesheet" href="style.css?v=a9930d27c107">
-  <script src="app.js?v=c71a635a830c" defer></script>
+  <link rel="stylesheet" href="style.css?v=3f8600d7a721">
+  <script src="app.js?v=640df6f396c1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#posts">Skip to posts</a>
@@ -2055,7 +2055,10 @@
       <p id="queue-updated" class="queue-updated" data-updated="2026-10-16T11:42:18.157382+00:00" hidden>Updated <time datetime="2026-10-16T11:42:18.157382+00:00"></time> UTC</p>
       <form class="controls" role="search">
         <label class="search-label" for="search">Search<input id="search" type="search" placeholder="Search" autocomplete="off"></label>
-        <label class="failure-filter"><input type="checkbox" id="failed"> Failures only</label>
+        <span class="status-filters">
+          <label class="status-filter" title="PDFs with conversion fallbacks"><input type="checkbox" id="amber"> Amber</label>
+          <label class="status-filter failure-filter" title="Missing PDFs or failed conversions"><input type="checkbox" id="failed"> <span id="failed-label">Failures</span></label>
+        </span>
         <label class="sort-label" for="sort">Order<select id="sort"><option value="newest">Newest</option><option value="updated" title="Most recently converted PDFs first">Updated</option><option value="oldest">Oldest</option><option value="title">A–Z</option><option value="queue" hidden>Queue order</option></select></label>
       </form>
       <ol id="posts" class="post-list" tabindex="-1"><li class="post" data-id="18439" data-title="Why are we even doing all this?" data-date="2026-10-15" data-updated="2026-10-16T11:40:14.656559+00:00" data-search="why are we even doing all this? rikab gambhir guest blog opinion" data-ready="true" data-quality="green" data-failed="false" data-attempted="2026-10-16T11:40:05.757324+00:00" data-tags="[&quot;rikab-gambhir&quot;]" data-categories="[&quot;guest-blog&quot;, &quot;opinion&quot;]" data-queue-position="" data-queue-status="" data-queue-reasons=""><div class="post-meta"><time datetime="2026-10-15">2026-10-15</time><span class="availability ready">Converted <time datetime="2026-10-16">2026-10-16</time></span><span class="queue-status"></span></div><h3><span class="quality-indicator quality-green" role="img" title="Clean PDF" aria-label="Clean PDF"></span><a href="https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/">Why are we even doing all this?</a></h3><div class="post-taxonomy"><a class="category" href="#category=guest-blog" title="Category: guest blog">guest blog</a><a class="category" href="#category=opinion" title="Category: opinion">opinion</a><a class="tag" href="#tag=rikab-gambhir" title="Tag: Rikab Gambhir">Rikab Gambhir</a></div><div class="post-actions"><button class="download pdf" type="button" aria-haspopup="dialog" data-download-url="https://raw.githubusercontent.com/clvnkhr/tao2typ/main/archive/pdfs/why-are-we-even-doing-all-this.pdf" data-filename="why-are-we-even-doing-all-this.pdf" data-download-format="pdf">PDF</button><button class="download typst" type="button" aria-haspopup="dialog" data-download-url="https://raw.githubusercontent.com/clvnkhr/tao2typ/main/archive/typst/why-are-we-even-doing-all-this.typ.gz" data-filename="why-are-we-even-doing-all-this.typ.gz" data-download-format="gzip">.typ.gz</button><button class="download ir" type="button" aria-haspopup="dialog" data-download-url="https://raw.githubusercontent.com/clvnkhr/tao2typ/main/archive/ir/why-are-we-even-doing-all-this.json.gz" data-filename="why-are-we-even-doing-all-this.json.gz" data-download-format="gzip">JSON.gz</button><a class="original" href="https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/">Original</a></div></li>

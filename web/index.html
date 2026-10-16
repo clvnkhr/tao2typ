@@ -24,7 +24,10 @@
       <p id="queue-updated" class="queue-updated" data-updated="@@QUEUE_UPDATED@@" hidden>Updated <time datetime="@@QUEUE_UPDATED@@"></time> UTC</p>
       <form class="controls" role="search">
         <label class="search-label" for="search">Search<input id="search" type="search" placeholder="Search" autocomplete="off"></label>
-        <label class="failure-filter"><input type="checkbox" id="failed"> Failures only</label>
+        <span class="status-filters">
+          <label class="status-filter" title="PDFs with conversion fallbacks"><input type="checkbox" id="amber"> Amber</label>
+          <label class="status-filter failure-filter" title="Missing PDFs or failed conversions"><input type="checkbox" id="failed"> <span id="failed-label">Failures</span></label>
+        </span>
         <label class="sort-label" for="sort">Order<select id="sort"><option value="newest">Newest</option><option value="updated" title="Most recently converted PDFs first">Updated</option><option value="oldest">Oldest</option><option value="title">A–Z</option><option value="queue" hidden>Queue order</option></select></label>
       </form>
       <ol id="posts" class="post-list" tabindex="-1">@@POSTS@@</ol>
