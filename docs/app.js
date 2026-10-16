@@ -7,7 +7,6 @@
     date: element.dataset.date,
     updated: Date.parse(element.dataset.updated),
     search: element.dataset.search,
-    failed: element.dataset.failed === "true",
     quality: element.dataset.quality,
     id: element.dataset.id,
     queuePosition: element.dataset.queuePosition !== undefined && element.dataset.queuePosition !== ""
@@ -16,10 +15,13 @@
     categories: JSON.parse(element.dataset.categories),
   }));
   const search = document.getElementById("search");
-  const failed = document.getElementById("failed");
-  const amber = document.getElementById("amber");
-  const amberFilter = amber.closest("label");
-  const failureFilter = failed.closest("label");
+  const statusButtons = Array.from(document.querySelectorAll("button[data-quality-filter]"));
+  const enabledColors = new Set(statusButtons.map(button => button.dataset.qualityFilter));
+  const statusNames = {
+    green: "clean PDFs",
+    amber: "PDFs with conversion fallbacks",
+    red: "missing PDFs or failed conversions",
+  };
   const sort = document.getElementById("sort");
   const title = document.getElementById("collection-title");
   const queueUpdated = document.getElementById("queue-updated");
@@ -211,8 +213,12 @@
       const saved = JSON.parse(sessionStorage.getItem(previewStateKey));
       sessionStorage.removeItem(previewStateKey);
       if (saved && typeof saved.search === "string") search.value = saved.search;
-      if (saved && typeof saved.failed === "boolean") failed.checked = saved.failed;
-      if (saved && typeof saved.amber === "boolean") amber.checked = saved.amber;
+      if (Array.isArray(saved?.enabledColors)) {
+        enabledColors.clear();
+        for (const color of saved.enabledColors) {
+          if (Object.hasOwn(statusNames, color)) enabledColors.add(color);
+        }
+      }
       if (saved && Array.from(sort.options).some(option => option.value === saved.order && option.value !== "queue")) {
         selectedOrder = saved.order;
       }
@@ -235,9 +241,12 @@
     catch { slug = ""; }
     const filtering = separator > 0 && ["tag", "category"].includes(kind);
     const isQueue = route === "queue";
-    amberFilter.hidden = isQueue;
-    document.getElementById("failed-label").textContent = isQueue ? "Failures only" : "Failures";
-    failureFilter.title = isQueue ? "Failed conversions" : "Missing PDFs or failed conversions";
+    for (const button of statusButtons) {
+      const color = button.dataset.qualityFilter;
+      const shown = enabledColors.has(color);
+      button.setAttribute("aria-pressed", String(shown));
+      button.title = `${shown ? "Hide" : "Show"} ${statusNames[color]}`;
+    }
     const key = filtering ? `${kind}=${slug}` : isQueue ? "queue" : "all";
     const term = terms.get(key) || slug;
     const query = search.value.normalize("NFKC").toLowerCase().trim();
@@ -259,13 +268,8 @@
       : sort.value === "oldest" ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
     const fragment = document.createDocumentFragment();
     for (const post of posts) {
-      const matchesStatus = isQueue
-        ? !failed.checked || post.failed
-        : !amber.checked && !failed.checked
-          || amber.checked && post.quality === "amber"
-          || failed.checked && post.quality === "red";
       const matches = (!query || post.search.includes(query))
-        && matchesStatus
+        && enabledColors.has(post.quality)
         && (!isQueue || post.queuePosition !== null)
         && (!filtering || (kind === "tag" ? post.tags : post.categories).includes(slug));
       post.element.hidden = !matches;
@@ -286,8 +290,14 @@
   }
   search.addEventListener("input", render);
   document.querySelector("form.controls").addEventListener("submit", event => event.preventDefault());
-  failed.addEventListener("change", render);
-  amber.addEventListener("change", render);
+  for (const button of statusButtons) {
+    button.addEventListener("click", () => {
+      const color = button.dataset.qualityFilter;
+      if (enabledColors.has(color)) enabledColors.delete(color);
+      else enabledColors.add(color);
+      render();
+    });
+  }
   sort.addEventListener("change", () => {
     if (!sort.disabled) selectedOrder = sort.value;
     render();
@@ -324,8 +334,7 @@
         try {
           sessionStorage.setItem(previewStateKey, JSON.stringify({
             search: search.value,
-            failed: failed.checked,
-            amber: amber.checked,
+            enabledColors: Array.from(enabledColors),
             order: selectedOrder,
             openFailures: posts.filter(post => post.element.querySelector(".failure-details")?.open).map(post => post.id),
           }));

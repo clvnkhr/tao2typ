@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>tao2typ</title>
-  <link rel="stylesheet" href="style.css?v=3f8600d7a721">
-  <script src="app.js?v=640df6f396c1" defer></script>
+  <link rel="stylesheet" href="style.css?v=07b0194fc7ba">
+  <script src="app.js?v=e9ecaebc9733" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#posts">Skip to posts</a>
@@ -2055,9 +2055,10 @@
       <p id="queue-updated" class="queue-updated" data-updated="2026-10-16T11:42:18.157382+00:00" hidden>Updated <time datetime="2026-10-16T11:42:18.157382+00:00"></time> UTC</p>
       <form class="controls" role="search">
         <label class="search-label" for="search">Search<input id="search" type="search" placeholder="Search" autocomplete="off"></label>
-        <span class="status-filters">
-          <label class="status-filter" title="PDFs with conversion fallbacks"><input type="checkbox" id="amber"> Amber</label>
-          <label class="status-filter failure-filter" title="Missing PDFs or failed conversions"><input type="checkbox" id="failed"> <span id="failed-label">Failures</span></label>
+        <span class="status-filters" role="group" aria-label="Post status filters">
+          <button class="status-toggle" type="button" data-quality-filter="green" aria-pressed="true" aria-label="Green: clean PDFs" title="Hide clean PDFs"><span aria-hidden="true"></span></button>
+          <button class="status-toggle" type="button" data-quality-filter="amber" aria-pressed="true" aria-label="Amber: PDFs with conversion fallbacks" title="Hide PDFs with conversion fallbacks"><span aria-hidden="true"></span></button>
+          <button class="status-toggle" type="button" data-quality-filter="red" aria-pressed="true" aria-label="Red: missing PDFs or failed conversions" title="Hide missing PDFs or failed conversions"><span aria-hidden="true"></span></button>
         </span>
         <label class="sort-label" for="sort">Order<select id="sort"><option value="newest">Newest</option><option value="updated" title="Most recently converted PDFs first">Updated</option><option value="oldest">Oldest</option><option value="title">A–Z</option><option value="queue" hidden>Queue order</option></select></label>
       </form>

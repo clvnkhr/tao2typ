@@ -153,7 +153,7 @@ def test_catalogue_counts_private_links_and_no_document_copies(tmp_path: Path) -
     assert ready["data-id"] == "1"
     assert ready["data-failed"] == "true"  # A failed refresh can retain an older PDF.
     assert selected(ready, ".failure-details summary").text == "Failed · Conversion failed"
-    assert selected(soup, "#failed")["type"] == "checkbox"
+    assert soup.select_one("#failed") is None
     assert soup.select_one("#ready") is None
     assert "PDFs only" not in soup.get_text()
     assert not soup.select('a[data-route="failures"]')
@@ -239,7 +239,32 @@ def test_catalogue_has_accessible_green_amber_and_red_indicators(tmp_path: Path)
             assert not indicator.has_attr("tabindex")
         assert indicator.get_text() == ""
     assert "PRIVATE-NOTE" not in page
-    assert selected(soup, "#failed")["type"] == "checkbox"
+    controls = selected(soup, ".status-filters")
+    assert controls["role"] == "group"
+    assert controls["aria-label"] == "Post status filters"
+    buttons = controls.select("button.status-toggle")
+    assert len(buttons) == 3
+    for button, color, label in zip(
+        buttons,
+        ("green", "amber", "red"),
+        (
+            "Green: clean PDFs",
+            "Amber: PDFs with conversion fallbacks",
+            "Red: missing PDFs or failed conversions",
+        ),
+        strict=True,
+    ):
+        assert button["type"] == "button"
+        assert button["data-quality-filter"] == color
+        assert button["aria-pressed"] == "true"
+        assert button["aria-label"] == label
+        assert attribute(button, "title").startswith("Hide ")
+        assert len(button.contents) == 1
+        dot = selected(button, "span")
+        assert dot["aria-hidden"] == "true"
+        assert not dot.contents
+        assert button.get_text() == ""
+    assert not soup.select('input[type="checkbox"], #failed')
     assert not soup.select('a[data-route="failures"]')
 
 

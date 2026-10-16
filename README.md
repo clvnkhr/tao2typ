@@ -270,9 +270,10 @@ Watch a running local batch with `uv run tao2typ serve`, then open
 when the checkpoint changes, preserving search and filters. PDF and source buttons
 use the same password prompt as the public catalogue. The preview reads checkpoints
 without changing batch state or generating PDFs; public Pages remains a published snapshot.
-Use the **Failures only** checkbox in [the queue](http://127.0.0.1:8765/#queue)
-to filter posts with an unresolved error, including failed refreshes with an older
-PDF. Expand a failure for its reason and last attempt. The local preview also
+The three coloured dots beside search toggle green, amber and red posts in all
+views, including [the queue](http://127.0.0.1:8765/#queue). Filled dots show that
+colour; hollow dots hide it. To see only failures or missing PDFs, leave only red
+filled. Expand a failure for its reason and last attempt. The local preview also
 shows the complete error and links to available failed Typst, IR and captured
 HTML. Open errors survive automatic refreshes. Captured HTML is served as plain
 text; these diagnostic files are never included in public exports.
