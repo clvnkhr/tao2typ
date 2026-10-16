@@ -224,7 +224,19 @@ def test_catalogue_has_accessible_green_amber_and_red_indicators(tmp_path: Path)
         indicator = selected(row, f".quality-indicator.quality-{color}")
         assert row["data-quality"] == color
         assert indicator["role"] == "img"
-        assert indicator["aria-label"] == indicator["title"]
+        if color == "amber":
+            assert indicator["aria-label"] == "PDF includes conversion fallbacks"
+            assert indicator["tabindex"] == "0"
+            assert not indicator.has_attr("title")
+            assert "1 source formula note in article" in attribute(indicator, "data-tooltip")
+            tooltip = selected(row, '[role="tooltip"]')
+            assert tooltip["id"] == indicator["aria-describedby"]
+            assert tooltip.get_text() == indicator["data-tooltip"]
+            assert tooltip["tabindex"] == "0"
+        else:
+            assert indicator["aria-label"] == indicator["title"]
+            assert not indicator.has_attr("data-tooltip")
+            assert not indicator.has_attr("tabindex")
         assert indicator.get_text() == ""
     assert "PRIVATE-NOTE" not in page
     assert selected(soup, "#failed")["type"] == "checkbox"
@@ -261,6 +273,202 @@ def test_fallback_in_a_nested_comment_is_amber(tmp_path: Path, node: dict) -> No
     generate_site(archive, output)
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
     assert selected(soup, '.post[data-id="1"]')["data-quality"] == "amber"
+
+
+def test_amber_tooltip_counts_each_reason_and_separates_article_from_nested_comments(
+    tmp_path: Path,
+) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(archive / "state.json", state)
+    malformed = {
+        "kind": "math",
+        "text": r"\left( u",
+        "attrs": {
+            "source_error": r"Unclosed \left delimiter in original source",
+            "source_error_evidence": "PRIVATE-MALFORMED-EVIDENCE",
+        },
+    }
+    original_formula_image = {
+        "kind": "image",
+        "attrs": {
+            "asset_path": "assets/formula.png",
+            "source_error_evidence": "https://example.org/formula-source.png",
+        },
+    }
+    unavailable_image = {
+        "kind": "image",
+        "attrs": {
+            "url": "https://example.org/missing-diagram.png",
+            "unavailable": "true",
+            "unavailable_asset": "Original image was not cached",
+            "alt": 'Diagram "A" <B>',
+        },
+    }
+    source_note = {
+        "kind": "math",
+        "attrs": {"source_error_evidence": "PRIVATE-FORMULA-NOTE"},
+    }
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {
+            "body": [malformed, original_formula_image, unavailable_image, source_note],
+            "comments": [
+                {
+                    "id": "comment-123",
+                    "author": "A commenter",
+                    "body": [malformed, unavailable_image, unavailable_image, source_note],
+                    "replies": [
+                        {
+                            "id": "comment-456",
+                            "author": "A reply author",
+                            "body": [
+                                malformed,
+                                original_formula_image,
+                                original_formula_image,
+                                unavailable_image,
+                                source_note,
+                            ],
+                        }
+                    ],
+                }
+            ],
+            "warnings": [
+                "Image unavailable; original link retained: "
+                "https://example.org/missing-diagram.png: HTTP 404 Not Found",
+                "Image unavailable; original link retained: "
+                "https://example.org/unrelated-image.png: PRIVATE-UNRELATED-WARNING",
+            ],
+        },
+    )
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    page = (output / "index.html").read_text()
+    soup = BeautifulSoup(page, "html.parser")
+    indicator = selected(soup, '.post[data-id="1"] .quality-amber')
+    tooltip = attribute(indicator, "data-tooltip")
+    assert indicator["aria-label"] == "PDF includes conversion fallbacks"
+    panel = selected(soup, f"#{attribute(indicator, 'aria-describedby')}")
+    assert panel["role"] == "tooltip" and panel.get_text() == tooltip
+    assert tooltip.startswith("PDF includes:\n")
+    reasons = tooltip.splitlines()[1:]
+    for expected in (
+        "1 formula in article with malformed source TeX",
+        "2 formulas in comments with malformed source TeX",
+        "1 formula in article using the original blog image",
+        "2 formulas in comments using the original blog image",
+        "1 unavailable image in article",
+        "3 unavailable images in comments",
+        "1 source formula note in article",
+        "2 source formula notes in comments",
+    ):
+        assert sum(reason.startswith(expected) for reason in reasons) == 1
+    assert any("exact TeX retained" in reason for reason in reasons)
+    assert any("linked placeholders used" in reason for reason in reasons)
+    assert r"Unclosed \left delimiter in original source" in tooltip
+    assert r"\left( u" in tooltip
+    assert "https://example.org/formula-source.png" in tooltip
+    assert "https://example.org/missing-diagram.png" in tooltip
+    assert "HTTP 404 Not Found" in tooltip
+    assert 'Diagram "A" <B>' in tooltip
+    assert "A commenter" in tooltip and "comment-123" in tooltip
+    assert "A reply author" in tooltip and "comment-456" in tooltip
+    assert not soup.select(".quality-indicator script, .quality-indicator b")
+    assert "PRIVATE-" not in page
+
+
+def test_amber_formula_image_exposes_reviewed_centerline_reason_and_capture_evidence(
+    tmp_path: Path,
+) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(archive / "state.json", state)
+    registry = json.loads(
+        (Path(catalogue.__file__).with_name("data") / "source-errors.json").read_text()
+    )
+    original = next(
+        item
+        for item in registry["formulas"]
+        if "higher-order-hilbert-spaces" in item["post_url"]
+        and item.get("render_as") == "source-image"
+    )
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {
+            "url": original["post_url"],
+            "body": [],
+            "comments": [
+                {
+                    "id": original["comment_id"],
+                    "author": "Original commenter",
+                    "body": [
+                        {
+                            "kind": "image",
+                            "text": original["tex"],
+                            "attrs": {
+                                "url": original["source_image_url"],
+                                "asset_path": "assets/original-formula.png",
+                                "source_error_evidence": original["evidence_page"],
+                                "alt": "Formula rendered by the original blog",
+                            },
+                        }
+                    ],
+                }
+            ],
+            "warnings": ["Original source image retained for centerline layout."],
+        },
+    )
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    tooltip = attribute(selected(soup, '.post[data-id="1"] .quality-amber'), "data-tooltip")
+    assert "1 formula in comments using the original blog image" in tooltip
+    assert original["reason"] in tooltip and "centerline" in tooltip
+    assert "TeX: " + original["tex"] in tooltip
+    assert "Evidence: " + original["evidence_page"] in tooltip
+    assert "Image URL: " + original["source_image_url"] in tooltip
+    assert original["post_url"] + "#" + original["comment_id"] in tooltip
+    assert original["comment_id"] in tooltip and "Original commenter" in tooltip
+    assert "Original source image retained for centerline layout" in tooltip
+    assert "unavailable image" not in tooltip
+
+
+def test_amber_image_errors_match_exact_urls_without_avatar_or_prefix_collisions(
+    tmp_path: Path,
+) -> None:
+    archive = fixture_archive(tmp_path)
+    state = json.loads((archive / "state.json").read_text())
+    state["posts"]["1"]["last_error"] = None
+    write_json(archive / "state.json", state)
+    url = "https://example.org/foo"
+    actual_error = f"Image unavailable; original link retained: {url}: HTTP 404 Not Found"
+    write_json(
+        archive / "ir/einstein-e-mc2.json",
+        {
+            "body": [{"kind": "image", "attrs": {"url": url, "unavailable": "true"}}],
+            "warnings": [
+                actual_error,
+                actual_error,
+                f"Image unavailable in local cache: {url}",
+                f"Image unavailable; original link retained: {url}bar: PRIVATE-PREFIX-COLLISION",
+                f"Comment avatar unavailable: {url}: PRIVATE-AVATAR-WARNING",
+                "Image unavailable; original link retained: "
+                "https://example.org/unrelated: PRIVATE-UNRELATED-ERROR",
+            ],
+        },
+    )
+    output = tmp_path / "site"
+    generate_site(archive, output)
+    page = (output / "index.html").read_text()
+    soup = BeautifulSoup(page, "html.parser")
+    tooltip = attribute(selected(soup, '.post[data-id="1"] .quality-amber'), "data-tooltip")
+    assert "1 unavailable image in article" in tooltip
+    assert tooltip.count(actual_error) == 1
+    assert f"Image unavailable in local cache: {url}" in tooltip
+    assert "No further image-download error was saved" not in tooltip
+    assert "PRIVATE-" not in page
 
 
 def test_optional_avatar_and_ordinary_math_keep_a_green_indicator(tmp_path: Path) -> None:
@@ -331,7 +539,54 @@ def test_quality_classification_is_cached_until_the_ir_changes(
     generate_site(archive, output)
     assert reads == 2
     soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
-    assert selected(soup, '.post[data-id="1"]')["data-quality"] == "amber"
+    first_tooltip = attribute(selected(soup, '.post[data-id="1"] .quality-amber'), "data-tooltip")
+    assert "1 unavailable image in article" in first_tooltip
+    write_json(
+        path,
+        {
+            "body": [
+                {
+                    "kind": "math",
+                    "text": r"\left( x",
+                    "attrs": {"source_error": "Unclosed delimiter"},
+                }
+            ]
+        },
+    )
+    os.utime(path, ns=(old_mtime + 2_000_000, old_mtime + 2_000_000))
+    generate_site(archive, output)
+    assert reads == 3
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    next_tooltip = attribute(selected(soup, '.post[data-id="1"] .quality-amber'), "data-tooltip")
+    assert "1 formula in article with malformed source TeX" in next_tooltip
+    assert "unavailable image" not in next_tooltip
+    assert "Unclosed delimiter" in next_tooltip
+    write_json(
+        path,
+        {
+            "body": [
+                {
+                    "kind": "math",
+                    "text": r"\bad",
+                    "attrs": {"source_error": r"Unknown command: \bad"},
+                }
+            ]
+        },
+    )
+    os.utime(path, ns=(old_mtime + 3_000_000, old_mtime + 3_000_000))
+    generate_site(archive, output)
+    assert reads == 4
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    changed_tooltip = attribute(selected(soup, '.post[data-id="1"] .quality-amber'), "data-tooltip")
+    assert r"Unknown command: \bad" in changed_tooltip
+    assert "Unclosed delimiter" not in changed_tooltip
+    write_json(path, {"body": []})
+    os.utime(path, ns=(old_mtime + 4_000_000, old_mtime + 4_000_000))
+    generate_site(archive, output)
+    assert reads == 5
+    soup = BeautifulSoup((output / "index.html").read_text(), "html.parser")
+    assert selected(soup, '.post[data-id="1"]')["data-quality"] == "green"
+    assert not selected(soup, '.post[data-id="1"] .quality-indicator').has_attr("data-tooltip")
 
 
 @pytest.mark.parametrize(

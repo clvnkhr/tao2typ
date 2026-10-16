@@ -51,7 +51,10 @@ with aligned displays. Typst then compiles the result to PDF.
 
 - **Green:** a PDF was produced without a recorded source issue.
 - **Amber:** the PDF needed a fallback, such as a missing-image placeholder or a
-  note preserving a broken formula from the source.
+  note preserving a broken formula from the source. Hover over the dot, or focus
+  it with the keyboard, to see the reasons for that post: affected formulas or
+  image URLs, article/comment locations, and the recorded error or fallback.
+  Long tooltips scroll.
 - **Red:** the PDF is missing, or its latest conversion failed.
 
 The conversion is imperfect. If something looks wrong, compare it with the

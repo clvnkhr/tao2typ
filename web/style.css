@@ -50,6 +50,13 @@ time { font-variant-numeric:tabular-nums; }
 h3 { grid-column:2; grid-row:1; font-size:13px; font-weight:400; line-height:1.45; margin:0; overflow-wrap:anywhere; }
 h3 a { color:var(--ink); }
 .quality-indicator { display:inline-block; width:6px; height:6px; margin-right:6px; border-radius:50%; vertical-align:0.12em; }
+.quality-status { position:relative; display:inline-block; width:6px; height:6px; margin-right:6px; vertical-align:0.12em; }
+.quality-status .quality-indicator { display:block; margin:0; cursor:help; }
+.quality-indicator[data-tooltip]:focus-visible { outline:2px solid var(--link); outline-offset:3px; }
+.quality-tooltip { display:none; position:absolute; z-index:2; top:100%; left:0; width:min(560px,calc(100vw - 350px)); max-height:min(420px,60vh); overflow:auto; padding:11px 13px; border:1px solid var(--control-border); border-radius:3px; background:var(--background); color:var(--ink); box-shadow:0 4px 14px rgb(0 0 0 / 0.15); font:11px/1.5 system-ui,sans-serif; white-space:pre-wrap; overflow-wrap:anywhere; }
+.quality-status:hover .quality-tooltip,.quality-status:focus-within .quality-tooltip { display:block; }
+.quality-status.tooltip-dismissed .quality-tooltip { display:none; }
+.quality-tooltip:focus-visible { outline:2px solid var(--link); outline-offset:1px; }
 .quality-green { background:var(--positive); }.quality-amber { background:var(--warning); }.quality-red { background:var(--negative); }
 .post-taxonomy { grid-column:2; grid-row:2; display:flex; flex-wrap:wrap; gap:3px 8px; }
 .post-taxonomy a { color:var(--muted); font-size:9px; line-height:1.4; }
@@ -92,4 +99,5 @@ button.download:disabled { color:var(--muted); cursor:wait; text-decoration:none
 .faq-content > :last-child { margin-bottom:0; }
 .faq-edit { margin-top:28px; color:var(--muted); font-size:11px; }
 @media(max-width:700px) { main { grid-template-columns:1fr; gap:20px; padding-top:18px; }.taxonomy { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }.taxonomy .all-posts,.taxonomy .queue-link { margin-bottom:5px; }.taxonomy details { padding-top:7px; padding-bottom:0; }.taxonomy details nav { max-height:200px; }.post { grid-template-columns:72px minmax(0,1fr); gap:3px 10px; }.post-actions { grid-column:2; grid-row:3; justify-content:flex-start; max-width:none; }.post-meta { grid-row:1/5; }.failure-details { grid-column:2; grid-row:4; }.controls { gap:10px; flex-wrap:wrap; }.search-label { flex-basis:100%; }.sort-label { margin-left:auto; } }
+@media(max-width:700px) { .quality-tooltip { width:min(560px,calc(100vw - 120px)); } }
 @media(max-width:390px) { header,main,.site-note { padding-left:14px; padding-right:14px; }header nav { gap:12px; }.controls { gap:7px; }.ready-filter,.failure-filter { font-size:10px; }.post { grid-template-columns:65px minmax(0,1fr); gap:3px 8px; } }

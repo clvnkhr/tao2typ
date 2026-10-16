@@ -30,6 +30,33 @@
   let selectedOrder = sort.value;
   const links = Array.from(document.querySelectorAll(".taxonomy a[data-route]"));
   const terms = new Map(links.map(link => [link.dataset.route, link.dataset.name]));
+  function positionQualityTooltip(status) {
+    const panel = status.querySelector(".quality-tooltip");
+    const dot = status.getBoundingClientRect();
+    const below = window.innerHeight - dot.bottom - 12;
+    const above = dot.top - 12;
+    const openAbove = below < 240 && above > below;
+    panel.style.top = openAbove ? "auto" : "100%";
+    panel.style.bottom = openAbove ? "100%" : "auto";
+    panel.style.maxHeight = `${Math.max(60, Math.min(420, openAbove ? above : below))}px`;
+    panel.style.left = "0px";
+    const bounds = panel.getBoundingClientRect();
+    if (bounds.right > window.innerWidth - 12) {
+      panel.style.left = `${window.innerWidth - 12 - bounds.right}px`;
+    }
+  }
+  for (const eventName of ["pointerover", "focusin"]) {
+    list.addEventListener(eventName, event => {
+      const status = event.target instanceof Element ? event.target.closest(".quality-status") : null;
+      if (!status || event.relatedTarget instanceof Node && status.contains(event.relatedTarget)) return;
+      status.classList.remove("tooltip-dismissed");
+      positionQualityTooltip(status);
+    });
+  }
+  list.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || !(event.target instanceof Element)) return;
+    event.target.closest(".quality-status")?.classList.add("tooltip-dismissed");
+  });
   const downloadMediaTypes = {
     pdf: "application/pdf",
     gzip: "application/gzip",

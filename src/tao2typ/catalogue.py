@@ -209,53 +209,184 @@ def _artifact_path(archive: Path, post: dict[str, Any], kind: str) -> Path | Non
     return source
 
 
-def _has_conversion_fallback(value: Any) -> bool:
+def _conversion_fallbacks(value: Any) -> Counter[str]:
+    reasons: Counter[str] = Counter()
     if isinstance(value, dict):
         attrs = value.get("attrs", {})
         if isinstance(attrs, dict):
-            if attrs.get("source_error") or attrs.get("source_error_evidence"):
-                return True
+            if attrs.get("source_error"):
+                reasons["source-formula"] += 1
+            elif attrs.get("source_error_evidence"):
+                reasons["formula-image" if value.get("kind") == "image" else "source-note"] += 1
             if value.get("kind") == "image" and (
                 not attrs.get("asset_path")
                 or attrs.get("unavailable")
                 or attrs.get("unavailable_asset")
             ):
-                return True
+                reasons["unavailable-image"] += 1
         # Avatars are optional decoration, unlike article/comment illustrations.
-        return any(_has_conversion_fallback(item) for key, item in value.items() if key != "avatar")
-    if isinstance(value, list):
-        return any(_has_conversion_fallback(item) for item in value)
-    return False
+        for key, item in value.items():
+            if key != "avatar":
+                reasons.update(_conversion_fallbacks(item))
+    elif isinstance(value, list):
+        for item in value:
+            reasons.update(_conversion_fallbacks(item))
+    return reasons
+
+
+def _fallback_descriptions(counts: Counter[str], location: str) -> list[str]:
+    descriptions = []
+    for reason, count in sorted(counts.items()):
+        plural = "s" if count != 1 else ""
+        match reason:
+            case "source-formula":
+                text = (
+                    f"{count} formula{plural} in {location} with malformed source TeX; "
+                    "exact TeX retained."
+                )
+            case "formula-image":
+                text = f"{count} formula{plural} in {location} using the original blog image."
+            case "source-note":
+                text = f"{count} source formula note{plural} in {location}."
+            case "unavailable-image":
+                text = f"{count} unavailable image{plural} in {location}; linked placeholders used."
+            case _:
+                continue
+        descriptions.append(text)
+    return descriptions
+
+
+@lru_cache(maxsize=1)
+def _original_formula_reasons() -> dict[tuple[str, str, str], str]:
+    registry = read_json(Path(__file__).with_name("data") / "source-errors.json")
+    return {
+        (item["post_url"], item["comment_id"], item["tex"]): item["reason"]
+        for item in registry["formulas"]
+        if item.get("render_as") == "source-image"
+    }
+
+
+def _fallback_details(payload: dict[str, Any]) -> list[str]:
+    details: list[str] = []
+    warnings = [warning for warning in payload.get("warnings", []) if isinstance(warning, str)]
+    post_url = str(payload.get("url") or "")
+
+    def visit(value: Any, location: str, source: str, comment_id: str = "") -> None:
+        if isinstance(value, list):
+            for item in value:
+                visit(item, location, source, comment_id)
+            return
+        if not isinstance(value, dict):
+            return
+        if "author" in value and "body" in value:
+            comment_id = str(value.get("id") or "")
+            location = f"Comment by {value.get('author') or 'Unknown author'}"
+            if comment_id:
+                location += f" ({comment_id})"
+            source = str(value.get("url") or (post_url + "#" + comment_id if post_url else ""))
+        attrs = value.get("attrs", {})
+        if isinstance(attrs, dict):
+            issue: list[str] = []
+            if reason := attrs.get("source_error"):
+                issue.append(
+                    "Issue: " + (str(reason) if reason != "true" else "Source formula error")
+                )
+                issue.append("Fallback: exact source TeX retained with a source-error note.")
+            elif attrs.get("source_error_evidence"):
+                if value.get("kind") == "image":
+                    reason = _original_formula_reasons().get(
+                        (post_url, comment_id, str(value.get("text") or "").strip()),
+                        "Original blog formula image retained",
+                    )
+                    issue.append("Issue: " + reason)
+                    issue.extend(
+                        "Recorded note: " + warning
+                        for warning in warnings
+                        if warning.startswith("Original source image retained ")
+                    )
+                else:
+                    issue.append("Issue: source formula note recorded.")
+            unavailable = value.get("kind") == "image" and (
+                not attrs.get("asset_path")
+                or attrs.get("unavailable")
+                or attrs.get("unavailable_asset")
+            )
+            if unavailable:
+                issue.append("Issue: image unavailable; linked placeholder used.")
+                if reason := attrs.get("unavailable_asset"):
+                    issue.append("Recorded asset error: " + str(reason))
+            if issue:
+                lines = [location, *issue]
+                source = str(attrs.get("source_error_url") or source)
+                if _public_url(source) != "#":
+                    lines.append("Source: " + source)
+                if value.get("text") and (
+                    attrs.get("source_error") or attrs.get("source_error_evidence")
+                ):
+                    lines.append("TeX: " + str(value["text"]))
+                if url := attrs.get("url"):
+                    lines.append("Image URL: " + str(url))
+                    if unavailable:
+                        matches = [
+                            warning
+                            for warning in warnings
+                            if warning == f"Image unavailable in local cache: {url}"
+                            or warning.startswith(
+                                f"Image unavailable; original link retained: {url}: "
+                            )
+                        ]
+                        lines.extend(
+                            "Recorded error: " + warning for warning in dict.fromkeys(matches)
+                        )
+                        if not matches:
+                            lines.append("No further image-download error was saved.")
+                if attrs.get("alt"):
+                    lines.append("Alt text: " + str(attrs["alt"]).strip())
+                if evidence := attrs.get("source_error_evidence"):
+                    if _public_url(evidence) != "#" or re.fullmatch(
+                        r"raw/pages/[0-9a-f]{64}\.html(?:\.gz)?", str(evidence)
+                    ):
+                        lines.append("Evidence: " + str(evidence))
+                details.append("\n".join(lines))
+        for key, item in value.items():
+            if key != "avatar":
+                visit(item, location, source, comment_id)
+
+    visit(payload.get("body", []), "Article", post_url)
+    visit(payload.get("comments", []), "Comments", post_url)
+    return details
 
 
 @lru_cache(maxsize=2048)
-def _cached_ir_fallback(path: str, mtime_ns: int, size: int) -> bool:
-    """Cache only the classification; file changes invalidate the preview's cache."""
+def _cached_ir_fallback(path: str, mtime_ns: int, size: int) -> tuple[str, ...]:
+    """Cache public reason summaries; file changes invalidate the preview's cache."""
     try:
         payload = read_json(Path(path))
     except (OSError, EOFError, ValueError):
-        return False
+        return ()
     if not isinstance(payload, dict):
-        return False
-    return _has_conversion_fallback(payload.get("body", [])) or _has_conversion_fallback(
-        payload.get("comments", [])
-    )
+        return ()
+    summaries = _fallback_descriptions(
+        _conversion_fallbacks(payload.get("body", [])), "article"
+    ) + _fallback_descriptions(_conversion_fallbacks(payload.get("comments", [])), "comments")
+    if not summaries:
+        return ()
+    return tuple([*summaries, "", "Details:", "\n\n".join(_fallback_details(payload))])
 
 
-def _conversion_quality(archive: Path, post: dict[str, Any], ready: bool) -> str:
+def _conversion_quality(archive: Path, post: dict[str, Any], ready: bool) -> tuple[str, str]:
     if not ready or post.get("last_error"):
-        return "red"
+        return "red", _QUALITY_LABELS["red"]
     path = _artifact_path(archive, post, "ir")
     if path is not None:
         stat = path.stat()
-        if _cached_ir_fallback(str(path.resolve()), stat.st_mtime_ns, stat.st_size):
-            return "amber"
-    return "green"
+        if reasons := _cached_ir_fallback(str(path.resolve()), stat.st_mtime_ns, stat.st_size):
+            return "amber", "PDF includes:\n" + "\n".join(reasons)
+    return "green", _QUALITY_LABELS["green"]
 
 
 _QUALITY_LABELS = {
     "green": "Clean PDF",
-    "amber": "PDF includes a source note, original formula image, or unavailable image",
     "red": "PDF missing or current conversion failed",
 }
 
@@ -431,8 +562,27 @@ def _post_markup(
         for kind in ("pdf", "typst", "ir")
     }
     ready = downloads["pdf"] is not None
-    quality = _conversion_quality(archive, post, ready)
-    quality_label = _escape(_QUALITY_LABELS[quality])
+    quality, quality_label = _conversion_quality(archive, post, ready)
+    quality_label = _escape(quality_label)
+    tooltip_id = "quality-tooltip-" + quote(str(post.get("id", "")), safe="")
+    accessible_label = "PDF includes conversion fallbacks" if quality == "amber" else quality_label
+    tooltip = (
+        f'tabindex="0" data-tooltip="{quality_label}" aria-describedby="{tooltip_id}"'
+        if quality == "amber"
+        else f'title="{quality_label}"'
+    )
+    indicator = (
+        f'<span class="quality-indicator quality-{quality}" role="img" '
+        f'{tooltip} aria-label="{accessible_label}"></span>'
+    )
+    if quality == "amber":
+        indicator = (
+            '<span class="quality-status">'
+            + indicator
+            + f'<span id="{tooltip_id}" class="quality-tooltip" role="tooltip" tabindex="0">'
+            + quality_label
+            + "</span></span>"
+        )
     title = str(post.get("title") or "Untitled post")
     published = str(post.get("published_at") or "")[:10]
     original = _escape(_public_url(post.get("url")))
@@ -480,8 +630,7 @@ def _post_markup(
         f'<time datetime="{_escape(published)}">{_escape(published)}</time>'
         f'<span class="availability{ready_class}">{availability}</span>'
         f'<span class="queue-status">{_escape(queue_label) if queue_status else ""}</span></div>'
-        f'<h3><span class="quality-indicator quality-{quality}" role="img" '
-        f'title="{quality_label}" aria-label="{quality_label}"></span>'
+        f"<h3>{indicator}"
         f'<a href="{original}">{_escape(title)}</a></h3>'
         f'<div class="post-taxonomy">{chips}</div><div class="post-actions">{buttons}'
         f'<a class="original" href="{original}">Original</a></div>'
