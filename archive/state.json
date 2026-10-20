@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-10-19T13:39:22.516072+00:00",
+  "last_discovered_at": "2026-10-20T11:52:21.332595+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -23831,17 +23831,17 @@
       "title": "Math Overflow",
       "published_at": "2009-10-20T09:26:42-08:00",
       "modified_at": "2009-11-19T12:01:24-08:00",
-      "last_checked_at": "2026-10-14T08:24:46.028182+00:00",
-      "last_attempted_at": "2026-10-14T16:35:54.712542+00:00",
-      "converted_at": "2026-10-14T16:35:54.859422+00:00",
+      "last_checked_at": "2026-10-20T11:54:24.132523+00:00",
+      "last_attempted_at": "2026-10-20T11:54:19.351861+00:00",
+      "converted_at": "2026-10-20T11:54:24.078215+00:00",
       "converted_modified_at": "2009-11-19T12:01:24-08:00",
-      "next_check_at": "2026-10-20T08:00:00+00:00",
-      "content_sha256": "a8491d5cdcaa5bbdaecee93d901525ea04333c160646333dc82d62ee46714d26",
+      "next_check_at": "2027-10-20T08:00:00+00:00",
+      "content_sha256": "703034763b556c4a7f2a1fa0343a3f1522949b243930b22b3442817ab31413ee",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/math-overflow.pdf",
       "ir": "ir/math-overflow.json.gz",
       "typst": "typst/math-overflow.typ.gz",
-      "source_manifest": "raw/math-overflow/20261014T080911.236810Z/manifest.json.gz",
+      "source_manifest": "raw/math-overflow/20261020T115419.424051Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -56635,17 +56635,17 @@
       "title": "The logarithmically averaged and non-logarithmically averaged Chowla conjectures",
       "published_at": "2017-10-20T10:44:05-08:00",
       "modified_at": "2017-10-22T08:33:29-08:00",
-      "last_checked_at": "2026-10-14T10:43:20.438435+00:00",
-      "last_attempted_at": "2026-10-14T16:38:12.443193+00:00",
-      "converted_at": "2026-10-14T16:38:12.584501+00:00",
+      "last_checked_at": "2026-10-20T11:54:31.132225+00:00",
+      "last_attempted_at": "2026-10-20T11:54:24.203745+00:00",
+      "converted_at": "2026-10-20T11:54:30.994328+00:00",
       "converted_modified_at": "2017-10-22T08:33:29-08:00",
-      "next_check_at": "2026-10-20T08:00:00+00:00",
-      "content_sha256": "73b3d82030f66789fa0b9c45059c1c2e48da23e17d658ec969294afbcaa94993",
+      "next_check_at": "2027-10-20T08:00:00+00:00",
+      "content_sha256": "ae8f19d8d20c09fbbcf592aab0ad07fdbe5f679007802fcc2128e001edb17235",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/the-logarithmically-averaged-and-non-logarithmically-averaged-chowla-conjectures.pdf",
       "ir": "ir/the-logarithmically-averaged-and-non-logarithmically-averaged-chowla-conjectures.json.gz",
       "typst": "typst/the-logarithmically-averaged-and-non-logarithmically-averaged-chowla-conjectures.typ.gz",
-      "source_manifest": "raw/the-logarithmically-averaged-and-non-logarithmically-averaged-chowla-conjectures/20261014T104319.451638Z/manifest.json.gz",
+      "source_manifest": "raw/the-logarithmically-averaged-and-non-logarithmically-averaged-chowla-conjectures/20261020T115424.272619Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -74913,24 +74913,25 @@
       "title": "A Severe Misalignment of AI in Mathematics",
       "published_at": "2026-09-11T09:27:46-08:00",
       "modified_at": "2026-09-12T22:11:30-08:00",
-      "last_checked_at": "2026-10-19T13:42:06.683865+00:00",
-      "last_attempted_at": "2026-10-19T13:41:02.715652+00:00",
-      "converted_at": "2026-10-19T13:42:05.459334+00:00",
+      "last_checked_at": "2026-10-20T11:53:42.741263+00:00",
+      "last_attempted_at": "2026-10-20T11:52:35.527384+00:00",
+      "converted_at": "2026-10-20T11:53:41.668500+00:00",
       "converted_modified_at": "2026-09-12T22:11:30-08:00",
       "next_check_at": "2027-09-11T08:00:00+00:00",
-      "content_sha256": "37e9e1615f893a691a120e33f8f9ab264bc97c82d2950f545a339aa7ca039355",
+      "content_sha256": "6989068fefa1ba8ece98db7b2def98783dd1b1e36662ea4d61b44d539a5134a9",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/a-severe-misalignment-of-ai-in-mathematics.pdf",
       "ir": "ir/a-severe-misalignment-of-ai-in-mathematics.json.gz",
       "typst": "typst/a-severe-misalignment-of-ai-in-mathematics.typ.gz",
-      "source_manifest": "raw/a-severe-misalignment-of-ai-in-mathematics/20261019T134102.800531Z/manifest.json.gz",
+      "source_manifest": "raw/a-severe-misalignment-of-ai-in-mathematics/20261020T115235.590277Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698253",
         "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698244",
         "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698371",
-        "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698321"
+        "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698321",
+        "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698387"
       ],
       "tags": [
         {
@@ -76011,17 +76012,17 @@
       "title": "Why Do We Need Human Mathematicians Anymore?",
       "published_at": "2026-09-19T16:55:40-08:00",
       "modified_at": "2026-09-18T16:58:22-08:00",
-      "last_checked_at": "2026-10-14T11:20:01.153944+00:00",
-      "last_attempted_at": "2026-10-14T16:39:31.980947+00:00",
-      "converted_at": "2026-10-14T16:39:32.832612+00:00",
+      "last_checked_at": "2026-10-20T11:54:47.265591+00:00",
+      "last_attempted_at": "2026-10-20T11:54:31.203182+00:00",
+      "converted_at": "2026-10-20T11:54:47.036396+00:00",
       "converted_modified_at": "2026-09-18T16:58:22-08:00",
-      "next_check_at": "2026-10-20T00:55:40+00:00",
-      "content_sha256": "84b53527d576876c632848e246da0950bab1e3d91b2cec63fec640074c23bcdb",
+      "next_check_at": "2027-09-19T08:00:00+00:00",
+      "content_sha256": "ced467bc9938440f20cc5c27a9397846b84f1d4f54fff93b4611da154d376803",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/why-do-we-need-human-mathematicians-anymore.pdf",
       "ir": "ir/why-do-we-need-human-mathematicians-anymore.json.gz",
       "typst": "typst/why-do-we-need-human-mathematicians-anymore.typ.gz",
-      "source_manifest": "raw/why-do-we-need-human-mathematicians-anymore/20261014T111954.602505Z/manifest.json.gz",
+      "source_manifest": "raw/why-do-we-need-human-mathematicians-anymore/20261020T115431.280141Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -77562,18 +77563,18 @@
       "url": "https://terrytao.wordpress.com/2026/10/10/math-2-0/",
       "title": "Math 2.0",
       "published_at": "2026-10-10T08:16:02-08:00",
-      "modified_at": "2026-10-10T08:16:02-08:00",
-      "last_checked_at": "2026-10-18T11:29:49.117268+00:00",
-      "last_attempted_at": "2026-10-18T11:29:36.563551+00:00",
-      "converted_at": "2026-10-15T08:36:29.453247+00:00",
-      "converted_modified_at": "2026-10-10T08:16:02-08:00",
+      "modified_at": "2026-10-19T22:52:33-08:00",
+      "last_checked_at": "2026-10-20T11:55:21.158569+00:00",
+      "last_attempted_at": "2026-10-20T11:55:07.096639+00:00",
+      "converted_at": "2026-10-20T11:55:20.990200+00:00",
+      "converted_modified_at": "2026-10-19T22:52:33-08:00",
       "next_check_at": "2026-11-10T16:16:02+00:00",
-      "content_sha256": "9a557a51164c4b6a167ba6a56252be78161f725556e7409885f8f3db2137b23a",
+      "content_sha256": "a397c0d3ac56b9baae8e96720428c1196e26d4f38be45213f6fe71851f577c6c",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/math-2-0.pdf",
       "ir": "ir/math-2-0.json.gz",
       "typst": "typst/math-2-0.typ.gz",
-      "source_manifest": "raw/math-2-0/20261018T112936.650550Z/manifest.json.gz",
+      "source_manifest": "raw/math-2-0/20261020T115507.161546Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -77591,7 +77592,15 @@
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697769",
         "https://terrytao.wordpress.com/2026/10/10/math-2-0/#comment-697762"
       ],
-      "tags": [],
+      "tags": [
+        {
+          "id": 22506242,
+          "name": "Math 2.0",
+          "slug": "math-2-0",
+          "url": "https://terrytao.wordpress.com/tag/math-2-0/",
+          "parent_id": null
+        }
+      ],
       "categories": [
         {
           "id": 1440160,
@@ -77662,17 +77671,17 @@
       "title": "Additional recent pieces on math and AI",
       "published_at": "2026-10-12T06:19:10-08:00",
       "modified_at": "2026-10-12T06:24:43-08:00",
-      "last_checked_at": "2026-10-19T13:42:23.061846+00:00",
-      "last_attempted_at": "2026-10-19T13:42:06.770542+00:00",
+      "last_checked_at": "2026-10-20T11:55:35.990176+00:00",
+      "last_attempted_at": "2026-10-20T11:55:21.224761+00:00",
       "converted_at": "2026-10-19T13:42:22.958689+00:00",
       "converted_modified_at": "2026-10-12T06:24:43-08:00",
-      "next_check_at": "2026-10-19T14:19:10+00:00",
+      "next_check_at": "2026-11-12T14:19:10+00:00",
       "content_sha256": "671d4d0c6777ad65633dc308cd207f82f83c25ae433b2e5567bd493ad21f6e47",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/additional-recent-pieces-on-math-and-ai.pdf",
       "ir": "ir/additional-recent-pieces-on-math-and-ai.json.gz",
       "typst": "typst/additional-recent-pieces-on-math-and-ai.typ.gz",
-      "source_manifest": "raw/additional-recent-pieces-on-math-and-ai/20261019T134206.856151Z/manifest.json.gz",
+      "source_manifest": "raw/additional-recent-pieces-on-math-and-ai/20261020T115521.288731Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -77722,17 +77731,17 @@
       "title": "This is normal bad work",
       "published_at": "2026-10-12T19:14:00-08:00",
       "modified_at": "2026-10-12T07:16:12-08:00",
-      "last_checked_at": "2026-10-18T11:27:04.645301+00:00",
-      "last_attempted_at": "2026-10-18T11:26:45.562755+00:00",
+      "last_checked_at": "2026-10-20T11:55:07.011904+00:00",
+      "last_attempted_at": "2026-10-20T11:54:47.335090+00:00",
       "converted_at": "2026-10-18T11:27:04.404249+00:00",
       "converted_modified_at": "2026-10-12T07:16:12-08:00",
-      "next_check_at": "2026-10-20T03:14:00+00:00",
+      "next_check_at": "2026-11-13T03:14:00+00:00",
       "content_sha256": "c96569baeca0d2b5629d6a7c8a14d608ce21033135d7b7217f39795f614066b5",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/this-is-normal-bad-work.pdf",
       "ir": "ir/this-is-normal-bad-work.json.gz",
       "typst": "typst/this-is-normal-bad-work.typ.gz",
-      "source_manifest": "raw/this-is-normal-bad-work/20261018T112645.641760Z/manifest.json.gz",
+      "source_manifest": "raw/this-is-normal-bad-work/20261020T115447.403447Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78288,18 +78297,18 @@
       "url": "https://terrytao.wordpress.com/2026/10/17/some-of-my-recent-talks-and-interviews/",
       "title": "Some of my recent talks and interviews",
       "published_at": "2026-10-17T09:09:00-08:00",
-      "modified_at": "2026-10-16T09:21:08-08:00",
-      "last_checked_at": "2026-10-19T13:43:07.057081+00:00",
-      "last_attempted_at": "2026-10-19T13:43:03.184338+00:00",
-      "converted_at": "2026-10-19T13:43:06.985958+00:00",
-      "converted_modified_at": "2026-10-16T09:21:08-08:00",
+      "modified_at": "2026-10-19T22:52:06-08:00",
+      "last_checked_at": "2026-10-20T11:55:40.084067+00:00",
+      "last_attempted_at": "2026-10-20T11:55:36.051816+00:00",
+      "converted_at": "2026-10-20T11:55:40.032051+00:00",
+      "converted_modified_at": "2026-10-19T22:52:06-08:00",
       "next_check_at": "2026-10-24T17:09:00+00:00",
-      "content_sha256": "e2f65974614b6d4b24b913eac4cb23ad862a0fa2872c40ccb4121d05d04a993f",
+      "content_sha256": "20163f0e318d4af116e3298136cd61d60033d259529610bfc4b25dfe011965a4",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/some-of-my-recent-talks-and-interviews.pdf",
       "ir": "ir/some-of-my-recent-talks-and-interviews.json.gz",
       "typst": "typst/some-of-my-recent-talks-and-interviews.typ.gz",
-      "source_manifest": "raw/some-of-my-recent-talks-and-interviews/20261019T134303.268944Z/manifest.json.gz",
+      "source_manifest": "raw/some-of-my-recent-talks-and-interviews/20261020T115536.119574Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78312,6 +78321,13 @@
           "name": "AI",
           "slug": "ai",
           "url": "https://terrytao.wordpress.com/tag/ai/",
+          "parent_id": null
+        },
+        {
+          "id": 22506242,
+          "name": "Math 2.0",
+          "slug": "math-2-0",
+          "url": "https://terrytao.wordpress.com/tag/math-2-0/",
           "parent_id": null
         }
       ],
@@ -78338,17 +78354,17 @@
       "title": "Starting a new journal",
       "published_at": "2026-10-17T19:11:00-08:00",
       "modified_at": "2026-10-18T08:57:56-08:00",
-      "last_checked_at": "2026-10-19T13:43:16.138287+00:00",
-      "last_attempted_at": "2026-10-19T13:43:07.148597+00:00",
-      "converted_at": "2026-10-19T13:43:15.988924+00:00",
+      "last_checked_at": "2026-10-20T11:53:59.107132+00:00",
+      "last_attempted_at": "2026-10-20T11:53:42.837351+00:00",
+      "converted_at": "2026-10-20T11:53:58.981436+00:00",
       "converted_modified_at": "2026-10-18T08:57:56-08:00",
       "next_check_at": "2026-10-25T03:11:00+00:00",
-      "content_sha256": "7c5e4b5f9d3a679a01c2ead5d3de65e201fec6fce5d8bea8570ff5227ae20046",
+      "content_sha256": "2d56378d763a3060af28e562d21f4b9fecd343140de3acaf58d18ae05dacd71a",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/starting-a-new-journal.pdf",
       "ir": "ir/starting-a-new-journal.json.gz",
       "typst": "typst/starting-a-new-journal.typ.gz",
-      "source_manifest": "raw/starting-a-new-journal/20261019T134307.233082Z/manifest.json.gz",
+      "source_manifest": "raw/starting-a-new-journal/20261020T115342.898261Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78372,7 +78388,15 @@
         "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698292",
         "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698291",
         "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698290",
-        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698289"
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698289",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698424",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698410",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698395",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698391",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698386",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698385",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698384",
+        "https://terrytao.wordpress.com/2026/10/17/starting-a-new-journal/#comment-698383"
       ],
       "tags": [
         {
@@ -78406,17 +78430,17 @@
       "title": "Will it be a golden age or a dark age for mathematics (and science)?",
       "published_at": "2026-10-18T06:59:49-08:00",
       "modified_at": "2026-10-18T06:59:49-08:00",
-      "last_checked_at": "2026-10-19T13:43:22.211402+00:00",
-      "last_attempted_at": "2026-10-19T13:43:16.237453+00:00",
-      "converted_at": "2026-10-19T13:43:21.986375+00:00",
+      "last_checked_at": "2026-10-20T11:54:08.149279+00:00",
+      "last_attempted_at": "2026-10-20T11:53:59.173661+00:00",
+      "converted_at": "2026-10-20T11:54:07.982852+00:00",
       "converted_modified_at": "2026-10-18T06:59:49-08:00",
       "next_check_at": "2026-10-25T14:59:49+00:00",
-      "content_sha256": "c797cab21fd1120fd2b5e1e451dadb4d198a918745440a6d645fe7663a9d94b2",
+      "content_sha256": "e0f5cce65d83092e70b1a070fff94390fe0f49aba5bf9c064007cfc08d54d48b",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science.pdf",
       "ir": "ir/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science.json.gz",
       "typst": "typst/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science.typ.gz",
-      "source_manifest": "raw/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/20261019T134316.322694Z/manifest.json.gz",
+      "source_manifest": "raw/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/20261020T115359.239768Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78440,7 +78464,9 @@
         "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698316",
         "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698315",
         "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698314",
-        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698312"
+        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698312",
+        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698420",
+        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698396"
       ],
       "tags": [
         {
@@ -78481,6 +78507,142 @@
           "parent_id": 0
         }
       ]
+    },
+    "18502": {
+      "id": 18502,
+      "url": "https://terrytao.wordpress.com/2026/10/19/the-bourgain-project/",
+      "title": "The Bourgain Project",
+      "published_at": "2026-10-19T09:07:10-08:00",
+      "modified_at": "2026-10-19T09:08:04-08:00",
+      "last_checked_at": "2026-10-20T11:54:12.061881+00:00",
+      "last_attempted_at": "2026-10-20T11:54:08.223048+00:00",
+      "converted_at": "2026-10-20T11:54:12.014344+00:00",
+      "converted_modified_at": "2026-10-19T09:08:04-08:00",
+      "next_check_at": "2026-10-26T17:07:10+00:00",
+      "content_sha256": "a9dd22c1ff7552b84cff9a87d2fb530d464449686ae86a3eada64af6fd8915ed",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/the-bourgain-project.pdf",
+      "ir": "ir/the-bourgain-project.json.gz",
+      "typst": "typst/the-bourgain-project.typ.gz",
+      "source_manifest": "raw/the-bourgain-project/20261020T115408.286914Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/19/the-bourgain-project/#comment-698418",
+        "https://terrytao.wordpress.com/2026/10/19/the-bourgain-project/#comment-698398"
+      ],
+      "tags": [
+        {
+          "id": 13730580,
+          "name": "Jean Bourgain",
+          "slug": "jean-bourgain",
+          "url": "https://terrytao.wordpress.com/tag/jean-bourgain/",
+          "parent_id": null
+        },
+        {
+          "id": 236861358,
+          "name": "Joao Pedro Ramos",
+          "slug": "joao-pedro-ramos",
+          "url": "https://terrytao.wordpress.com/tag/joao-pedro-ramos/",
+          "parent_id": null
+        },
+        {
+          "id": 792618784,
+          "name": "Lukas Liehr",
+          "slug": "lukas-liehr",
+          "url": "https://terrytao.wordpress.com/tag/lukas-liehr/",
+          "parent_id": null
+        },
+        {
+          "id": 22193894,
+          "name": "Mitchell Taylor",
+          "slug": "mitchell-taylor",
+          "url": "https://terrytao.wordpress.com/tag/mitchell-taylor/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 521,
+          "name": "advertising",
+          "slug": "advertising",
+          "url": "https://terrytao.wordpress.com/?cat=521",
+          "parent_id": 47932
+        },
+        {
+          "id": 279350,
+          "name": "guest blog",
+          "slug": "guest-blog",
+          "url": "https://terrytao.wordpress.com/?cat=279350",
+          "parent_id": 0
+        }
+      ]
+    },
+    "18505": {
+      "id": 18505,
+      "url": "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/",
+      "title": "A sketch of the proof of non-existence of Siegel zeroes",
+      "published_at": "2026-10-19T10:27:19-08:00",
+      "modified_at": "2026-10-19T12:39:48-08:00",
+      "last_checked_at": "2026-10-20T11:54:19.261306+00:00",
+      "last_attempted_at": "2026-10-20T11:54:12.128933+00:00",
+      "converted_at": "2026-10-20T11:54:19.035594+00:00",
+      "converted_modified_at": "2026-10-19T12:39:48-08:00",
+      "next_check_at": "2026-10-26T18:27:19+00:00",
+      "content_sha256": "35042c0093037b3034f06438739694f0d4538d4dd1cbb05813ce2078bc7cad2d",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes.pdf",
+      "ir": "ir/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes.json.gz",
+      "typst": "typst/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes.typ.gz",
+      "source_manifest": "raw/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/20261020T115412.192706Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698428",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698427",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698426",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698421",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698414",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698413",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698411",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698409",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698408",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698407",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698406",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698405"
+      ],
+      "tags": [
+        {
+          "id": 14067,
+          "name": "AI",
+          "slug": "ai",
+          "url": "https://terrytao.wordpress.com/tag/ai/",
+          "parent_id": null
+        },
+        {
+          "id": 310254029,
+          "name": "Siegel zero",
+          "slug": "siegel-zero",
+          "url": "https://terrytao.wordpress.com/tag/siegel-zero/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 162892,
+          "name": "expository",
+          "slug": "expository",
+          "url": "https://terrytao.wordpress.com/?cat=162892",
+          "parent_id": 0
+        },
+        {
+          "id": 1440053,
+          "name": "math.NT",
+          "slug": "math-nt",
+          "url": "https://terrytao.wordpress.com/?cat=1440053",
+          "parent_id": 3582
+        }
+      ]
     }
   },
   "daily_attempts": {
@@ -78490,6 +78652,7 @@
     "2026-10-16": 16,
     "2026-10-17": 14,
     "2026-10-18": 18,
-    "2026-10-19": 18
+    "2026-10-19": 18,
+    "2026-10-20": 12
   }
 }
