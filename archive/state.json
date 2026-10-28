@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-10-27T12:28:16.871483+00:00",
+  "last_discovered_at": "2026-10-28T13:15:20.234278+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -14806,17 +14806,17 @@
       "title": "When are eigenvalues stable?",
       "published_at": "2008-10-28T08:38:18-08:00",
       "modified_at": "2016-11-05T06:26:13-08:00",
-      "last_checked_at": "2026-10-14T07:05:03.259691+00:00",
-      "last_attempted_at": "2026-10-14T16:35:26.715427+00:00",
-      "converted_at": "2026-10-14T16:35:27.151599+00:00",
+      "last_checked_at": "2026-10-28T13:17:47.126755+00:00",
+      "last_attempted_at": "2026-10-28T13:17:29.703194+00:00",
+      "converted_at": "2026-10-28T13:17:46.901208+00:00",
       "converted_modified_at": "2016-11-05T06:26:13-08:00",
-      "next_check_at": "2026-10-28T08:00:00+00:00",
-      "content_sha256": "6a1d950b28c82a006d7fffe4df20814f8447ba57691dfc396f7eec36bb9ed788",
+      "next_check_at": "2027-10-28T08:00:00+00:00",
+      "content_sha256": "19487529aaf7e777dc8402b37f66d8f356b55a055fe9ff9bd9ef5aabb092b190",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/when-are-eigenvalues-stable.pdf",
       "ir": "ir/when-are-eigenvalues-stable.json.gz",
       "typst": "typst/when-are-eigenvalues-stable.typ.gz",
-      "source_manifest": "raw/when-are-eigenvalues-stable/20261014T070442.167167Z/manifest.json.gz",
+      "source_manifest": "raw/when-are-eigenvalues-stable/20261028T131729.776340Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -41055,17 +41055,17 @@
       "title": "van Kampen’s theorem via covering spaces",
       "published_at": "2012-10-28T09:07:36-08:00",
       "modified_at": "2012-10-28T13:37:38-08:00",
-      "last_checked_at": "2026-10-14T09:28:27.628915+00:00",
-      "last_attempted_at": "2026-10-14T16:36:55.500108+00:00",
-      "converted_at": "2026-10-14T16:36:55.653149+00:00",
+      "last_checked_at": "2026-10-28T13:17:57.114015+00:00",
+      "last_attempted_at": "2026-10-28T13:17:47.198447+00:00",
+      "converted_at": "2026-10-28T13:17:56.951586+00:00",
       "converted_modified_at": "2012-10-28T13:37:38-08:00",
-      "next_check_at": "2026-10-28T08:00:00+00:00",
-      "content_sha256": "5a086700fcd7ec7e8eeba42b16f33a45dce38a23d5fbe2cbb445bfa6b7c8fc27",
+      "next_check_at": "2027-10-28T08:00:00+00:00",
+      "content_sha256": "14bf3a32e30d08c5aac239ad2464580c384632f2f53573989934de4403137247",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/van-kampens-theorem-via-covering-spaces.pdf",
       "ir": "ir/van-kampens-theorem-via-covering-spaces.json.gz",
       "typst": "typst/van-kampens-theorem-via-covering-spaces.typ.gz",
-      "source_manifest": "raw/van-kampens-theorem-via-covering-spaces/20261014T092823.770131Z/manifest.json.gz",
+      "source_manifest": "raw/van-kampens-theorem-via-covering-spaces/20261028T131747.258123Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -76645,17 +76645,17 @@
       "title": "Cognitive Sanctuaries or: Manifesto of the Department Chair",
       "published_at": "2026-09-27T13:11:54-08:00",
       "modified_at": "2026-09-26T13:17:05-08:00",
-      "last_checked_at": "2026-10-19T13:40:36.607151+00:00",
-      "last_attempted_at": "2026-10-19T13:40:31.006796+00:00",
+      "last_checked_at": "2026-10-28T13:18:01.877937+00:00",
+      "last_attempted_at": "2026-10-28T13:17:57.196082+00:00",
       "converted_at": "2026-10-19T13:40:36.403160+00:00",
       "converted_modified_at": "2026-09-26T13:17:05-08:00",
-      "next_check_at": "2026-10-27T21:11:54+00:00",
+      "next_check_at": "2027-09-27T08:00:00+00:00",
       "content_sha256": "edf5a24b6b7c78984d64f6284bb37d6b16b4e869b4612ae0077d04a7bd580aaf",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/cognitive-sanctuaries-or-manifesto-of-the-department-chair.pdf",
       "ir": "ir/cognitive-sanctuaries-or-manifesto-of-the-department-chair.json.gz",
       "typst": "typst/cognitive-sanctuaries-or-manifesto-of-the-department-chair.typ.gz",
-      "source_manifest": "raw/cognitive-sanctuaries-or-manifesto-of-the-department-chair/20261019T134031.104235Z/manifest.json.gz",
+      "source_manifest": "raw/cognitive-sanctuaries-or-manifesto-of-the-department-chair/20261028T131757.277226Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78074,17 +78074,17 @@
       "title": "Why are we even doing all this?",
       "published_at": "2026-10-15T12:21:47-08:00",
       "modified_at": "2026-10-14T12:22:54-08:00",
-      "last_checked_at": "2026-10-26T13:21:24.909996+00:00",
-      "last_attempted_at": "2026-10-26T13:20:56.429168+00:00",
-      "converted_at": "2026-10-26T13:21:24.643776+00:00",
+      "last_checked_at": "2026-10-28T13:16:13.591635+00:00",
+      "last_attempted_at": "2026-10-28T13:15:39.521289+00:00",
+      "converted_at": "2026-10-28T13:16:13.375756+00:00",
       "converted_modified_at": "2026-10-14T12:22:54-08:00",
       "next_check_at": "2026-11-15T20:21:47+00:00",
-      "content_sha256": "05bb8e75b325684150693b3cb3e1e6d99f5447c5c3fb1f3fd31aab1d6b8b41fb",
+      "content_sha256": "70a874c1e3d9d4293014e18eeaea79edb2c5d151b1f608517778dae284977052",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/why-are-we-even-doing-all-this.pdf",
       "ir": "ir/why-are-we-even-doing-all-this.json.gz",
       "typst": "typst/why-are-we-even-doing-all-this.typ.gz",
-      "source_manifest": "raw/why-are-we-even-doing-all-this/20261026T132056.524016Z/manifest.json.gz",
+      "source_manifest": "raw/why-are-we-even-doing-all-this/20261028T131539.580968Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78143,7 +78143,10 @@
         "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698643",
         "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698670",
         "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698720",
-        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698754"
+        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698754",
+        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698865",
+        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698864",
+        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698851"
       ],
       "tags": [
         {
@@ -78338,23 +78341,24 @@
       "url": "https://terrytao.wordpress.com/2026/10/17/some-of-my-recent-talks-and-interviews/",
       "title": "Some of my recent talks and interviews",
       "published_at": "2026-10-17T09:09:00-08:00",
-      "modified_at": "2026-10-19T22:52:06-08:00",
-      "last_checked_at": "2026-10-25T11:51:34.503088+00:00",
-      "last_attempted_at": "2026-10-25T11:51:31.254315+00:00",
-      "converted_at": "2026-10-20T11:55:40.032051+00:00",
-      "converted_modified_at": "2026-10-19T22:52:06-08:00",
+      "modified_at": "2026-10-27T08:30:12-08:00",
+      "last_checked_at": "2026-10-28T13:15:39.454874+00:00",
+      "last_attempted_at": "2026-10-28T13:15:34.076948+00:00",
+      "converted_at": "2026-10-28T13:15:39.401630+00:00",
+      "converted_modified_at": "2026-10-27T08:30:12-08:00",
       "next_check_at": "2026-11-17T17:09:00+00:00",
-      "content_sha256": "20163f0e318d4af116e3298136cd61d60033d259529610bfc4b25dfe011965a4",
+      "content_sha256": "ad21bb8678db43bb58720fec38c3b43cace5688a78257fe35b41ac85bf241384",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/some-of-my-recent-talks-and-interviews.pdf",
       "ir": "ir/some-of-my-recent-talks-and-interviews.json.gz",
       "typst": "typst/some-of-my-recent-talks-and-interviews.typ.gz",
-      "source_manifest": "raw/some-of-my-recent-talks-and-interviews/20261025T115131.344346Z/manifest.json.gz",
+      "source_manifest": "raw/some-of-my-recent-talks-and-interviews/20261028T131534.198922Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/10/17/some-of-my-recent-talks-and-interviews/#comment-698273",
-        "https://terrytao.wordpress.com/2026/10/17/some-of-my-recent-talks-and-interviews/#comment-698278"
+        "https://terrytao.wordpress.com/2026/10/17/some-of-my-recent-talks-and-interviews/#comment-698278",
+        "https://terrytao.wordpress.com/2026/10/17/some-of-my-recent-talks-and-interviews/#comment-698846"
       ],
       "tags": [
         {
@@ -78640,18 +78644,18 @@
       "url": "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/",
       "title": "A sketch of the proof of non-existence of Siegel zeroes",
       "published_at": "2026-10-19T10:27:19-08:00",
-      "modified_at": "2026-10-25T14:14:14-08:00",
-      "last_checked_at": "2026-10-27T12:31:15.370866+00:00",
-      "last_attempted_at": "2026-10-27T12:31:04.421022+00:00",
-      "converted_at": "2026-10-26T13:20:55.698601+00:00",
-      "converted_modified_at": "2026-10-25T14:14:14-08:00",
+      "modified_at": "2026-10-27T07:42:24-08:00",
+      "last_checked_at": "2026-10-28T13:17:25.728450+00:00",
+      "last_attempted_at": "2026-10-28T13:17:14.554008+00:00",
+      "converted_at": "2026-10-28T13:17:25.413906+00:00",
+      "converted_modified_at": "2026-10-27T07:42:24-08:00",
       "next_check_at": "2026-11-19T18:27:19+00:00",
-      "content_sha256": "f8e4005762a2939adc3a6b752140f582e39de3af1398df93c014224eb66b5208",
+      "content_sha256": "33aee831e3c5ea76eeb8f97ac6227d6c7861107cdd673c21ffc83f6ea2e93e26",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes.pdf",
       "ir": "ir/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes.json.gz",
       "typst": "typst/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes.typ.gz",
-      "source_manifest": "raw/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/20261027T123104.488237Z/manifest.json.gz",
+      "source_manifest": "raw/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/20261028T131714.612007Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78686,7 +78690,8 @@
         "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698716",
         "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698774",
         "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698773",
-        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698770"
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698770",
+        "https://terrytao.wordpress.com/2026/10/19/a-sketch-of-the-proof-of-non-existence-of-siegel-zeroes/#comment-698794"
       ],
       "tags": [
         {
@@ -78727,17 +78732,17 @@
       "title": "An experimental AI-math challenge: using tenth discriminant bounds to explore arguments ruling out Siegel zeroes",
       "published_at": "2026-10-20T07:35:00-08:00",
       "modified_at": "2026-10-22T06:34:47-08:00",
-      "last_checked_at": "2026-10-27T12:29:26.577132+00:00",
-      "last_attempted_at": "2026-10-27T12:29:02.554631+00:00",
-      "converted_at": "2026-10-27T12:29:26.121380+00:00",
+      "last_checked_at": "2026-10-28T13:16:38.878353+00:00",
+      "last_attempted_at": "2026-10-28T13:16:13.678382+00:00",
+      "converted_at": "2026-10-28T13:16:38.414642+00:00",
       "converted_modified_at": "2026-10-22T06:34:47-08:00",
-      "next_check_at": "2026-10-27T15:35:00+00:00",
-      "content_sha256": "394cd68bc49be5edb254003376fd409d83325e829e96f4ec19fd7aa083fe217c",
+      "next_check_at": "2026-11-20T15:35:00+00:00",
+      "content_sha256": "d3627e6ec2b8b0fbcab1569e528613269b05adda7fe020099aea530e51c1ebac",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes.pdf",
       "ir": "ir/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes.json.gz",
       "typst": "typst/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes.typ.gz",
-      "source_manifest": "raw/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/20261027T122902.617765Z/manifest.json.gz",
+      "source_manifest": "raw/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/20261028T131613.744407Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78821,7 +78826,13 @@
         "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698813",
         "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698809",
         "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698803",
-        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698799"
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698799",
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698870",
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698859",
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698858",
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698855",
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698839",
+        "https://terrytao.wordpress.com/2026/10/20/an-experimental-ai-math-challenge-using-tenth-discriminant-bounds-to-explore-arguments-ruling-out-siegel-zeroes/#comment-698807"
       ],
       "tags": [
         {
@@ -78890,17 +78901,17 @@
       "title": "Mathematics is a subject for the young",
       "published_at": "2026-10-21T10:19:00-08:00",
       "modified_at": "2026-10-20T12:13:11-08:00",
-      "last_checked_at": "2026-10-27T12:29:45.309275+00:00",
-      "last_attempted_at": "2026-10-27T12:29:26.639561+00:00",
-      "converted_at": "2026-10-27T12:29:45.093547+00:00",
+      "last_checked_at": "2026-10-28T13:16:55.591088+00:00",
+      "last_attempted_at": "2026-10-28T13:16:38.952105+00:00",
+      "converted_at": "2026-10-28T13:16:55.380863+00:00",
       "converted_modified_at": "2026-10-20T12:13:11-08:00",
       "next_check_at": "2026-10-28T18:19:00+00:00",
-      "content_sha256": "f78c829a820e7cbc5cbe46e3d0125438a358d6ead475a871bc527941b0682e96",
+      "content_sha256": "279a1fa13b121270c84d852131461346e31daec9a2dc3a7822ded3459a116aa6",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/mathematics-is-a-subject-for-the-young.pdf",
       "ir": "ir/mathematics-is-a-subject-for-the-young.json.gz",
       "typst": "typst/mathematics-is-a-subject-for-the-young.typ.gz",
-      "source_manifest": "raw/mathematics-is-a-subject-for-the-young/20261027T122926.697814Z/manifest.json.gz",
+      "source_manifest": "raw/mathematics-is-a-subject-for-the-young/20261028T131639.024625Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78958,7 +78969,8 @@
         "https://terrytao.wordpress.com/2026/10/21/mathematics-is-a-subject-for-the-young/#comment-698713",
         "https://terrytao.wordpress.com/2026/10/21/mathematics-is-a-subject-for-the-young/#comment-698792",
         "https://terrytao.wordpress.com/2026/10/21/mathematics-is-a-subject-for-the-young/#comment-698772",
-        "https://terrytao.wordpress.com/2026/10/21/mathematics-is-a-subject-for-the-young/#comment-698814"
+        "https://terrytao.wordpress.com/2026/10/21/mathematics-is-a-subject-for-the-young/#comment-698814",
+        "https://terrytao.wordpress.com/2026/10/21/mathematics-is-a-subject-for-the-young/#comment-698820"
       ],
       "tags": [
         {
@@ -79207,17 +79219,17 @@
       "title": "Disadvantages of Designating Mathematicians for AI Output Releases",
       "published_at": "2026-10-25T14:17:58-08:00",
       "modified_at": "2026-10-25T14:17:58-08:00",
-      "last_checked_at": "2026-10-27T12:30:06.346592+00:00",
-      "last_attempted_at": "2026-10-27T12:29:56.260290+00:00",
-      "converted_at": "2026-10-27T12:30:06.128944+00:00",
+      "last_checked_at": "2026-10-28T13:17:06.518330+00:00",
+      "last_attempted_at": "2026-10-28T13:16:55.662933+00:00",
+      "converted_at": "2026-10-28T13:17:06.411056+00:00",
       "converted_modified_at": "2026-10-25T14:17:58-08:00",
       "next_check_at": "2026-11-01T22:17:58+00:00",
-      "content_sha256": "9b54680019a436feeb02c5d6a33e83cc1b22e300f64cb9a031523fa16f38456d",
+      "content_sha256": "465a0c48cd928a8c11c6483bc71f29774c54aa8dc2c21d642b25657dbda0dbd2",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/disadvantages-of-designating-mathematicians-for-ai-output-releases.pdf",
       "ir": "ir/disadvantages-of-designating-mathematicians-for-ai-output-releases.json.gz",
       "typst": "typst/disadvantages-of-designating-mathematicians-for-ai-output-releases.typ.gz",
-      "source_manifest": "raw/disadvantages-of-designating-mathematicians-for-ai-output-releases/20261027T122956.326012Z/manifest.json.gz",
+      "source_manifest": "raw/disadvantages-of-designating-mathematicians-for-ai-output-releases/20261028T131655.722924Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -79243,7 +79255,10 @@
         "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698802",
         "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698798",
         "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698796",
-        "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698795"
+        "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698795",
+        "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698869",
+        "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698856",
+        "https://terrytao.wordpress.com/2026/10/25/disadvantages-of-designating-mathematicians-for-ai-output-releases/#comment-698843"
       ],
       "tags": [
         {
@@ -79284,21 +79299,30 @@
       "title": "More additional blog posts and articles",
       "published_at": "2026-10-26T23:01:00-08:00",
       "modified_at": "2026-10-26T12:32:22-08:00",
-      "last_checked_at": "2026-10-27T12:30:10.169865+00:00",
-      "last_attempted_at": "2026-10-27T12:30:06.413890+00:00",
-      "converted_at": "2026-10-27T12:30:10.124831+00:00",
+      "last_checked_at": "2026-10-28T13:17:14.481785+00:00",
+      "last_attempted_at": "2026-10-28T13:17:06.589073+00:00",
+      "converted_at": "2026-10-28T13:17:14.415232+00:00",
       "converted_modified_at": "2026-10-26T12:32:22-08:00",
       "next_check_at": "2026-11-03T07:01:00+00:00",
-      "content_sha256": "78ded3b257ea79a5ed8e289523554b3de751b32e81f5fd3496d108a856c3f8fe",
+      "content_sha256": "ff1ebbb6016055c339ed87178718877a9f83540035d9efbc90b7d023337d3e7c",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/more-additional-blog-posts-and-articles.pdf",
       "ir": "ir/more-additional-blog-posts-and-articles.json.gz",
       "typst": "typst/more-additional-blog-posts-and-articles.typ.gz",
-      "source_manifest": "raw/more-additional-blog-posts-and-articles/20261027T123006.470659Z/manifest.json.gz",
+      "source_manifest": "raw/more-additional-blog-posts-and-articles/20261028T131706.657000Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
-        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698837"
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698837",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698861",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698860",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698857",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698854",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698850",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698849",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698848",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698840",
+        "https://terrytao.wordpress.com/2026/10/26/more-additional-blog-posts-and-articles/#comment-698838"
       ],
       "tags": [],
       "categories": [
@@ -79308,6 +79332,114 @@
           "slug": "opinion",
           "url": "https://terrytao.wordpress.com/?cat=352",
           "parent_id": 0
+        }
+      ]
+    },
+    "18595": {
+      "id": 18595,
+      "url": "https://terrytao.wordpress.com/2026/10/27/the-quasi-riemann-hypothesis/",
+      "title": "The quasi-Riemann hypothesis",
+      "published_at": "2026-10-27T14:12:50-08:00",
+      "modified_at": "2026-10-27T14:12:50-08:00",
+      "last_checked_at": "2026-10-28T13:18:05.046994+00:00",
+      "last_attempted_at": "2026-10-28T13:18:01.952598+00:00",
+      "converted_at": "2026-10-28T13:18:05.010808+00:00",
+      "converted_modified_at": "2026-10-27T14:12:50-08:00",
+      "next_check_at": "2026-11-03T22:12:50+00:00",
+      "content_sha256": "861088e4af61ea1685fb98aa1b55f6a15b631000a22fa087d9c25708b22eeea9",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/the-quasi-riemann-hypothesis.pdf",
+      "ir": "ir/the-quasi-riemann-hypothesis.json.gz",
+      "typst": "typst/the-quasi-riemann-hypothesis.typ.gz",
+      "source_manifest": "raw/the-quasi-riemann-hypothesis/20261028T131802.013233Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [],
+      "tags": [
+        {
+          "id": 331326374,
+          "name": "Maksym Radziwill",
+          "slug": "maksym-radziwill",
+          "url": "https://terrytao.wordpress.com/tag/maksym-radziwill/",
+          "parent_id": null
+        },
+        {
+          "id": 792474026,
+          "name": "quasi-Riemann hypothesis",
+          "slug": "quasi-riemann-hypothesis",
+          "url": "https://terrytao.wordpress.com/tag/quasi-riemann-hypothesis/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 1440053,
+          "name": "math.NT",
+          "slug": "math-nt",
+          "url": "https://terrytao.wordpress.com/?cat=1440053",
+          "parent_id": 3582
+        },
+        {
+          "id": 739,
+          "name": "talk",
+          "slug": "talk",
+          "url": "https://terrytao.wordpress.com/?cat=739",
+          "parent_id": 0
+        }
+      ]
+    },
+    "18574": {
+      "id": 18574,
+      "url": "https://terrytao.wordpress.com/2026/10/27/247a-notes-3-singular-integral-operators/",
+      "title": "247A, Notes 3: Singular integral operators",
+      "published_at": "2026-10-27T17:40:01-08:00",
+      "modified_at": "2026-10-27T19:27:11-08:00",
+      "last_checked_at": "2026-10-28T13:17:29.640964+00:00",
+      "last_attempted_at": "2026-10-28T13:17:25.802163+00:00",
+      "converted_at": "2026-10-28T13:17:28.790423+00:00",
+      "converted_modified_at": "2026-10-27T19:27:11-08:00",
+      "next_check_at": "2026-11-04T01:40:01+00:00",
+      "content_sha256": "087f169b458aea566ad7fa2e04297ff5df6425ff3a9d91dede3453b1f149532e",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/247a-notes-3-singular-integral-operators.pdf",
+      "ir": "ir/247a-notes-3-singular-integral-operators.json.gz",
+      "typst": "typst/247a-notes-3-singular-integral-operators.typ.gz",
+      "source_manifest": "raw/247a-notes-3-singular-integral-operators/20261028T131725.871961Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/27/247a-notes-3-singular-integral-operators/#comment-698867"
+      ],
+      "tags": [
+        {
+          "id": 654875652,
+          "name": "bounded mean oscillation",
+          "slug": "bounded-mean-oscillation",
+          "url": "https://terrytao.wordpress.com/tag/bounded-mean-oscillation/",
+          "parent_id": null
+        },
+        {
+          "id": 12590175,
+          "name": "singular integrals",
+          "slug": "singular-integrals",
+          "url": "https://terrytao.wordpress.com/tag/singular-integrals/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 791955116,
+          "name": "247A - Classical Fourier Analysis",
+          "slug": "247a-classical-fourier-analysis",
+          "url": "https://terrytao.wordpress.com/?cat=791955116",
+          "parent_id": 1591
+        },
+        {
+          "id": 1440094,
+          "name": "math.CA",
+          "slug": "math-ca",
+          "url": "https://terrytao.wordpress.com/?cat=1440094",
+          "parent_id": 3582
         }
       ]
     }
@@ -79327,6 +79459,7 @@
     "2026-10-24": 13,
     "2026-10-25": 19,
     "2026-10-26": 10,
-    "2026-10-27": 15
+    "2026-10-27": 15,
+    "2026-10-28": 12
   }
 }
