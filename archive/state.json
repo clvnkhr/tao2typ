@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-10-31T12:49:46.315653+00:00",
+  "last_discovered_at": "2026-11-01T13:38:43.921745+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -9217,20 +9217,22 @@
       "title": "254A, Lecture 12: Weakly mixing systems",
       "published_at": "2008-02-21T20:20:41-08:00",
       "modified_at": "2019-03-25T13:57:06-08:00",
-      "last_checked_at": "2026-10-14T06:48:19.999436+00:00",
-      "last_attempted_at": "2026-10-14T16:35:13.186575+00:00",
-      "converted_at": "2026-10-14T16:35:13.282887+00:00",
+      "last_checked_at": "2026-11-01T13:39:10.831462+00:00",
+      "last_attempted_at": "2026-11-01T13:38:57.995194+00:00",
+      "converted_at": "2026-11-01T13:39:10.302256+00:00",
       "converted_modified_at": "2019-03-25T13:57:06-08:00",
       "next_check_at": "2027-02-21T08:00:00+00:00",
-      "content_sha256": "5b8a729e27f3f9ee1b8bd44edfb8c2729cb5f5e3a9df58f8335dc1dcab4d2fdd",
+      "content_sha256": "8d973785944e64da46be576c09835f30b3be1cb8563e7c779975878230d550a2",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/254a-lecture-12-weakly-mixing-systems.pdf",
       "ir": "ir/254a-lecture-12-weakly-mixing-systems.json.gz",
       "typst": "typst/254a-lecture-12-weakly-mixing-systems.typ.gz",
-      "source_manifest": "raw/254a-lecture-12-weakly-mixing-systems/20261014T064807.357978Z/manifest.json.gz",
+      "source_manifest": "raw/254a-lecture-12-weakly-mixing-systems/20261101T133858.097443Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
-      "seen_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2008/02/21/254a-lecture-12-weakly-mixing-systems/#comment-698977"
+      ],
       "tags": [
         {
           "id": 4288862,
@@ -14866,17 +14868,17 @@
       "title": "The inverse conjecture for the Gowers norm over finite fields via the correspondence principle",
       "published_at": "2008-11-01T11:04:44-08:00",
       "modified_at": "2008-11-02T09:24:02-08:00",
-      "last_checked_at": "2026-10-14T07:05:09.701998+00:00",
-      "last_attempted_at": "2026-10-14T16:35:26.834013+00:00",
-      "converted_at": "2026-10-14T16:35:26.871143+00:00",
+      "last_checked_at": "2026-11-01T13:40:03.543949+00:00",
+      "last_attempted_at": "2026-11-01T13:39:57.396749+00:00",
+      "converted_at": "2026-11-01T13:40:03.294700+00:00",
       "converted_modified_at": "2008-11-02T09:24:02-08:00",
-      "next_check_at": "2026-11-01T08:00:00+00:00",
-      "content_sha256": "95ee6f7812d126d9a9e2d3a2ad4b28b857c03207fc6065f7f3dfef2522ebf926",
+      "next_check_at": "2027-11-01T08:00:00+00:00",
+      "content_sha256": "81fc6d52d5731e1678f59f770502a2c128332110103d2e4ae85a0babbfb8d46d",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/the-inverse-conjecture-for-the-gowers-norm-over-finite-fields-via-the-correspondence-principle.pdf",
       "ir": "ir/the-inverse-conjecture-for-the-gowers-norm-over-finite-fields-via-the-correspondence-principle.json.gz",
       "typst": "typst/the-inverse-conjecture-for-the-gowers-norm-over-finite-fields-via-the-correspondence-principle.typ.gz",
-      "source_manifest": "raw/the-inverse-conjecture-for-the-gowers-norm-over-finite-fields-via-the-correspondence-principle/20261014T070503.319899Z/manifest.json.gz",
+      "source_manifest": "raw/the-inverse-conjecture-for-the-gowers-norm-over-finite-fields-via-the-correspondence-principle/20261101T133957.501818Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -78082,17 +78084,17 @@
       "title": "Why are we even doing all this?",
       "published_at": "2026-10-15T12:21:47-08:00",
       "modified_at": "2026-10-14T12:22:54-08:00",
-      "last_checked_at": "2026-10-29T13:24:55.249182+00:00",
-      "last_attempted_at": "2026-10-29T13:24:26.191812+00:00",
-      "converted_at": "2026-10-29T13:24:54.958284+00:00",
+      "last_checked_at": "2026-11-01T13:39:45.553376+00:00",
+      "last_attempted_at": "2026-11-01T13:39:10.931832+00:00",
+      "converted_at": "2026-11-01T13:39:45.266554+00:00",
       "converted_modified_at": "2026-10-14T12:22:54-08:00",
       "next_check_at": "2026-11-15T20:21:47+00:00",
-      "content_sha256": "dcd973d2ba7e8323c5e55845a76619cfc11e8efdfcd0bd209d61e973e747b157",
+      "content_sha256": "0c1bae2391cea932deaa66c6b701e9b565830f8cc06301dc56608415528f936c",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/why-are-we-even-doing-all-this.pdf",
       "ir": "ir/why-are-we-even-doing-all-this.json.gz",
       "typst": "typst/why-are-we-even-doing-all-this.typ.gz",
-      "source_manifest": "raw/why-are-we-even-doing-all-this/20261029T132426.294609Z/manifest.json.gz",
+      "source_manifest": "raw/why-are-we-even-doing-all-this/20261101T133911.032148Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78155,7 +78157,8 @@
         "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698865",
         "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698864",
         "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698851",
-        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698877"
+        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698877",
+        "https://terrytao.wordpress.com/2026/10/15/why-are-we-even-doing-all-this/#comment-698975"
       ],
       "tags": [
         {
@@ -79150,17 +79153,17 @@
       "title": "oai-math-revised: a community hub for revising OpenAI’s math write-ups",
       "published_at": "2026-10-24T07:08:02-08:00",
       "modified_at": "2026-10-23T09:53:56-08:00",
-      "last_checked_at": "2026-10-31T12:50:59.460006+00:00",
-      "last_attempted_at": "2026-10-31T12:50:46.618868+00:00",
+      "last_checked_at": "2026-11-01T13:40:15.273440+00:00",
+      "last_attempted_at": "2026-11-01T13:40:03.645829+00:00",
       "converted_at": "2026-10-31T12:50:59.358722+00:00",
       "converted_modified_at": "2026-10-23T09:53:56-08:00",
-      "next_check_at": "2026-10-31T15:08:02+00:00",
+      "next_check_at": "2026-11-24T15:08:02+00:00",
       "content_sha256": "5a857b386628532ad08996e25299742bca4257ff2db16783d4ac8765ae58157a",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups.pdf",
       "ir": "ir/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups.json.gz",
       "typst": "typst/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups.typ.gz",
-      "source_manifest": "raw/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups/20261031T125046.696395Z/manifest.json.gz",
+      "source_manifest": "raw/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups/20261101T134003.746514Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -79563,17 +79566,17 @@
       "title": "AI, Mathematics, Education, and a public goods problem",
       "published_at": "2026-10-29T15:27:54-08:00",
       "modified_at": "2026-10-28T16:06:11-08:00",
-      "last_checked_at": "2026-10-31T12:52:30.508123+00:00",
-      "last_attempted_at": "2026-10-31T12:52:23.512107+00:00",
-      "converted_at": "2026-10-31T12:52:30.387295+00:00",
+      "last_checked_at": "2026-11-01T13:39:52.397047+00:00",
+      "last_attempted_at": "2026-11-01T13:39:45.656953+00:00",
+      "converted_at": "2026-11-01T13:39:52.222013+00:00",
       "converted_modified_at": "2026-10-28T16:06:11-08:00",
       "next_check_at": "2026-11-05T23:27:54+00:00",
-      "content_sha256": "0865e3c5f1977e27fdb77ecc013552fbc12e196ab27e8caf7fb3a84d4b3dcd9f",
+      "content_sha256": "ec647a247c003a3795607902d24ec0fc1c5022ba0d7c4f081a25ca0539e635eb",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/ai-mathematics-education-and-a-public-goods-problem.pdf",
       "ir": "ir/ai-mathematics-education-and-a-public-goods-problem.json.gz",
       "typst": "typst/ai-mathematics-education-and-a-public-goods-problem.typ.gz",
-      "source_manifest": "raw/ai-mathematics-education-and-a-public-goods-problem/20261031T125223.572625Z/manifest.json.gz",
+      "source_manifest": "raw/ai-mathematics-education-and-a-public-goods-problem/20261101T133945.757714Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -79584,7 +79587,9 @@
         "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698959",
         "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698952",
         "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698949",
-        "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698944"
+        "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698944",
+        "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698971",
+        "https://terrytao.wordpress.com/2026/10/29/ai-mathematics-education-and-a-public-goods-problem/#comment-698964"
       ],
       "tags": [
         {
@@ -79745,6 +79750,55 @@
           "parent_id": 0
         }
       ]
+    },
+    "18624": {
+      "id": 18624,
+      "url": "https://terrytao.wordpress.com/2026/10/31/the-mathematical-sciences-in-an-ai-enabled-world/",
+      "title": "The mathematical sciences in an AI-enabled world",
+      "published_at": "2026-10-31T07:17:00-08:00",
+      "modified_at": "2026-10-30T07:18:00-08:00",
+      "last_checked_at": "2026-11-01T13:39:57.290742+00:00",
+      "last_attempted_at": "2026-11-01T13:39:52.504271+00:00",
+      "converted_at": "2026-11-01T13:39:57.220891+00:00",
+      "converted_modified_at": "2026-10-30T07:18:00-08:00",
+      "next_check_at": "2026-11-07T15:17:00+00:00",
+      "content_sha256": "b582df11976d302d7c6a5fe471086c1cb021fd7a7724734309dedf609f357f92",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/the-mathematical-sciences-in-an-ai-enabled-world.pdf",
+      "ir": "ir/the-mathematical-sciences-in-an-ai-enabled-world.json.gz",
+      "typst": "typst/the-mathematical-sciences-in-an-ai-enabled-world.typ.gz",
+      "source_manifest": "raw/the-mathematical-sciences-in-an-ai-enabled-world/20261101T133952.607767Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/10/31/the-mathematical-sciences-in-an-ai-enabled-world/#comment-698989",
+        "https://terrytao.wordpress.com/2026/10/31/the-mathematical-sciences-in-an-ai-enabled-world/#comment-698978"
+      ],
+      "tags": [
+        {
+          "id": 792831277,
+          "name": "Academy for the Mathematical Sciences",
+          "slug": "academy-for-the-mathematical-sciences",
+          "url": "https://terrytao.wordpress.com/tag/academy-for-the-mathematical-sciences/",
+          "parent_id": null
+        },
+        {
+          "id": 14067,
+          "name": "AI",
+          "slug": "ai",
+          "url": "https://terrytao.wordpress.com/tag/ai/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 19368,
+          "name": "paper",
+          "slug": "paper",
+          "url": "https://terrytao.wordpress.com/?cat=19368",
+          "parent_id": 0
+        }
+      ]
     }
   },
   "daily_attempts": {
@@ -79766,6 +79820,7 @@
     "2026-10-28": 12,
     "2026-10-29": 18,
     "2026-10-30": 10,
-    "2026-10-31": 16
+    "2026-10-31": 16,
+    "2026-11-01": 6
   }
 }
