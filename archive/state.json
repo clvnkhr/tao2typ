@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-09T16:39:58.903343+00:00",
+  "last_discovered_at": "2026-11-10T15:03:50.792852+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -24544,17 +24544,17 @@
       "title": "An elementary non-commutative Freiman theorem",
       "published_at": "2009-11-10T14:35:30-08:00",
       "modified_at": "2009-11-16T11:14:12-08:00",
-      "last_checked_at": "2026-10-14T08:50:05.769638+00:00",
-      "last_attempted_at": "2026-10-14T16:35:56.655214+00:00",
+      "last_checked_at": "2026-11-10T15:04:34.892439+00:00",
+      "last_attempted_at": "2026-11-10T15:04:27.411393+00:00",
       "converted_at": "2026-10-14T16:35:56.822502+00:00",
       "converted_modified_at": "2009-11-16T11:14:12-08:00",
-      "next_check_at": "2026-11-10T08:00:00+00:00",
+      "next_check_at": "2027-11-10T08:00:00+00:00",
       "content_sha256": "87e80e7a5eda0912ba5f760ba5c82087d390eb52540dcb3ceb5fe107aad37df5",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/an-elementary-non-commutative-freiman-theorem.pdf",
       "ir": "ir/an-elementary-non-commutative-freiman-theorem.json.gz",
       "typst": "typst/an-elementary-non-commutative-freiman-theorem.typ.gz",
-      "source_manifest": "raw/an-elementary-non-commutative-freiman-theorem/20261014T085002.748465Z/manifest.json.gz",
+      "source_manifest": "raw/an-elementary-non-commutative-freiman-theorem/20261110T150427.503911Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -79947,17 +79947,17 @@
       "title": "Egoless Mathematics in the AI Era",
       "published_at": "2026-11-02T10:54:00-08:00",
       "modified_at": "2026-10-31T10:55:53-08:00",
-      "last_checked_at": "2026-11-06T14:27:57.579920+00:00",
-      "last_attempted_at": "2026-11-06T14:27:39.757233+00:00",
-      "converted_at": "2026-11-06T14:27:57.329747+00:00",
+      "last_checked_at": "2026-11-10T15:04:53.138294+00:00",
+      "last_attempted_at": "2026-11-10T15:04:34.988028+00:00",
+      "converted_at": "2026-11-10T15:04:52.868093+00:00",
       "converted_modified_at": "2026-10-31T10:55:53-08:00",
-      "next_check_at": "2026-11-09T18:54:00+00:00",
-      "content_sha256": "73c2c2c690a819d7d4e24924e5d2fd7e78ed32e92362f582a21f52aa91b9147a",
+      "next_check_at": "2026-12-02T18:54:00+00:00",
+      "content_sha256": "f020e0bc2600970769e24a6d52d34699257679026d07ec6f3864cc53da0c7b99",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/egoless-mathematics-in-the-ai-era.pdf",
       "ir": "ir/egoless-mathematics-in-the-ai-era.json.gz",
       "typst": "typst/egoless-mathematics-in-the-ai-era.typ.gz",
-      "source_manifest": "raw/egoless-mathematics-in-the-ai-era/20261106T142739.844770Z/manifest.json.gz",
+      "source_manifest": "raw/egoless-mathematics-in-the-ai-era/20261110T150435.082671Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80060,17 +80060,17 @@
       "title": "Doctoral Advising Guidelines by the AHM",
       "published_at": "2026-11-03T10:32:46-08:00",
       "modified_at": "2026-11-03T10:37:59-08:00",
-      "last_checked_at": "2026-11-07T13:20:19.958569+00:00",
-      "last_attempted_at": "2026-11-07T13:20:13.217106+00:00",
-      "converted_at": "2026-11-07T13:20:19.782843+00:00",
+      "last_checked_at": "2026-11-10T15:04:13.045569+00:00",
+      "last_attempted_at": "2026-11-10T15:04:03.168473+00:00",
+      "converted_at": "2026-11-10T15:04:12.859894+00:00",
       "converted_modified_at": "2026-11-03T10:37:59-08:00",
       "next_check_at": "2026-11-10T18:32:46+00:00",
-      "content_sha256": "0374991781d5766f693683b0b3a904d27ed2286a263e15fd799a71a19b8cbf1a",
+      "content_sha256": "ecbd9e76c0acd18d9fd76e12f4e09e38066ce4329196ef2dc53ddfdd208dcc05",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/doctoral-advising-guidelines-by-the-ahm.pdf",
       "ir": "ir/doctoral-advising-guidelines-by-the-ahm.json.gz",
       "typst": "typst/doctoral-advising-guidelines-by-the-ahm.typ.gz",
-      "source_manifest": "raw/doctoral-advising-guidelines-by-the-ahm/20261107T132013.316709Z/manifest.json.gz",
+      "source_manifest": "raw/doctoral-advising-guidelines-by-the-ahm/20261110T150403.266000Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80100,7 +80100,11 @@
         "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699214",
         "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699264",
         "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699241",
-        "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699240"
+        "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699240",
+        "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699311",
+        "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699309",
+        "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699293",
+        "https://terrytao.wordpress.com/2026/11/03/doctoral-advising-guidelines-by-the-ahm/#comment-699292"
       ],
       "tags": [
         {
@@ -80254,17 +80258,17 @@
       "title": "More posts",
       "published_at": "2026-11-06T10:05:00-08:00",
       "modified_at": "2026-11-06T11:19:48-08:00",
-      "last_checked_at": "2026-11-09T16:40:52.394670+00:00",
-      "last_attempted_at": "2026-11-09T16:40:47.503762+00:00",
-      "converted_at": "2026-11-09T16:40:52.330112+00:00",
+      "last_checked_at": "2026-11-10T15:04:17.931902+00:00",
+      "last_attempted_at": "2026-11-10T15:04:13.147255+00:00",
+      "converted_at": "2026-11-10T15:04:17.856151+00:00",
       "converted_modified_at": "2026-11-06T11:19:48-08:00",
       "next_check_at": "2026-11-13T18:05:00+00:00",
-      "content_sha256": "bd8cee8218110a9840bcbdb536c706e8ab1edf152a2ea733af07166ce582b3f8",
+      "content_sha256": "95bd98c89af2c02a66db64111792261fc1ac67874f1a512c337d6c7b8e3f15e9",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/more-posts.pdf",
       "ir": "ir/more-posts.json.gz",
       "typst": "typst/more-posts.typ.gz",
-      "source_manifest": "raw/more-posts/20261109T164047.592100Z/manifest.json.gz",
+      "source_manifest": "raw/more-posts/20261110T150413.246069Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80272,7 +80276,10 @@
         "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699272",
         "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699269",
         "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699268",
-        "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699265"
+        "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699265",
+        "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699314",
+        "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699302",
+        "https://terrytao.wordpress.com/2026/11/06/more-posts/#comment-699301"
       ],
       "tags": [],
       "categories": [
@@ -80291,23 +80298,27 @@
       "title": "What should we teach our (undergraduate) students?",
       "published_at": "2026-11-08T07:56:34-08:00",
       "modified_at": "2026-11-08T07:56:34-08:00",
-      "last_checked_at": "2026-11-09T16:40:56.450227+00:00",
-      "last_attempted_at": "2026-11-09T16:40:52.503388+00:00",
-      "converted_at": "2026-11-09T16:40:56.331841+00:00",
+      "last_checked_at": "2026-11-10T15:04:25.007725+00:00",
+      "last_attempted_at": "2026-11-10T15:04:18.050070+00:00",
+      "converted_at": "2026-11-10T15:04:24.859930+00:00",
       "converted_modified_at": "2026-11-08T07:56:34-08:00",
       "next_check_at": "2026-11-15T15:56:34+00:00",
-      "content_sha256": "16eac8813ef4f03dea3fc0a1b874de0b16bfd8f878c1a2d3cbcf5337abcf6418",
+      "content_sha256": "51ef44b9134dd2e71481126ffcfe9eeda96fca64130b3ad39a13a5b4d5c41bc5",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/what-should-we-teach-our-undergraduate-students.pdf",
       "ir": "ir/what-should-we-teach-our-undergraduate-students.json.gz",
       "typst": "typst/what-should-we-teach-our-undergraduate-students.typ.gz",
-      "source_manifest": "raw/what-should-we-teach-our-undergraduate-students/20261109T164052.589600Z/manifest.json.gz",
+      "source_manifest": "raw/what-should-we-teach-our-undergraduate-students/20261110T150418.142471Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699281",
         "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699277",
-        "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699276"
+        "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699276",
+        "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699306",
+        "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699298",
+        "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699288",
+        "https://terrytao.wordpress.com/2026/11/08/what-should-we-teach-our-undergraduate-students/#comment-699287"
       ],
       "tags": [
         {
@@ -80348,6 +80359,64 @@
           "parent_id": 0
         }
       ]
+    },
+    "18684": {
+      "id": 18684,
+      "url": "https://terrytao.wordpress.com/2026/11/09/our-survey-of-early-career-mathematicians/",
+      "title": "Our Survey of Early Career Mathematicians",
+      "published_at": "2026-11-09T09:12:00-08:00",
+      "modified_at": "2026-11-09T08:57:09-08:00",
+      "last_checked_at": "2026-11-10T15:04:27.315776+00:00",
+      "last_attempted_at": "2026-11-10T15:04:25.102278+00:00",
+      "converted_at": "2026-11-10T15:04:27.236847+00:00",
+      "converted_modified_at": "2026-11-09T08:57:09-08:00",
+      "next_check_at": "2026-11-16T17:12:00+00:00",
+      "content_sha256": "59ccce79011fe3940a80a886a5eb59dd4a0fc5dee6380c0c63b74624841d59c6",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/our-survey-of-early-career-mathematicians.pdf",
+      "ir": "ir/our-survey-of-early-career-mathematicians.json.gz",
+      "typst": "typst/our-survey-of-early-career-mathematicians.typ.gz",
+      "source_manifest": "raw/our-survey-of-early-career-mathematicians/20261110T150425.211144Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/09/our-survey-of-early-career-mathematicians/#comment-699310",
+        "https://terrytao.wordpress.com/2026/11/09/our-survey-of-early-career-mathematicians/#comment-699307",
+        "https://terrytao.wordpress.com/2026/11/09/our-survey-of-early-career-mathematicians/#comment-699303",
+        "https://terrytao.wordpress.com/2026/11/09/our-survey-of-early-career-mathematicians/#comment-699300"
+      ],
+      "tags": [
+        {
+          "id": 793096109,
+          "name": "Anna Brandenberger",
+          "slug": "anna-brandenberger",
+          "url": "https://terrytao.wordpress.com/tag/anna-brandenberger/",
+          "parent_id": null
+        },
+        {
+          "id": 772601105,
+          "name": "Dora Woodruff",
+          "slug": "dora-woodruff",
+          "url": "https://terrytao.wordpress.com/tag/dora-woodruff/",
+          "parent_id": null
+        },
+        {
+          "id": 763522998,
+          "name": "Hanna Mularczyk",
+          "slug": "hanna-mularczyk",
+          "url": "https://terrytao.wordpress.com/tag/hanna-mularczyk/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 279350,
+          "name": "guest blog",
+          "slug": "guest-blog",
+          "url": "https://terrytao.wordpress.com/?cat=279350",
+          "parent_id": 0
+        }
+      ]
     }
   },
   "daily_attempts": {
@@ -80378,6 +80447,7 @@
     "2026-11-06": 9,
     "2026-11-07": 12,
     "2026-11-08": 4,
-    "2026-11-09": 9
+    "2026-11-09": 9,
+    "2026-11-10": 6
   }
 }
