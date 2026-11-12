@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-12T01:29:12.187739+00:00",
+  "last_discovered_at": "2026-11-12T15:27:42.826818+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -37225,17 +37225,17 @@
       "title": "UCLA Math Undergraduate Merit Scholarship for 2012",
       "published_at": "2011-11-12T10:31:06-08:00",
       "modified_at": "2012-11-15T08:45:59-08:00",
-      "last_checked_at": "2026-10-14T09:20:44.593050+00:00",
-      "last_attempted_at": "2026-10-14T16:36:41.946253+00:00",
+      "last_checked_at": "2026-11-12T15:28:33.969221+00:00",
+      "last_attempted_at": "2026-11-12T15:28:32.150450+00:00",
       "converted_at": "2026-10-14T16:36:42.063138+00:00",
       "converted_modified_at": "2012-11-15T08:45:59-08:00",
-      "next_check_at": "2026-11-12T08:00:00+00:00",
+      "next_check_at": "2027-11-12T08:00:00+00:00",
       "content_sha256": "fe785efdc71f5f4e5625b9233c1f10311765577da0492dd27f6de4b4be71a8b3",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/ucla-math-undergraduate-merit-scholarship-for-2011.pdf",
       "ir": "ir/ucla-math-undergraduate-merit-scholarship-for-2011.json.gz",
       "typst": "typst/ucla-math-undergraduate-merit-scholarship-for-2011.typ.gz",
-      "source_manifest": "raw/ucla-math-undergraduate-merit-scholarship-for-2011/20261014T092043.777281Z/manifest.json.gz",
+      "source_manifest": "raw/ucla-math-undergraduate-merit-scholarship-for-2011/20261112T152832.230244Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -52000,17 +52000,17 @@
       "title": "Klaus Roth",
       "published_at": "2015-11-12T08:20:30-08:00",
       "modified_at": "2015-11-17T08:42:33-08:00",
-      "last_checked_at": "2026-10-14T10:28:33.437652+00:00",
-      "last_attempted_at": "2026-10-14T16:37:50.206686+00:00",
-      "converted_at": "2026-10-14T16:37:50.223440+00:00",
+      "last_checked_at": "2026-11-12T15:28:44.030867+00:00",
+      "last_attempted_at": "2026-11-12T15:28:34.048014+00:00",
+      "converted_at": "2026-11-12T15:28:43.903934+00:00",
       "converted_modified_at": "2015-11-17T08:42:33-08:00",
-      "next_check_at": "2026-11-12T08:00:00+00:00",
-      "content_sha256": "55bb0bf1b31ad77e1edef64ac0ac27dadc6db120f60bdaed15dff3283099f6d5",
+      "next_check_at": "2027-11-12T08:00:00+00:00",
+      "content_sha256": "ddd839a1c49ddb8a9c12a697ea5cfd43808770cfe9d53cca96d08c3f38af8349",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/klaus-roth.pdf",
       "ir": "ir/klaus-roth.json.gz",
       "typst": "typst/klaus-roth.typ.gz",
-      "source_manifest": "raw/klaus-roth/20261014T102825.453485Z/manifest.json.gz",
+      "source_manifest": "raw/klaus-roth/20261112T152834.127263Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -61715,17 +61715,17 @@
       "title": "254A, Notes 9 – second moment and entropy methods",
       "published_at": "2019-11-12T18:47:05-08:00",
       "modified_at": "2026-04-18T17:28:06-08:00",
-      "last_checked_at": "2026-10-14T10:56:14.155100+00:00",
-      "last_attempted_at": "2026-10-14T16:38:37.810289+00:00",
-      "converted_at": "2026-10-14T16:38:38.162451+00:00",
+      "last_checked_at": "2026-11-12T15:28:59.361412+00:00",
+      "last_attempted_at": "2026-11-12T15:28:44.111599+00:00",
+      "converted_at": "2026-11-12T15:28:58.116105+00:00",
       "converted_modified_at": "2026-04-18T17:28:06-08:00",
-      "next_check_at": "2026-11-12T08:00:00+00:00",
-      "content_sha256": "be3676ae5f4dccb8aca0133aa973b972fab171a59f60db851b4f740952ea3231",
+      "next_check_at": "2027-11-12T08:00:00+00:00",
+      "content_sha256": "1b8b21e4d118a1ae46ee9e25f431123edc41ee29d390941635c36e5a858afa28",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/254a-notes-9-second-moment-and-entropy-methods.pdf",
       "ir": "ir/254a-notes-9-second-moment-and-entropy-methods.json.gz",
       "typst": "typst/254a-notes-9-second-moment-and-entropy-methods.typ.gz",
-      "source_manifest": "raw/254a-notes-9-second-moment-and-entropy-methods/20261014T105604.190715Z/manifest.json.gz",
+      "source_manifest": "raw/254a-notes-9-second-moment-and-entropy-methods/20261112T152844.188973Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -71952,17 +71952,17 @@
       "title": "New Nikodym set constructions over finite fields",
       "published_at": "2025-11-12T07:53:53-08:00",
       "modified_at": "2025-11-12T07:53:53-08:00",
-      "last_checked_at": "2026-10-14T11:14:56.167503+00:00",
-      "last_attempted_at": "2026-10-14T16:39:19.468167+00:00",
+      "last_checked_at": "2026-11-12T15:29:02.737428+00:00",
+      "last_attempted_at": "2026-11-12T15:28:59.444741+00:00",
       "converted_at": "2026-10-14T16:39:19.501646+00:00",
       "converted_modified_at": "2025-11-12T07:53:53-08:00",
-      "next_check_at": "2026-11-12T08:00:00+00:00",
+      "next_check_at": "2027-11-12T08:00:00+00:00",
       "content_sha256": "affdaf0dea0b3d4b5c6af34fd3402410fce347030c047912964c4b6915e0fb48",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/new-nikodym-set-constructions-over-finite-fields.pdf",
       "ir": "ir/new-nikodym-set-constructions-over-finite-fields.json.gz",
       "typst": "typst/new-nikodym-set-constructions-over-finite-fields.typ.gz",
-      "source_manifest": "raw/new-nikodym-set-constructions-over-finite-fields/20261014T111455.291523Z/manifest.json.gz",
+      "source_manifest": "raw/new-nikodym-set-constructions-over-finite-fields/20261112T152859.521642Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -78300,17 +78300,17 @@
       "title": "SAIR Open Math OS released",
       "published_at": "2026-10-16T09:32:00-08:00",
       "modified_at": "2026-10-16T07:56:08-08:00",
-      "last_checked_at": "2026-10-25T11:49:08.239206+00:00",
-      "last_attempted_at": "2026-10-25T11:48:55.351146+00:00",
-      "converted_at": "2026-10-25T11:49:08.116153+00:00",
+      "last_checked_at": "2026-11-12T15:28:10.126151+00:00",
+      "last_attempted_at": "2026-11-12T15:27:55.200278+00:00",
+      "converted_at": "2026-11-12T15:28:10.019520+00:00",
       "converted_modified_at": "2026-10-16T07:56:08-08:00",
       "next_check_at": "2026-11-16T17:32:00+00:00",
-      "content_sha256": "4390ed113085845f5719f2c06155d68dc04f900cb773e64658a9191c132bc156",
+      "content_sha256": "e4c040b85fa9df44559c2bbcef6ba7a7f165c4ee51c9c74a0157fcf65fecb4b2",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/sair-open-math-os-released.pdf",
       "ir": "ir/sair-open-math-os-released.json.gz",
       "typst": "typst/sair-open-math-os-released.typ.gz",
-      "source_manifest": "raw/sair-open-math-os-released/20261025T114855.460029Z/manifest.json.gz",
+      "source_manifest": "raw/sair-open-math-os-released/20261112T152755.283795Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78334,7 +78334,8 @@
         "https://terrytao.wordpress.com/2026/10/16/sair-open-math-os-released/#comment-698655",
         "https://terrytao.wordpress.com/2026/10/16/sair-open-math-os-released/#comment-698600",
         "https://terrytao.wordpress.com/2026/10/16/sair-open-math-os-released/#comment-698671",
-        "https://terrytao.wordpress.com/2026/10/16/sair-open-math-os-released/#comment-698714"
+        "https://terrytao.wordpress.com/2026/10/16/sair-open-math-os-released/#comment-698714",
+        "https://terrytao.wordpress.com/2026/10/16/sair-open-math-os-released/#comment-699358"
       ],
       "tags": [],
       "categories": [
@@ -78503,17 +78504,17 @@
       "title": "Will it be a golden age or a dark age for mathematics (and science)?",
       "published_at": "2026-10-18T06:59:49-08:00",
       "modified_at": "2026-10-18T06:59:49-08:00",
-      "last_checked_at": "2026-10-31T12:50:46.547910+00:00",
-      "last_attempted_at": "2026-10-31T12:50:28.813383+00:00",
-      "converted_at": "2026-10-31T12:50:46.358818+00:00",
+      "last_checked_at": "2026-11-12T15:28:26.112840+00:00",
+      "last_attempted_at": "2026-11-12T15:28:10.207090+00:00",
+      "converted_at": "2026-11-12T15:28:25.900423+00:00",
       "converted_modified_at": "2026-10-18T06:59:49-08:00",
       "next_check_at": "2026-11-18T14:59:49+00:00",
-      "content_sha256": "bd3b1d34fbb365bb3f11e650f29a66f375c4d2d6f56deaa9e9760c2f2c7862ec",
+      "content_sha256": "3c11416114337cd37478f0ba1acd6ed1c0146d741a7cd8fa35ed3773750b1d81",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science.pdf",
       "ir": "ir/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science.json.gz",
       "typst": "typst/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science.typ.gz",
-      "source_manifest": "raw/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/20261031T125028.879829Z/manifest.json.gz",
+      "source_manifest": "raw/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/20261112T152810.285953Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -78547,7 +78548,8 @@
         "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698665",
         "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698756",
         "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698883",
-        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698961"
+        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-698961",
+        "https://terrytao.wordpress.com/2026/10/18/will-it-be-a-golden-age-or-a-dark-age-for-mathematics-and-science/#comment-699348"
       ],
       "tags": [
         {
@@ -80486,6 +80488,67 @@
           "parent_id": 3582
         }
       ]
+    },
+    "18701": {
+      "id": 18701,
+      "url": "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/",
+      "title": "Lean Grimoire",
+      "published_at": "2026-11-11T18:36:00-08:00",
+      "modified_at": "2026-11-11T22:41:51-08:00",
+      "last_checked_at": "2026-11-12T15:28:32.027642+00:00",
+      "last_attempted_at": "2026-11-12T15:28:26.195768+00:00",
+      "converted_at": "2026-11-12T15:28:31.944648+00:00",
+      "converted_modified_at": "2026-11-11T22:41:51-08:00",
+      "next_check_at": "2026-11-19T02:36:00+00:00",
+      "content_sha256": "8532f7d0bc4e666e361b8be552eb223fbf7d73a31f58c6de9d097efe77c7d72f",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/lean-grimoire.pdf",
+      "ir": "ir/lean-grimoire.json.gz",
+      "typst": "typst/lean-grimoire.typ.gz",
+      "source_manifest": "raw/lean-grimoire/20261112T152826.277341Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699359",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699355",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699354",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699353",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699352",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699350",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699349"
+      ],
+      "tags": [
+        {
+          "id": 12928,
+          "name": "applets",
+          "slug": "applets",
+          "url": "https://terrytao.wordpress.com/tag/applets/",
+          "parent_id": null
+        },
+        {
+          "id": 108946,
+          "name": "Lean",
+          "slug": "lean",
+          "url": "https://terrytao.wordpress.com/tag/lean/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 26904563,
+          "name": "diversions",
+          "slug": "diversions",
+          "url": "https://terrytao.wordpress.com/?cat=26904563",
+          "parent_id": 47932
+        },
+        {
+          "id": 1440125,
+          "name": "math.LO",
+          "slug": "math-lo",
+          "url": "https://terrytao.wordpress.com/?cat=1440125",
+          "parent_id": 3582
+        }
+      ]
     }
   },
   "daily_attempts": {
@@ -80518,6 +80581,6 @@
     "2026-11-08": 4,
     "2026-11-09": 9,
     "2026-11-10": 6,
-    "2026-11-12": 13
+    "2026-11-12": 20
   }
 }
