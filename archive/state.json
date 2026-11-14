@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-13T14:44:26.455532+00:00",
+  "last_discovered_at": "2026-11-14T13:41:23.318176+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -20559,20 +20559,22 @@
       "title": "245C, Notes 5: Hausdorff dimension (optional)",
       "published_at": "2009-05-19T16:00:15-08:00",
       "modified_at": "2024-02-24T11:51:32-08:00",
-      "last_checked_at": "2026-10-14T07:22:03.369818+00:00",
-      "last_attempted_at": "2026-10-14T16:35:45.060356+00:00",
-      "converted_at": "2026-10-14T16:35:45.408063+00:00",
+      "last_checked_at": "2026-11-14T13:42:02.427465+00:00",
+      "last_attempted_at": "2026-11-14T13:41:35.693890+00:00",
+      "converted_at": "2026-11-14T13:42:01.577542+00:00",
       "converted_modified_at": "2024-02-24T11:51:32-08:00",
       "next_check_at": "2027-05-19T08:00:00+00:00",
-      "content_sha256": "7964b145fca851bea98ef901521ba75ecbd81dd8a1cd350321bac0d3339a1da9",
+      "content_sha256": "d0726c46235576fa2103bc939bf5edbeff85cb44e63392310f3ce601cc748a15",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/245c-notes-5-hausdorff-dimension-optional.pdf",
       "ir": "ir/245c-notes-5-hausdorff-dimension-optional.json.gz",
       "typst": "typst/245c-notes-5-hausdorff-dimension-optional.typ.gz",
-      "source_manifest": "raw/245c-notes-5-hausdorff-dimension-optional/20261014T072145.927907Z/manifest.json.gz",
+      "source_manifest": "raw/245c-notes-5-hausdorff-dimension-optional/20261114T134135.787005Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
-      "seen_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2009/05/19/245c-notes-5-hausdorff-dimension-optional/#comment-699407"
+      ],
       "tags": [
         {
           "id": 20562657,
@@ -41202,17 +41204,17 @@
       "title": "Expanding polynomials over finite fields of large characteristic, and a regularity lemma for definable sets",
       "published_at": "2012-11-14T09:41:20-08:00",
       "modified_at": "2012-11-14T15:37:55-08:00",
-      "last_checked_at": "2026-10-14T09:28:36.365553+00:00",
-      "last_attempted_at": "2026-10-14T16:36:55.818342+00:00",
+      "last_checked_at": "2026-11-14T13:42:30.710657+00:00",
+      "last_attempted_at": "2026-11-14T13:42:22.832552+00:00",
       "converted_at": "2026-10-14T16:36:55.963279+00:00",
       "converted_modified_at": "2012-11-14T15:37:55-08:00",
-      "next_check_at": "2026-11-14T08:00:00+00:00",
+      "next_check_at": "2027-11-14T08:00:00+00:00",
       "content_sha256": "21ed8c77f72a649c050425416d3bf39a64bd3e68d72d247bf9e22edd6a02f929",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/expanding-polynomials-over-finite-fields-of-large-characteristic-and-a-regularity-lemma-for-definable-sets.pdf",
       "ir": "ir/expanding-polynomials-over-finite-fields-of-large-characteristic-and-a-regularity-lemma-for-definable-sets.json.gz",
       "typst": "typst/expanding-polynomials-over-finite-fields-of-large-characteristic-and-a-regularity-lemma-for-definable-sets.typ.gz",
-      "source_manifest": "raw/expanding-polynomials-over-finite-fields-of-large-characteristic-and-a-regularity-lemma-for-definable-sets/20261014T092833.824763Z/manifest.json.gz",
+      "source_manifest": "raw/expanding-polynomials-over-finite-fields-of-large-characteristic-and-a-regularity-lemma-for-definable-sets/20261114T134222.924617Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -77879,17 +77881,17 @@
       "title": "2026 AMS Committee on Education Workshop Report",
       "published_at": "2026-10-13T11:30:10-08:00",
       "modified_at": "2026-10-13T11:30:10-08:00",
-      "last_checked_at": "2026-10-21T12:07:49.135112+00:00",
-      "last_attempted_at": "2026-10-21T12:07:44.884519+00:00",
-      "converted_at": "2026-10-17T10:59:32.670305+00:00",
+      "last_checked_at": "2026-11-14T13:42:35.730504+00:00",
+      "last_attempted_at": "2026-11-14T13:42:30.813296+00:00",
+      "converted_at": "2026-11-14T13:42:35.662715+00:00",
       "converted_modified_at": "2026-10-13T11:30:10-08:00",
-      "next_check_at": "2026-11-13T19:30:10+00:00",
-      "content_sha256": "c27d642c0404a1f9a9a3243ecfb62f6ae51903557efa7568a6b55040b1cd887a",
+      "next_check_at": "2027-10-13T08:00:00+00:00",
+      "content_sha256": "24f6fb379982e60ce5248352eabfa460942bd697337317d6c6018be8fea60e27",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/2026-ams-committee-on-education-workshop-report.pdf",
       "ir": "ir/2026-ams-committee-on-education-workshop-report.json.gz",
       "typst": "typst/2026-ams-committee-on-education-workshop-report.typ.gz",
-      "source_manifest": "raw/2026-ams-committee-on-education-workshop-report/20261021T120744.974542Z/manifest.json.gz",
+      "source_manifest": "raw/2026-ams-committee-on-education-workshop-report/20261114T134230.913820Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80274,17 +80276,17 @@
       "title": "More posts",
       "published_at": "2026-11-06T10:05:00-08:00",
       "modified_at": "2026-11-06T11:19:48-08:00",
-      "last_checked_at": "2026-11-10T15:04:17.931902+00:00",
-      "last_attempted_at": "2026-11-10T15:04:13.147255+00:00",
-      "converted_at": "2026-11-10T15:04:17.856151+00:00",
+      "last_checked_at": "2026-11-14T13:42:40.727632+00:00",
+      "last_attempted_at": "2026-11-14T13:42:35.830215+00:00",
+      "converted_at": "2026-11-14T13:42:40.641166+00:00",
       "converted_modified_at": "2026-11-06T11:19:48-08:00",
-      "next_check_at": "2026-11-13T18:05:00+00:00",
-      "content_sha256": "95bd98c89af2c02a66db64111792261fc1ac67874f1a512c337d6c7b8e3f15e9",
+      "next_check_at": "2026-12-06T18:05:00+00:00",
+      "content_sha256": "5c6087bee4027a24d8e08a61cec02aab4447821e9dc31c97a89adc480c7ccfd6",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/more-posts.pdf",
       "ir": "ir/more-posts.json.gz",
       "typst": "typst/more-posts.typ.gz",
-      "source_manifest": "raw/more-posts/20261110T150413.246069Z/manifest.json.gz",
+      "source_manifest": "raw/more-posts/20261114T134235.952745Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80500,17 +80502,17 @@
       "title": "Lean Grimoire",
       "published_at": "2026-11-11T18:36:00-08:00",
       "modified_at": "2026-11-11T22:41:51-08:00",
-      "last_checked_at": "2026-11-13T14:46:29.717789+00:00",
-      "last_attempted_at": "2026-11-13T14:46:20.710661+00:00",
-      "converted_at": "2026-11-13T14:46:29.602364+00:00",
+      "last_checked_at": "2026-11-14T13:42:16.051816+00:00",
+      "last_attempted_at": "2026-11-14T13:42:02.586409+00:00",
+      "converted_at": "2026-11-14T13:42:15.860874+00:00",
       "converted_modified_at": "2026-11-11T22:41:51-08:00",
       "next_check_at": "2026-11-19T02:36:00+00:00",
-      "content_sha256": "835e5a3e5539a157731d2aff8c8c4c6a8670d4c3d1a99791d8793113243d351f",
+      "content_sha256": "6ba883fed06eba98dae03816d694c2d35d9d9ded70b8b1d61aead7f746a5a397",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/lean-grimoire.pdf",
       "ir": "ir/lean-grimoire.json.gz",
       "typst": "typst/lean-grimoire.typ.gz",
-      "source_manifest": "raw/lean-grimoire/20261113T144620.783407Z/manifest.json.gz",
+      "source_manifest": "raw/lean-grimoire/20261114T134202.688231Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80530,7 +80532,15 @@
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699378",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699376",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699373",
-        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699371"
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699371",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699406",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699404",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699401",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699399",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699396",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699394",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699393",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699392"
       ],
       "tags": [
         {
@@ -80571,20 +80581,22 @@
       "title": "247A, Notes 4: Weighted estimates and pseudodifferential operators",
       "published_at": "2026-11-12T23:09:00-08:00",
       "modified_at": "2026-11-12T18:12:01-08:00",
-      "last_checked_at": "2026-11-13T14:47:44.042063+00:00",
-      "last_attempted_at": "2026-11-13T14:47:41.778271+00:00",
-      "converted_at": "2026-11-13T14:47:43.049082+00:00",
+      "last_checked_at": "2026-11-14T13:42:20.348121+00:00",
+      "last_attempted_at": "2026-11-14T13:42:16.173868+00:00",
+      "converted_at": "2026-11-14T13:42:19.039824+00:00",
       "converted_modified_at": "2026-11-12T18:12:01-08:00",
       "next_check_at": "2026-11-20T07:09:00+00:00",
-      "content_sha256": "d4cdfdc3a99a5e4311d2ac73a95f5581757d0be77b47cc4d74db37cf038d6f4d",
+      "content_sha256": "52331b10492a3756acbbb6bbc906b3c132139a26351f962de61628828a061ebf",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/247a-notes-4-weighted-estimates-and-pseudodifferential-operators.pdf",
       "ir": "ir/247a-notes-4-weighted-estimates-and-pseudodifferential-operators.json.gz",
       "typst": "typst/247a-notes-4-weighted-estimates-and-pseudodifferential-operators.typ.gz",
-      "source_manifest": "raw/247a-notes-4-weighted-estimates-and-pseudodifferential-operators/20261113T144741.853636Z/manifest.json.gz",
+      "source_manifest": "raw/247a-notes-4-weighted-estimates-and-pseudodifferential-operators/20261114T134216.263713Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
-      "seen_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/12/247a-notes-4-weighted-estimates-and-pseudodifferential-operators/#comment-699408"
+      ],
       "tags": [
         {
           "id": 4428570,
@@ -80614,6 +80626,118 @@
           "name": "math.CA",
           "slug": "math-ca",
           "url": "https://terrytao.wordpress.com/?cat=1440094",
+          "parent_id": 3582
+        }
+      ]
+    },
+    "18722": {
+      "id": 18722,
+      "url": "https://terrytao.wordpress.com/2026/11/13/introducing-mathhelm-a-place-to-discuss-ai-generated-papers/",
+      "title": "Introducing MathHelm: A Place to discuss AI-generated papers",
+      "published_at": "2026-11-13T19:19:00-08:00",
+      "modified_at": "2026-11-13T16:25:25-08:00",
+      "last_checked_at": "2026-11-14T13:42:22.737585+00:00",
+      "last_attempted_at": "2026-11-14T13:42:20.444404+00:00",
+      "converted_at": "2026-11-14T13:42:22.661049+00:00",
+      "converted_modified_at": "2026-11-13T16:25:25-08:00",
+      "next_check_at": "2026-11-21T03:19:00+00:00",
+      "content_sha256": "b666ef6a785b6b784d6cfb9404d68a96739a8d987b591f23c2e647b3203ce226",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/introducing-mathhelm-a-place-to-discuss-ai-generated-papers.pdf",
+      "ir": "ir/introducing-mathhelm-a-place-to-discuss-ai-generated-papers.json.gz",
+      "typst": "typst/introducing-mathhelm-a-place-to-discuss-ai-generated-papers.typ.gz",
+      "source_manifest": "raw/introducing-mathhelm-a-place-to-discuss-ai-generated-papers/20261114T134220.535658Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/13/introducing-mathhelm-a-place-to-discuss-ai-generated-papers/#comment-699411",
+        "https://terrytao.wordpress.com/2026/11/13/introducing-mathhelm-a-place-to-discuss-ai-generated-papers/#comment-699409"
+      ],
+      "tags": [
+        {
+          "id": 14067,
+          "name": "AI",
+          "slug": "ai",
+          "url": "https://terrytao.wordpress.com/tag/ai/",
+          "parent_id": null
+        },
+        {
+          "id": 431559271,
+          "name": "Fan Zheng",
+          "slug": "fan-zheng",
+          "url": "https://terrytao.wordpress.com/tag/fan-zheng/",
+          "parent_id": null
+        },
+        {
+          "id": 35136571,
+          "name": "Liang Xiao",
+          "slug": "liang-xiao",
+          "url": "https://terrytao.wordpress.com/tag/liang-xiao/",
+          "parent_id": null
+        },
+        {
+          "id": 793179010,
+          "name": "Mathhelm",
+          "slug": "mathhelm",
+          "url": "https://terrytao.wordpress.com/tag/mathhelm/",
+          "parent_id": null
+        },
+        {
+          "id": 480568190,
+          "name": "Ruixiang Zhang",
+          "slug": "ruixiang-zhang",
+          "url": "https://terrytao.wordpress.com/tag/ruixiang-zhang/",
+          "parent_id": null
+        },
+        {
+          "id": 793179028,
+          "name": "Xiaoming Sun",
+          "slug": "xiaoming-sun",
+          "url": "https://terrytao.wordpress.com/tag/xiaoming-sun/",
+          "parent_id": null
+        },
+        {
+          "id": 793179026,
+          "name": "Xinyi Yuan",
+          "slug": "xinyi-yuan",
+          "url": "https://terrytao.wordpress.com/tag/xinyi-yuan/",
+          "parent_id": null
+        },
+        {
+          "id": 793179027,
+          "name": "Yi Ni",
+          "slug": "yi-ni",
+          "url": "https://terrytao.wordpress.com/tag/yi-ni/",
+          "parent_id": null
+        },
+        {
+          "id": 7589556,
+          "name": "Yuan Yuan",
+          "slug": "yuan-yuan",
+          "url": "https://terrytao.wordpress.com/tag/yuan-yuan/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 521,
+          "name": "advertising",
+          "slug": "advertising",
+          "url": "https://terrytao.wordpress.com/?cat=521",
+          "parent_id": 47932
+        },
+        {
+          "id": 279350,
+          "name": "guest blog",
+          "slug": "guest-blog",
+          "url": "https://terrytao.wordpress.com/?cat=279350",
+          "parent_id": 0
+        },
+        {
+          "id": 1440160,
+          "name": "math.GM",
+          "slug": "math-gm",
+          "url": "https://terrytao.wordpress.com/?cat=1440160",
           "parent_id": 3582
         }
       ]
@@ -80650,6 +80774,7 @@
     "2026-11-09": 9,
     "2026-11-10": 6,
     "2026-11-12": 20,
-    "2026-11-13": 14
+    "2026-11-13": 14,
+    "2026-11-14": 7
   }
 }
