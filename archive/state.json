@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-20T15:38:26.719629+00:00",
+  "last_discovered_at": "2026-11-21T14:48:19.307885+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -37439,17 +37439,17 @@
       "title": "The Katai-Bourgain-Sarnak-Ziegler orthogonality criterion",
       "published_at": "2011-11-21T23:12:00-08:00",
       "modified_at": "2012-10-15T07:40:49-08:00",
-      "last_checked_at": "2026-10-14T09:20:53.598538+00:00",
-      "last_attempted_at": "2026-10-14T16:36:42.546420+00:00",
+      "last_checked_at": "2026-11-21T14:49:31.464884+00:00",
+      "last_attempted_at": "2026-11-21T14:49:24.647730+00:00",
       "converted_at": "2026-10-14T16:36:42.807087+00:00",
       "converted_modified_at": "2012-10-15T07:40:49-08:00",
-      "next_check_at": "2026-11-21T08:00:00+00:00",
+      "next_check_at": "2027-11-21T08:00:00+00:00",
       "content_sha256": "1a16d6af8d5ed5db2ee5be269b5b24f154268479e19be56d3edbac120d68ee0c",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/the-bourgain-sarnak-ziegler-orthogonality-criterion.pdf",
       "ir": "ir/the-bourgain-sarnak-ziegler-orthogonality-criterion.json.gz",
       "typst": "typst/the-bourgain-sarnak-ziegler-orthogonality-criterion.typ.gz",
-      "source_manifest": "raw/the-bourgain-sarnak-ziegler-orthogonality-criterion/20261014T092049.876518Z/manifest.json.gz",
+      "source_manifest": "raw/the-bourgain-sarnak-ziegler-orthogonality-criterion/20261121T144924.702200Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -48302,17 +48302,17 @@
       "title": "A general parity problem obstruction",
       "published_at": "2014-11-21T16:57:06-08:00",
       "modified_at": "2014-11-27T08:29:47-08:00",
-      "last_checked_at": "2026-10-14T10:21:32.168978+00:00",
-      "last_attempted_at": "2026-10-14T16:37:30.821661+00:00",
+      "last_checked_at": "2026-11-21T14:49:34.540288+00:00",
+      "last_attempted_at": "2026-11-21T14:49:31.521482+00:00",
       "converted_at": "2026-10-14T16:37:30.975452+00:00",
       "converted_modified_at": "2014-11-27T08:29:47-08:00",
-      "next_check_at": "2026-11-21T08:00:00+00:00",
+      "next_check_at": "2027-11-21T08:00:00+00:00",
       "content_sha256": "9a8d8ae14c35c6bc4b62dd30fd404992ebf6b1602c729a40a3b9df1f9100ead8",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/a-general-parity-problem-obstruction.pdf",
       "ir": "ir/a-general-parity-problem-obstruction.json.gz",
       "typst": "typst/a-general-parity-problem-obstruction.typ.gz",
-      "source_manifest": "raw/a-general-parity-problem-obstruction/20261014T102130.123219Z/manifest.json.gz",
+      "source_manifest": "raw/a-general-parity-problem-obstruction/20261121T144931.575621Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -59446,17 +59446,17 @@
       "title": "The nonlinearity of the Fefferman-Stein decomposition",
       "published_at": "2018-11-21T20:01:59-08:00",
       "modified_at": "2018-12-30T01:07:10-08:00",
-      "last_checked_at": "2026-10-14T10:49:15.104788+00:00",
-      "last_attempted_at": "2026-10-14T16:38:26.540608+00:00",
+      "last_checked_at": "2026-11-21T14:49:39.429573+00:00",
+      "last_attempted_at": "2026-11-21T14:49:34.596987+00:00",
       "converted_at": "2026-10-14T16:38:26.653583+00:00",
       "converted_modified_at": "2018-12-30T01:07:10-08:00",
-      "next_check_at": "2026-11-21T08:00:00+00:00",
+      "next_check_at": "2027-11-21T08:00:00+00:00",
       "content_sha256": "065806b559500ccbf4255abbdbd2cfb58c88e9f265e0ecd0f8f52a90d3044223",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/the-nonlinearity-of-the-fefferman-stein-decomposition.pdf",
       "ir": "ir/the-nonlinearity-of-the-fefferman-stein-decomposition.json.gz",
       "typst": "typst/the-nonlinearity-of-the-fefferman-stein-decomposition.typ.gz",
-      "source_manifest": "raw/the-nonlinearity-of-the-fefferman-stein-decomposition/20261014T104911.312849Z/manifest.json.gz",
+      "source_manifest": "raw/the-nonlinearity-of-the-fefferman-stein-decomposition/20261121T144934.654733Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -72092,17 +72092,17 @@
       "title": "Climbing the cosmic distance ladder: another sample chapter",
       "published_at": "2025-11-21T16:36:35-08:00",
       "modified_at": "2025-12-02T21:48:37-08:00",
-      "last_checked_at": "2026-10-14T11:15:01.009292+00:00",
-      "last_attempted_at": "2026-10-14T16:39:19.931568+00:00",
+      "last_checked_at": "2026-11-21T14:49:43.373000+00:00",
+      "last_attempted_at": "2026-11-21T14:49:39.500755+00:00",
       "converted_at": "2026-10-14T16:39:20.052512+00:00",
       "converted_modified_at": "2025-12-02T21:48:37-08:00",
-      "next_check_at": "2026-11-21T08:00:00+00:00",
+      "next_check_at": "2027-11-21T08:00:00+00:00",
       "content_sha256": "a16fe33377bfc27e7bd6d3aef104fa2eefeafbf7b05bd9dee4bc0a652223c7ec",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/climbing-the-cosmic-distance-ladder-another-sample-chapter.pdf",
       "ir": "ir/climbing-the-cosmic-distance-ladder-another-sample-chapter.json.gz",
       "typst": "typst/climbing-the-cosmic-distance-ladder-another-sample-chapter.typ.gz",
-      "source_manifest": "raw/climbing-the-cosmic-distance-ladder-another-sample-chapter/20261014T111458.435593Z/manifest.json.gz",
+      "source_manifest": "raw/climbing-the-cosmic-distance-ladder-another-sample-chapter/20261121T144939.556973Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -80514,17 +80514,17 @@
       "title": "Lean Grimoire",
       "published_at": "2026-11-11T18:36:00-08:00",
       "modified_at": "2026-11-11T22:41:51-08:00",
-      "last_checked_at": "2026-11-19T15:58:23.027881+00:00",
-      "last_attempted_at": "2026-11-19T15:58:02.874438+00:00",
-      "converted_at": "2026-11-19T15:58:22.704023+00:00",
+      "last_checked_at": "2026-11-21T14:48:56.829406+00:00",
+      "last_attempted_at": "2026-11-21T14:48:31.605084+00:00",
+      "converted_at": "2026-11-21T14:48:56.436882+00:00",
       "converted_modified_at": "2026-11-11T22:41:51-08:00",
       "next_check_at": "2026-12-12T02:36:00+00:00",
-      "content_sha256": "0f8f14c8969c003e7219e656ac7ba0d55748c89c460ee9667b11c9646053c258",
+      "content_sha256": "cef0c31a58f9d1a5efea1ed2cdd7534132a9ebaa00e5abff170fc265bb12da2d",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/lean-grimoire.pdf",
       "ir": "ir/lean-grimoire.json.gz",
       "typst": "typst/lean-grimoire.typ.gz",
-      "source_manifest": "raw/lean-grimoire/20261119T155802.933238Z/manifest.json.gz",
+      "source_manifest": "raw/lean-grimoire/20261121T144831.657219Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80570,7 +80570,8 @@
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699513",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699511",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699510",
-        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699506"
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699506",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699722"
       ],
       "tags": [
         {
@@ -80667,17 +80668,17 @@
       "title": "Introducing MathHelm: A Place to discuss AI-generated papers",
       "published_at": "2026-11-13T19:19:00-08:00",
       "modified_at": "2026-11-13T16:25:25-08:00",
-      "last_checked_at": "2026-11-20T15:39:42.864988+00:00",
-      "last_attempted_at": "2026-11-20T15:39:29.010213+00:00",
-      "converted_at": "2026-11-20T15:39:42.764421+00:00",
+      "last_checked_at": "2026-11-21T14:49:55.476529+00:00",
+      "last_attempted_at": "2026-11-21T14:49:43.432056+00:00",
+      "converted_at": "2026-11-21T14:49:55.363717+00:00",
       "converted_modified_at": "2026-11-13T16:25:25-08:00",
-      "next_check_at": "2026-11-21T03:19:00+00:00",
-      "content_sha256": "808601e933894035246e8319f51f1f8fcf4fe2a410fdcfdf92f3f1a4d1e3b6ce",
+      "next_check_at": "2026-12-14T03:19:00+00:00",
+      "content_sha256": "6351e49ff8e31270e8b8a77167ae74e33d01799b47de778304c2383ec9421e02",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/introducing-mathhelm-a-place-to-discuss-ai-generated-papers.pdf",
       "ir": "ir/introducing-mathhelm-a-place-to-discuss-ai-generated-papers.json.gz",
       "typst": "typst/introducing-mathhelm-a-place-to-discuss-ai-generated-papers.typ.gz",
-      "source_manifest": "raw/introducing-mathhelm-a-place-to-discuss-ai-generated-papers/20261120T153929.076136Z/manifest.json.gz",
+      "source_manifest": "raw/introducing-mathhelm-a-place-to-discuss-ai-generated-papers/20261121T144943.486516Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80791,6 +80792,155 @@
           "parent_id": 3582
         }
       ]
+    },
+    "18727": {
+      "id": 18727,
+      "url": "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/",
+      "title": "Unforced Euler singularity, unforced Navier-Stokes singularity, and the Generalized Riemann Hypothesis",
+      "published_at": "2026-11-20T09:19:00-08:00",
+      "modified_at": "2026-11-20T11:13:39-08:00",
+      "last_checked_at": "2026-11-21T14:49:24.588927+00:00",
+      "last_attempted_at": "2026-11-21T14:48:56.885121+00:00",
+      "converted_at": "2026-11-21T14:49:24.363853+00:00",
+      "converted_modified_at": "2026-11-20T11:13:39-08:00",
+      "next_check_at": "2026-11-27T17:19:00+00:00",
+      "content_sha256": "7b0287a1ea14122e33e4af4b1d9d44872796ac7a8680cf57c0f308d422157fb1",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.pdf",
+      "ir": "ir/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.json.gz",
+      "typst": "typst/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.typ.gz",
+      "source_manifest": "raw/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/20261121T144856.941332Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699726",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699725",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699724",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699717",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699716",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699714",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699706",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699704",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699703",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699702",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699699",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699698",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699697",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699696"
+      ],
+      "tags": [
+        {
+          "id": 14067,
+          "name": "AI",
+          "slug": "ai",
+          "url": "https://terrytao.wordpress.com/tag/ai/",
+          "parent_id": null
+        },
+        {
+          "id": 53103315,
+          "name": "incompressible Euler equations",
+          "slug": "incompressible-euler-equations",
+          "url": "https://terrytao.wordpress.com/tag/incompressible-euler-equations/",
+          "parent_id": null
+        },
+        {
+          "id": 320686399,
+          "name": "Levent Alpöge",
+          "slug": "levent-alpoge",
+          "url": "https://terrytao.wordpress.com/tag/levent-alpoge/",
+          "parent_id": null
+        },
+        {
+          "id": 793311264,
+          "name": "Matei Coiculescu",
+          "slug": "matei-coiculescu",
+          "url": "https://terrytao.wordpress.com/tag/matei-coiculescu/",
+          "parent_id": null
+        },
+        {
+          "id": 1454673,
+          "name": "Navier-Stokes equations",
+          "slug": "navier-stokes-equations",
+          "url": "https://terrytao.wordpress.com/tag/navier-stokes-equations/",
+          "parent_id": null
+        },
+        {
+          "id": 1831085,
+          "name": "Riemann hypothesis",
+          "slug": "riemann-hypothesis",
+          "url": "https://terrytao.wordpress.com/tag/riemann-hypothesis/",
+          "parent_id": null
+        },
+        {
+          "id": 791576905,
+          "name": "Tristan Buckmaster",
+          "slug": "tristan-buckmaster",
+          "url": "https://terrytao.wordpress.com/tag/tristan-buckmaster/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 1440182,
+          "name": "math.AP",
+          "slug": "math-ap",
+          "url": "https://terrytao.wordpress.com/?cat=1440182",
+          "parent_id": 3582
+        },
+        {
+          "id": 1440053,
+          "name": "math.NT",
+          "slug": "math-nt",
+          "url": "https://terrytao.wordpress.com/?cat=1440053",
+          "parent_id": 3582
+        }
+      ]
+    },
+    "18739": {
+      "id": 18739,
+      "url": "https://terrytao.wordpress.com/2026/11/20/postdoc-positions-at-the-columbia-data-science-institute/",
+      "title": "Postdoc positions at the Columbia Data Science Institute",
+      "published_at": "2026-11-20T14:05:50-08:00",
+      "modified_at": "2026-11-20T14:05:50-08:00",
+      "last_checked_at": "2026-11-21T14:49:56.494408+00:00",
+      "last_attempted_at": "2026-11-21T14:49:55.536100+00:00",
+      "converted_at": "2026-11-21T14:49:56.448819+00:00",
+      "converted_modified_at": "2026-11-20T14:05:50-08:00",
+      "next_check_at": "2026-11-27T22:05:50+00:00",
+      "content_sha256": "7000540276f4fb322cb6f69914a9e379912c3521b49497523d08e370a2e2666d",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/postdoc-positions-at-the-columbia-data-science-institute.pdf",
+      "ir": "ir/postdoc-positions-at-the-columbia-data-science-institute.json.gz",
+      "typst": "typst/postdoc-positions-at-the-columbia-data-science-institute.typ.gz",
+      "source_manifest": "raw/postdoc-positions-at-the-columbia-data-science-institute/20261121T144955.594573Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [],
+      "tags": [
+        {
+          "id": 792087505,
+          "name": "Ivan Corwin",
+          "slug": "ivan-corwin",
+          "url": "https://terrytao.wordpress.com/tag/ivan-corwin/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 521,
+          "name": "advertising",
+          "slug": "advertising",
+          "url": "https://terrytao.wordpress.com/?cat=521",
+          "parent_id": 47932
+        },
+        {
+          "id": 279350,
+          "name": "guest blog",
+          "slug": "guest-blog",
+          "url": "https://terrytao.wordpress.com/?cat=279350",
+          "parent_id": 0
+        }
+      ]
     }
   },
   "daily_attempts": {
@@ -80831,6 +80981,7 @@
     "2026-11-17": 7,
     "2026-11-18": 8,
     "2026-11-19": 13,
-    "2026-11-20": 13
+    "2026-11-20": 13,
+    "2026-11-21": 8
   }
 }
