@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-21T14:48:19.307885+00:00",
+  "last_discovered_at": "2026-11-22T14:45:36.931296+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -45241,17 +45241,17 @@
       "title": "Polymath8b, II: Optimising the variational problem and the sieve",
       "published_at": "2013-11-22T19:41:29-08:00",
       "modified_at": "2013-11-23T10:02:31-08:00",
-      "last_checked_at": "2026-10-14T09:34:49.875964+00:00",
-      "last_attempted_at": "2026-10-14T16:37:17.058241+00:00",
+      "last_checked_at": "2026-11-22T14:46:54.779369+00:00",
+      "last_attempted_at": "2026-11-22T14:46:36.759446+00:00",
       "converted_at": "2026-10-14T16:37:17.831247+00:00",
       "converted_modified_at": "2013-11-23T10:02:31-08:00",
-      "next_check_at": "2026-11-22T08:00:00+00:00",
+      "next_check_at": "2027-11-22T08:00:00+00:00",
       "content_sha256": "567850cf7f594c14c168c51329677ce55376240dee58511b99f426bb370c78fe",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/polymath8b-ii-optimising-the-variational-problem-and-the-sieve.pdf",
       "ir": "ir/polymath8b-ii-optimising-the-variational-problem-and-the-sieve.json.gz",
       "typst": "typst/polymath8b-ii-optimising-the-variational-problem-and-the-sieve.typ.gz",
-      "source_manifest": "raw/polymath8b-ii-optimising-the-variational-problem-and-the-sieve/20261014T093447.822374Z/manifest.json.gz",
+      "source_manifest": "raw/polymath8b-ii-optimising-the-variational-problem-and-the-sieve/20261122T144636.852364Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -54620,17 +54620,17 @@
       "title": "An integration approach to the Toeplitz square peg problem",
       "published_at": "2016-11-22T20:40:18-08:00",
       "modified_at": "2016-11-23T17:36:44-08:00",
-      "last_checked_at": "2026-10-14T10:38:24.918096+00:00",
-      "last_attempted_at": "2026-10-14T16:38:03.595317+00:00",
+      "last_checked_at": "2026-11-22T14:47:06.428529+00:00",
+      "last_attempted_at": "2026-11-22T14:46:54.898195+00:00",
       "converted_at": "2026-10-14T16:38:03.690850+00:00",
       "converted_modified_at": "2016-11-23T17:36:44-08:00",
-      "next_check_at": "2026-11-22T08:00:00+00:00",
+      "next_check_at": "2027-11-22T08:00:00+00:00",
       "content_sha256": "c425f983b0d5ca3bd8f1b3d370e277345e251d2fa2fae610869319433f63c5f5",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/an-integration-approach-to-the-toeplitz-square-peg-problem.pdf",
       "ir": "ir/an-integration-approach-to-the-toeplitz-square-peg-problem.json.gz",
       "typst": "typst/an-integration-approach-to-the-toeplitz-square-peg-problem.typ.gz",
-      "source_manifest": "raw/an-integration-approach-to-the-toeplitz-square-peg-problem/20261014T103820.808931Z/manifest.json.gz",
+      "source_manifest": "raw/an-integration-approach-to-the-toeplitz-square-peg-problem/20261122T144654.989917Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -78951,17 +78951,17 @@
       "title": "Mathematics is a subject for the young",
       "published_at": "2026-10-21T10:19:00-08:00",
       "modified_at": "2026-10-20T12:13:11-08:00",
-      "last_checked_at": "2026-10-29T13:25:33.375531+00:00",
-      "last_attempted_at": "2026-10-29T13:25:18.818729+00:00",
-      "converted_at": "2026-10-29T13:25:33.068914+00:00",
+      "last_checked_at": "2026-11-22T14:47:26.184774+00:00",
+      "last_attempted_at": "2026-11-22T14:47:06.520389+00:00",
+      "converted_at": "2026-11-22T14:47:25.896622+00:00",
       "converted_modified_at": "2026-10-20T12:13:11-08:00",
-      "next_check_at": "2026-11-21T18:19:00+00:00",
-      "content_sha256": "6bf22688685bd6deb5fb6bdca4d188f032c5971ff0e63b10d28d86fc3679d089",
+      "next_check_at": "2027-10-21T08:00:00+00:00",
+      "content_sha256": "07c36d94748a3fb60bbcb0577e1bc837f1dce1e7e17e51cc2149ac5a34a30522",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/mathematics-is-a-subject-for-the-young.pdf",
       "ir": "ir/mathematics-is-a-subject-for-the-young.json.gz",
       "typst": "typst/mathematics-is-a-subject-for-the-young.typ.gz",
-      "source_manifest": "raw/mathematics-is-a-subject-for-the-young/20261029T132518.939180Z/manifest.json.gz",
+      "source_manifest": "raw/mathematics-is-a-subject-for-the-young/20261122T144706.627800Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80799,17 +80799,17 @@
       "title": "Unforced Euler singularity, unforced Navier-Stokes singularity, and the Generalized Riemann Hypothesis",
       "published_at": "2026-11-20T09:19:00-08:00",
       "modified_at": "2026-11-20T11:13:39-08:00",
-      "last_checked_at": "2026-11-21T14:49:24.588927+00:00",
-      "last_attempted_at": "2026-11-21T14:48:56.885121+00:00",
-      "converted_at": "2026-11-21T14:49:24.363853+00:00",
+      "last_checked_at": "2026-11-22T14:46:33.058695+00:00",
+      "last_attempted_at": "2026-11-22T14:45:49.983479+00:00",
+      "converted_at": "2026-11-22T14:46:32.609967+00:00",
       "converted_modified_at": "2026-11-20T11:13:39-08:00",
       "next_check_at": "2026-11-27T17:19:00+00:00",
-      "content_sha256": "7b0287a1ea14122e33e4af4b1d9d44872796ac7a8680cf57c0f308d422157fb1",
+      "content_sha256": "1e0317217105e1a264c6f0653d70df1c00e082749751712263ca606c3b358ef7",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.pdf",
       "ir": "ir/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.json.gz",
       "typst": "typst/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.typ.gz",
-      "source_manifest": "raw/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/20261121T144856.941332Z/manifest.json.gz",
+      "source_manifest": "raw/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/20261122T144550.076170Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80826,7 +80826,16 @@
         "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699699",
         "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699698",
         "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699697",
-        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699696"
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699696",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699801",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699796",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699793",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699791",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699790",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699789",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699788",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699787",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699783"
       ],
       "tags": [
         {
@@ -80941,6 +80950,51 @@
           "parent_id": 0
         }
       ]
+    },
+    "18674": {
+      "id": 18674,
+      "url": "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/",
+      "title": "Even more posts, opinion pieces, interviews, and position statements",
+      "published_at": "2026-11-21T17:19:10-08:00",
+      "modified_at": "2026-11-21T17:20:44-08:00",
+      "last_checked_at": "2026-11-22T14:46:36.659360+00:00",
+      "last_attempted_at": "2026-11-22T14:46:33.161303+00:00",
+      "converted_at": "2026-11-22T14:46:36.587556+00:00",
+      "converted_modified_at": "2026-11-21T17:20:44-08:00",
+      "next_check_at": "2026-11-29T01:19:10+00:00",
+      "content_sha256": "4f1377d28d48a56eeb9c525938a141b963ac38a52367bbe82f563a03939327ee",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/even-more-posts-opinion-pieces-interviews-and-position-statements.pdf",
+      "ir": "ir/even-more-posts-opinion-pieces-interviews-and-position-statements.json.gz",
+      "typst": "typst/even-more-posts-opinion-pieces-interviews-and-position-statements.typ.gz",
+      "source_manifest": "raw/even-more-posts-opinion-pieces-interviews-and-position-statements/20261122T144633.257911Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699811",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699807",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699805",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699800",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699798",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699797"
+      ],
+      "tags": [],
+      "categories": [
+        {
+          "id": 292,
+          "name": "media",
+          "slug": "media",
+          "url": "https://terrytao.wordpress.com/?cat=292",
+          "parent_id": 47932
+        },
+        {
+          "id": 352,
+          "name": "opinion",
+          "slug": "opinion",
+          "url": "https://terrytao.wordpress.com/?cat=352",
+          "parent_id": 0
+        }
+      ]
     }
   },
   "daily_attempts": {
@@ -80982,6 +81036,7 @@
     "2026-11-18": 8,
     "2026-11-19": 13,
     "2026-11-20": 13,
-    "2026-11-21": 8
+    "2026-11-21": 8,
+    "2026-11-22": 5
   }
 }
