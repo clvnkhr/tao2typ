@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-23T18:30:14.713213+00:00",
+  "last_discovered_at": "2026-11-24T17:58:09.854320+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -72152,17 +72152,17 @@
       "title": "Call for industry sponsors for IPAM’s RIPS program",
       "published_at": "2025-11-24T20:00:58-08:00",
       "modified_at": "2025-11-24T20:06:56-08:00",
-      "last_checked_at": "2026-10-15T08:34:58.497089+00:00",
-      "last_attempted_at": "2026-10-15T08:34:54.044511+00:00",
-      "converted_at": "2026-10-15T08:34:58.439252+00:00",
+      "last_checked_at": "2026-11-24T18:00:07.976222+00:00",
+      "last_attempted_at": "2026-11-24T18:00:05.299067+00:00",
+      "converted_at": "2026-11-24T18:00:07.923505+00:00",
       "converted_modified_at": "2025-11-24T20:06:56-08:00",
-      "next_check_at": "2026-11-24T08:00:00+00:00",
-      "content_sha256": "2e7efcedbd7cdcdf806275b5b71220774e73568e9484915413ea93b9972a46f7",
+      "next_check_at": "2027-11-24T08:00:00+00:00",
+      "content_sha256": "7f0f3570bb5ca2c0265cf8973d5a5c1e284bd2d845c663f40e4e0e8e1f822737",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/call-for-industry-sponsors-for-ipams-rips-program.pdf",
       "ir": "ir/call-for-industry-sponsors-for-ipams-rips-program.json.gz",
       "typst": "typst/call-for-industry-sponsors-for-ipams-rips-program.typ.gz",
-      "source_manifest": "raw/call-for-industry-sponsors-for-ipams-rips-program/20261015T083454.105675Z/manifest.json.gz",
+      "source_manifest": "raw/call-for-industry-sponsors-for-ipams-rips-program/20261124T180005.357557Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -79183,17 +79183,17 @@
       "title": "oai-math-revised: a community hub for revising OpenAI’s math write-ups",
       "published_at": "2026-10-24T07:08:02-08:00",
       "modified_at": "2026-10-23T09:53:56-08:00",
-      "last_checked_at": "2026-11-01T13:40:15.273440+00:00",
-      "last_attempted_at": "2026-11-01T13:40:03.645829+00:00",
-      "converted_at": "2026-10-31T12:50:59.358722+00:00",
+      "last_checked_at": "2026-11-24T18:00:19.999102+00:00",
+      "last_attempted_at": "2026-11-24T18:00:08.038217+00:00",
+      "converted_at": "2026-11-24T18:00:19.900495+00:00",
       "converted_modified_at": "2026-10-23T09:53:56-08:00",
-      "next_check_at": "2026-11-24T15:08:02+00:00",
-      "content_sha256": "5a857b386628532ad08996e25299742bca4257ff2db16783d4ac8765ae58157a",
+      "next_check_at": "2027-10-24T08:00:00+00:00",
+      "content_sha256": "d7255e9cf0ab5d501ccc902a8cbbaa899d5194dd8ba867ba3fb81ece1f754621",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups.pdf",
       "ir": "ir/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups.json.gz",
       "typst": "typst/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups.typ.gz",
-      "source_manifest": "raw/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups/20261101T134003.746514Z/manifest.json.gz",
+      "source_manifest": "raw/oai-math-revised-a-community-hub-for-revising-openais-math-write-ups/20261124T180008.092094Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80514,17 +80514,17 @@
       "title": "Lean Grimoire",
       "published_at": "2026-11-11T18:36:00-08:00",
       "modified_at": "2026-11-11T22:41:51-08:00",
-      "last_checked_at": "2026-11-21T14:48:56.829406+00:00",
-      "last_attempted_at": "2026-11-21T14:48:31.605084+00:00",
-      "converted_at": "2026-11-21T14:48:56.436882+00:00",
+      "last_checked_at": "2026-11-24T17:58:47.600304+00:00",
+      "last_attempted_at": "2026-11-24T17:58:22.249332+00:00",
+      "converted_at": "2026-11-24T17:58:46.980501+00:00",
       "converted_modified_at": "2026-11-11T22:41:51-08:00",
       "next_check_at": "2026-12-12T02:36:00+00:00",
-      "content_sha256": "cef0c31a58f9d1a5efea1ed2cdd7534132a9ebaa00e5abff170fc265bb12da2d",
+      "content_sha256": "c6e2d018ef8ccca5af7500f9b0420e1477a2d1067a79fdf6e5d1975ed26d8d46",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/lean-grimoire.pdf",
       "ir": "ir/lean-grimoire.json.gz",
       "typst": "typst/lean-grimoire.typ.gz",
-      "source_manifest": "raw/lean-grimoire/20261121T144831.657219Z/manifest.json.gz",
+      "source_manifest": "raw/lean-grimoire/20261124T175822.308638Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80571,7 +80571,10 @@
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699511",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699510",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699506",
-        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699722"
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699722",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700051",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700050",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700049"
       ],
       "tags": [
         {
@@ -80799,17 +80802,17 @@
       "title": "Unforced Euler singularity, unforced Navier-Stokes singularity, and the Generalized Riemann Hypothesis",
       "published_at": "2026-11-20T09:19:00-08:00",
       "modified_at": "2026-11-20T11:13:39-08:00",
-      "last_checked_at": "2026-11-23T18:31:15.336131+00:00",
-      "last_attempted_at": "2026-11-23T18:30:27.068704+00:00",
-      "converted_at": "2026-11-23T18:31:14.837305+00:00",
+      "last_checked_at": "2026-11-24T17:59:37.311677+00:00",
+      "last_attempted_at": "2026-11-24T17:58:47.664159+00:00",
+      "converted_at": "2026-11-24T17:59:36.911136+00:00",
       "converted_modified_at": "2026-11-20T11:13:39-08:00",
       "next_check_at": "2026-11-27T17:19:00+00:00",
-      "content_sha256": "7ec79fab1db90e04fb62a9f7c37227bbd0afe205d416056c022092da5ad00690",
+      "content_sha256": "47d45e2b747f55c8aa28d021954b0c9f65c81701fc8d6b08ee3c12d23e456697",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.pdf",
       "ir": "ir/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.json.gz",
       "typst": "typst/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis.typ.gz",
-      "source_manifest": "raw/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/20261123T183027.157392Z/manifest.json.gz",
+      "source_manifest": "raw/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/20261124T175847.724439Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80844,7 +80847,10 @@
         "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699909",
         "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699908",
         "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699907",
-        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699906"
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-699906",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-700036",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-700034",
+        "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/#comment-700022"
       ],
       "tags": [
         {
@@ -80966,17 +80972,17 @@
       "title": "Even more posts, opinion pieces, interviews, and position statements",
       "published_at": "2026-11-21T17:19:10-08:00",
       "modified_at": "2026-11-22T07:26:48-08:00",
-      "last_checked_at": "2026-11-23T18:31:26.966887+00:00",
-      "last_attempted_at": "2026-11-23T18:31:15.430850+00:00",
-      "converted_at": "2026-11-23T18:31:26.814218+00:00",
+      "last_checked_at": "2026-11-24T17:59:52.042981+00:00",
+      "last_attempted_at": "2026-11-24T17:59:37.378376+00:00",
+      "converted_at": "2026-11-24T17:59:51.900441+00:00",
       "converted_modified_at": "2026-11-22T07:26:48-08:00",
       "next_check_at": "2026-11-29T01:19:10+00:00",
-      "content_sha256": "bf00647f4c601a5a066b1f999ea6ded7a48b5f41df90987332242cd4537baa12",
+      "content_sha256": "167caf66624c313dab3ff68ba5c3de864603c90c400516b3bbbfac6ecae4c425",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/even-more-posts-opinion-pieces-interviews-and-position-statements.pdf",
       "ir": "ir/even-more-posts-opinion-pieces-interviews-and-position-statements.json.gz",
       "typst": "typst/even-more-posts-opinion-pieces-interviews-and-position-statements.typ.gz",
-      "source_manifest": "raw/even-more-posts-opinion-pieces-interviews-and-position-statements/20261123T183115.563755Z/manifest.json.gz",
+      "source_manifest": "raw/even-more-posts-opinion-pieces-interviews-and-position-statements/20261124T175937.436347Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80989,7 +80995,11 @@
         "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699939",
         "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699937",
         "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699924",
-        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699918"
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-699918",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700045",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700032",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700025",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700017"
       ],
       "tags": [],
       "categories": [
@@ -81012,25 +81022,26 @@
     "18748": {
       "id": 18748,
       "url": "https://terrytao.wordpress.com/2026/11/22/tenure-track-position-in-pure-mathematics-at-ucla/",
-      "title": "Tenure-track position in pure mathematics at UCLA",
+      "title": "Tenure-track position in pure and applied mathematics at UCLA",
       "published_at": "2026-11-22T07:01:49-08:00",
-      "modified_at": "2026-11-22T07:01:49-08:00",
-      "last_checked_at": "2026-11-23T18:31:29.899164+00:00",
-      "last_attempted_at": "2026-11-23T18:31:27.059192+00:00",
-      "converted_at": "2026-11-23T18:31:29.834127+00:00",
-      "converted_modified_at": "2026-11-22T07:01:49-08:00",
+      "modified_at": "2026-11-23T11:04:27-08:00",
+      "last_checked_at": "2026-11-24T17:59:55.948764+00:00",
+      "last_attempted_at": "2026-11-24T17:59:52.101979+00:00",
+      "converted_at": "2026-11-24T17:59:55.897221+00:00",
+      "converted_modified_at": "2026-11-23T11:04:27-08:00",
       "next_check_at": "2026-11-29T15:01:49+00:00",
-      "content_sha256": "6c618f89939ff2205d46aeab746b3423f0e2675a5c00206a2a78682a8b741502",
+      "content_sha256": "8da8f8cc799ceba1640984cd388c73105543de140aaab9d4b1ed9a6703a7a561",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/tenure-track-position-in-pure-mathematics-at-ucla.pdf",
       "ir": "ir/tenure-track-position-in-pure-mathematics-at-ucla.json.gz",
       "typst": "typst/tenure-track-position-in-pure-mathematics-at-ucla.typ.gz",
-      "source_manifest": "raw/tenure-track-position-in-pure-mathematics-at-ucla/20261123T183127.176875Z/manifest.json.gz",
+      "source_manifest": "raw/tenure-track-position-in-pure-mathematics-at-ucla/20261124T175952.155948Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/11/22/tenure-track-position-in-pure-mathematics-at-ucla/#comment-699928",
-        "https://terrytao.wordpress.com/2026/11/22/tenure-track-position-in-pure-mathematics-at-ucla/#comment-699914"
+        "https://terrytao.wordpress.com/2026/11/22/tenure-track-position-in-pure-mathematics-at-ucla/#comment-699914",
+        "https://terrytao.wordpress.com/2026/11/22/tenure-track-position-in-pure-mathematics-at-ucla/#comment-700037"
       ],
       "tags": [
         {
@@ -81048,6 +81059,64 @@
           "slug": "advertising",
           "url": "https://terrytao.wordpress.com/?cat=521",
           "parent_id": 47932
+        }
+      ]
+    },
+    "18763": {
+      "id": 18763,
+      "url": "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/",
+      "title": "Finite-Time Singularity Formation for the Three-Dimensional Euler Equations",
+      "published_at": "2026-11-23T12:39:56-08:00",
+      "modified_at": "2026-11-23T14:38:11-08:00",
+      "last_checked_at": "2026-11-24T18:00:05.234907+00:00",
+      "last_attempted_at": "2026-11-24T17:59:56.010010+00:00",
+      "converted_at": "2026-11-24T18:00:04.966165+00:00",
+      "converted_modified_at": "2026-11-23T14:38:11-08:00",
+      "next_check_at": "2026-11-30T20:39:56+00:00",
+      "content_sha256": "aec7638b14509d3566aac32a6853bce1380ea1768a0d19c20c3e1b82f1eddfeb",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/finite-time-singularity-formation-for-the-three-dimensional-euler-equations.pdf",
+      "ir": "ir/finite-time-singularity-formation-for-the-three-dimensional-euler-equations.json.gz",
+      "typst": "typst/finite-time-singularity-formation-for-the-three-dimensional-euler-equations.typ.gz",
+      "source_manifest": "raw/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/20261124T175956.065192Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700047",
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700042",
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700040",
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700013"
+      ],
+      "tags": [
+        {
+          "id": 53103315,
+          "name": "incompressible Euler equations",
+          "slug": "incompressible-euler-equations",
+          "url": "https://terrytao.wordpress.com/tag/incompressible-euler-equations/",
+          "parent_id": null
+        },
+        {
+          "id": 793311264,
+          "name": "Matei Coiculescu",
+          "slug": "matei-coiculescu",
+          "url": "https://terrytao.wordpress.com/tag/matei-coiculescu/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 162892,
+          "name": "expository",
+          "slug": "expository",
+          "url": "https://terrytao.wordpress.com/?cat=162892",
+          "parent_id": 0
+        },
+        {
+          "id": 1440182,
+          "name": "math.AP",
+          "slug": "math-ap",
+          "url": "https://terrytao.wordpress.com/?cat=1440182",
+          "parent_id": 3582
         }
       ]
     }
@@ -81093,6 +81162,7 @@
     "2026-11-20": 13,
     "2026-11-21": 8,
     "2026-11-22": 5,
-    "2026-11-23": 11
+    "2026-11-23": 11,
+    "2026-11-24": 7
   }
 }
