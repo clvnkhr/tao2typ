@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_discovered_at": "2026-11-24T17:58:09.854320+00:00",
+  "last_discovered_at": "2026-11-25T17:26:50.440553+00:00",
   "posts": {
     "7": {
       "id": 7,
@@ -37587,17 +37587,17 @@
       "title": "Course announcement: 254B, expansion in groups of Lie type",
       "published_at": "2011-11-25T13:49:33-08:00",
       "modified_at": "2011-11-25T13:50:57-08:00",
-      "last_checked_at": "2026-10-14T09:21:04.036276+00:00",
-      "last_attempted_at": "2026-10-14T16:36:43.108343+00:00",
+      "last_checked_at": "2026-11-25T17:29:15.003391+00:00",
+      "last_attempted_at": "2026-11-25T17:29:13.069964+00:00",
       "converted_at": "2026-10-14T16:36:43.113026+00:00",
       "converted_modified_at": "2011-11-25T13:50:57-08:00",
-      "next_check_at": "2026-11-25T08:00:00+00:00",
+      "next_check_at": "2027-11-25T08:00:00+00:00",
       "content_sha256": "7c492661bc23177a6c388c206b0f8b61e638cfca209ad5f0727dd5421d68fac6",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/course-announcement-254b-expansion-in-groups-of-lie-type.pdf",
       "ir": "ir/course-announcement-254b-expansion-in-groups-of-lie-type.json.gz",
       "typst": "typst/course-announcement-254b-expansion-in-groups-of-lie-type.typ.gz",
-      "source_manifest": "raw/course-announcement-254b-expansion-in-groups-of-lie-type/20261014T092100.862225Z/manifest.json.gz",
+      "source_manifest": "raw/course-announcement-254b-expansion-in-groups-of-lie-type/20261125T172913.154601Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [],
@@ -74544,20 +74544,22 @@
       "title": "Rotating needles in space: the road to the Kakeya conjecture, and why it matters",
       "published_at": "2026-08-25T22:51:18-08:00",
       "modified_at": "2026-08-25T22:51:18-08:00",
-      "last_checked_at": "2026-10-14T11:17:27.263612+00:00",
-      "last_attempted_at": "2026-10-14T16:39:27.009235+00:00",
-      "converted_at": "2026-10-14T16:39:27.088942+00:00",
+      "last_checked_at": "2026-11-25T17:27:07.897791+00:00",
+      "last_attempted_at": "2026-11-25T17:27:03.230932+00:00",
+      "converted_at": "2026-11-25T17:27:07.827969+00:00",
       "converted_modified_at": "2026-08-25T22:51:18-08:00",
       "next_check_at": "2027-08-25T08:00:00+00:00",
-      "content_sha256": "341e229253c4a06aea1a7e6e77fb5cec1cdeecad5ec08113aedc4dc19a288b1e",
+      "content_sha256": "d8391911c364a0ee84f4a2006c441536a4b3d720bdbe4f58e5c356ec1ec53847",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/rotating-needles-in-space-the-road-to-the-kakeya-conjecture-and-why-it-matters.pdf",
       "ir": "ir/rotating-needles-in-space-the-road-to-the-kakeya-conjecture-and-why-it-matters.json.gz",
       "typst": "typst/rotating-needles-in-space-the-road-to-the-kakeya-conjecture-and-why-it-matters.typ.gz",
-      "source_manifest": "raw/rotating-needles-in-space-the-road-to-the-kakeya-conjecture-and-why-it-matters/20261014T111725.989028Z/manifest.json.gz",
+      "source_manifest": "raw/rotating-needles-in-space-the-road-to-the-kakeya-conjecture-and-why-it-matters/20261125T172703.317630Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
-      "seen_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/08/25/rotating-needles-in-space-the-road-to-the-kakeya-conjecture-and-why-it-matters/#comment-700083"
+      ],
       "tags": [
         {
           "id": 33673117,
@@ -74938,17 +74940,17 @@
       "title": "A Severe Misalignment of AI in Mathematics",
       "published_at": "2026-09-11T09:27:46-08:00",
       "modified_at": "2026-09-12T22:11:30-08:00",
-      "last_checked_at": "2026-11-19T15:57:36.400909+00:00",
-      "last_attempted_at": "2026-11-19T15:56:28.195562+00:00",
-      "converted_at": "2026-11-19T15:57:34.971532+00:00",
+      "last_checked_at": "2026-11-25T17:28:17.254786+00:00",
+      "last_attempted_at": "2026-11-25T17:27:08.011106+00:00",
+      "converted_at": "2026-11-25T17:28:16.093214+00:00",
       "converted_modified_at": "2026-09-12T22:11:30-08:00",
       "next_check_at": "2027-09-11T08:00:00+00:00",
-      "content_sha256": "29efdde7c6c8d9249acb0d8f54090078b314d5e4323bee8c2054b24392a8ebb8",
+      "content_sha256": "83031506e235ddf00cc58c4afc3221778687a02a0d86ade22399f1bc30b29e8d",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/a-severe-misalignment-of-ai-in-mathematics.pdf",
       "ir": "ir/a-severe-misalignment-of-ai-in-mathematics.json.gz",
       "typst": "typst/a-severe-misalignment-of-ai-in-mathematics.typ.gz",
-      "source_manifest": "raw/a-severe-misalignment-of-ai-in-mathematics/20261119T155628.255401Z/manifest.json.gz",
+      "source_manifest": "raw/a-severe-misalignment-of-ai-in-mathematics/20261125T172708.098895Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -74961,7 +74963,8 @@
         "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698608",
         "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-698899",
         "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-699209",
-        "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-699505"
+        "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-699505",
+        "https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/#comment-700084"
       ],
       "tags": [
         {
@@ -80514,17 +80517,17 @@
       "title": "Lean Grimoire",
       "published_at": "2026-11-11T18:36:00-08:00",
       "modified_at": "2026-11-11T22:41:51-08:00",
-      "last_checked_at": "2026-11-24T17:58:47.600304+00:00",
-      "last_attempted_at": "2026-11-24T17:58:22.249332+00:00",
-      "converted_at": "2026-11-24T17:58:46.980501+00:00",
+      "last_checked_at": "2026-11-25T17:28:41.640628+00:00",
+      "last_attempted_at": "2026-11-25T17:28:17.336678+00:00",
+      "converted_at": "2026-11-25T17:28:40.779619+00:00",
       "converted_modified_at": "2026-11-11T22:41:51-08:00",
       "next_check_at": "2026-12-12T02:36:00+00:00",
-      "content_sha256": "c6e2d018ef8ccca5af7500f9b0420e1477a2d1067a79fdf6e5d1975ed26d8d46",
+      "content_sha256": "bda7d8abb181af32245ae36fed17e39757a133a060475325e2fb281e34b82a21",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/lean-grimoire.pdf",
       "ir": "ir/lean-grimoire.json.gz",
       "typst": "typst/lean-grimoire.typ.gz",
-      "source_manifest": "raw/lean-grimoire/20261124T175822.308638Z/manifest.json.gz",
+      "source_manifest": "raw/lean-grimoire/20261125T172817.422009Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80574,7 +80577,8 @@
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-699722",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700051",
         "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700050",
-        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700049"
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700049",
+        "https://terrytao.wordpress.com/2026/11/11/lean-grimoire/#comment-700058"
       ],
       "tags": [
         {
@@ -80972,17 +80976,17 @@
       "title": "Even more posts, opinion pieces, interviews, and position statements",
       "published_at": "2026-11-21T17:19:10-08:00",
       "modified_at": "2026-11-22T07:26:48-08:00",
-      "last_checked_at": "2026-11-24T17:59:52.042981+00:00",
-      "last_attempted_at": "2026-11-24T17:59:37.378376+00:00",
-      "converted_at": "2026-11-24T17:59:51.900441+00:00",
+      "last_checked_at": "2026-11-25T17:28:59.099214+00:00",
+      "last_attempted_at": "2026-11-25T17:28:41.722190+00:00",
+      "converted_at": "2026-11-25T17:28:58.921666+00:00",
       "converted_modified_at": "2026-11-22T07:26:48-08:00",
       "next_check_at": "2026-11-29T01:19:10+00:00",
-      "content_sha256": "167caf66624c313dab3ff68ba5c3de864603c90c400516b3bbbfac6ecae4c425",
+      "content_sha256": "29aa6c313ac5ba892292de01ca67c1c3da585f5add333cbdc53de161cf8e288a",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/even-more-posts-opinion-pieces-interviews-and-position-statements.pdf",
       "ir": "ir/even-more-posts-opinion-pieces-interviews-and-position-statements.json.gz",
       "typst": "typst/even-more-posts-opinion-pieces-interviews-and-position-statements.typ.gz",
-      "source_manifest": "raw/even-more-posts-opinion-pieces-interviews-and-position-statements/20261124T175937.436347Z/manifest.json.gz",
+      "source_manifest": "raw/even-more-posts-opinion-pieces-interviews-and-position-statements/20261125T172841.806544Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
@@ -80999,7 +81003,9 @@
         "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700045",
         "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700032",
         "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700025",
-        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700017"
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700017",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700063",
+        "https://terrytao.wordpress.com/2026/11/21/even-more-posts-opinion-pieces-interviews-and-position-statements/#comment-700059"
       ],
       "tags": [],
       "categories": [
@@ -81068,24 +81074,26 @@
       "title": "Finite-Time Singularity Formation for the Three-Dimensional Euler Equations",
       "published_at": "2026-11-23T12:39:56-08:00",
       "modified_at": "2026-11-23T14:38:11-08:00",
-      "last_checked_at": "2026-11-24T18:00:05.234907+00:00",
-      "last_attempted_at": "2026-11-24T17:59:56.010010+00:00",
-      "converted_at": "2026-11-24T18:00:04.966165+00:00",
+      "last_checked_at": "2026-11-25T17:29:08.325400+00:00",
+      "last_attempted_at": "2026-11-25T17:28:59.182681+00:00",
+      "converted_at": "2026-11-25T17:29:07.955174+00:00",
       "converted_modified_at": "2026-11-23T14:38:11-08:00",
       "next_check_at": "2026-11-30T20:39:56+00:00",
-      "content_sha256": "aec7638b14509d3566aac32a6853bce1380ea1768a0d19c20c3e1b82f1eddfeb",
+      "content_sha256": "cba312f7c073c31061cbdc71efe7a8f313ce89ba6cd6a742e9368298227c4fb5",
       "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
       "pdf": "pdfs/finite-time-singularity-formation-for-the-three-dimensional-euler-equations.pdf",
       "ir": "ir/finite-time-singularity-formation-for-the-three-dimensional-euler-equations.json.gz",
       "typst": "typst/finite-time-singularity-formation-for-the-three-dimensional-euler-equations.typ.gz",
-      "source_manifest": "raw/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/20261124T175956.065192Z/manifest.json.gz",
+      "source_manifest": "raw/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/20261125T172859.265649Z/manifest.json.gz",
       "last_error": null,
       "pending_comments": [],
       "seen_comments": [
         "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700047",
         "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700042",
         "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700040",
-        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700013"
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700013",
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700062",
+        "https://terrytao.wordpress.com/2026/11/23/finite-time-singularity-formation-for-the-three-dimensional-euler-equations/#comment-700061"
       ],
       "tags": [
         {
@@ -81117,6 +81125,89 @@
           "slug": "math-ap",
           "url": "https://terrytao.wordpress.com/?cat=1440182",
           "parent_id": 3582
+        }
+      ]
+    },
+    "18775": {
+      "id": 18775,
+      "url": "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/",
+      "title": "G.R.H. Polymath",
+      "published_at": "2026-11-24T21:29:41-08:00",
+      "modified_at": "2026-11-25T06:43:10-08:00",
+      "last_checked_at": "2026-11-25T17:29:12.982897+00:00",
+      "last_attempted_at": "2026-11-25T17:29:08.410533+00:00",
+      "converted_at": "2026-11-25T17:29:12.917748+00:00",
+      "converted_modified_at": "2026-11-25T06:43:10-08:00",
+      "next_check_at": "2026-12-02T05:29:41+00:00",
+      "content_sha256": "f81c92cd99cf2c6300f03558f02bd9560c2b321d23b95621457b32cb776b1798",
+      "converter_fingerprint": "cea8a43b834cd87f14caba952a1800edcbcae5b871d4bbf46f1fa079f42dfd5b",
+      "pdf": "pdfs/g-r-h-polymath.pdf",
+      "ir": "ir/g-r-h-polymath.json.gz",
+      "typst": "typst/g-r-h-polymath.typ.gz",
+      "source_manifest": "raw/g-r-h-polymath/20261125T172908.496692Z/manifest.json.gz",
+      "last_error": null,
+      "pending_comments": [],
+      "seen_comments": [
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700081",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700080",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700079",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700077",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700073",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700072",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700070",
+        "https://terrytao.wordpress.com/2026/11/24/g-r-h-polymath/#comment-700067"
+      ],
+      "tags": [
+        {
+          "id": 793518079,
+          "name": "Anurag Sahay",
+          "slug": "anurag-sahay",
+          "url": "https://terrytao.wordpress.com/tag/anurag-sahay/",
+          "parent_id": null
+        },
+        {
+          "id": 791820479,
+          "name": "Lior Silberman",
+          "slug": "lior-silberman",
+          "url": "https://terrytao.wordpress.com/tag/lior-silberman/",
+          "parent_id": null
+        },
+        {
+          "id": 1831085,
+          "name": "Riemann hypothesis",
+          "slug": "riemann-hypothesis",
+          "url": "https://terrytao.wordpress.com/tag/riemann-hypothesis/",
+          "parent_id": null
+        },
+        {
+          "id": 533631572,
+          "name": "Will Sawin",
+          "slug": "will-sawin",
+          "url": "https://terrytao.wordpress.com/tag/will-sawin/",
+          "parent_id": null
+        }
+      ],
+      "categories": [
+        {
+          "id": 521,
+          "name": "advertising",
+          "slug": "advertising",
+          "url": "https://terrytao.wordpress.com/?cat=521",
+          "parent_id": 47932
+        },
+        {
+          "id": 1440053,
+          "name": "math.NT",
+          "slug": "math-nt",
+          "url": "https://terrytao.wordpress.com/?cat=1440053",
+          "parent_id": 3582
+        },
+        {
+          "id": 123554,
+          "name": "polymath",
+          "slug": "polymath",
+          "url": "https://terrytao.wordpress.com/?cat=123554",
+          "parent_id": 395
         }
       ]
     }
@@ -81163,6 +81254,7 @@
     "2026-11-21": 8,
     "2026-11-22": 5,
     "2026-11-23": 11,
-    "2026-11-24": 7
+    "2026-11-24": 7,
+    "2026-11-25": 7
   }
 }
